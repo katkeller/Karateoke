@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using System.Linq;
 
 public class AudioSampleCollector : MonoBehaviour
 {
@@ -21,10 +22,29 @@ public class AudioSampleCollector : MonoBehaviour
 
     #endregion
 
+    [SerializeField]
+    private GameObject pitchIndicator;
+
+    [SerializeField]
+    private float scaleMultiplier = 5;
+
+    [SerializeField]
+    private float startingYPosition = 0.25f;
+
+    [SerializeField]
+    private float dividingValue = 20;
+
+    [SerializeField]
+    private float timeToMove = 0.1f;
+
     private AudioSource audioSource;
 
     public static float[] audioBand = new float[8];
     public static float[] audioBandBuffer = new float[8];
+
+    private int indexOfHighestValue;
+    private float highestValue;
+
     private float[] samples = new float[512];
     private float[] frequencyBand = new float[8];
     private float[] bandBuffer = new float[8];
@@ -66,23 +86,11 @@ public class AudioSampleCollector : MonoBehaviour
     void Update()
     {
         GetSpectrumAudioSource();
-        MakeFrequencyBands();
-        FrequencyBandBuffer();
-        CreateAudioBands();
-    }
-
-    private void CreateAudioBands()
-    {
-        for (int i = 0; i < 8; i++)
-        {
-            if (frequencyBand[i] > frequencyBandHighest[i])
-            {
-                frequencyBandHighest[i] = frequencyBand[i];
-            }
-
-            audioBand[i] = (frequencyBand[i] / frequencyBandHighest[i]);
-            audioBandBuffer[i] = (bandBuffer[i] / frequencyBandHighest[i]);
-        }
+        GetForwardFrequency();
+        ChangePitchIndicator();
+        //MakeFrequencyBands();
+        //FrequencyBandBuffer();
+        //CreateAudioBands();
     }
 
     private void GetSpectrumAudioSource()
@@ -90,45 +98,79 @@ public class AudioSampleCollector : MonoBehaviour
         audioSource.GetSpectrumData(samples, 0, FFTWindow.Blackman);
     }
 
-    private void FrequencyBandBuffer()
+    private void GetForwardFrequency()
     {
-        for (int g = 0; g < 8; ++g)
-        {
-            if (frequencyBand[g] > bandBuffer[g])
-            {
-                bandBuffer[g] = frequencyBand[g];
-                bufferDecrease[g] = lowDecreaseSpeed;
-            }
-            else if (frequencyBand[g] < bandBuffer[g])
-            {
-                bandBuffer[g] -= bufferDecrease[g];
-                bufferDecrease[g] *= highDecreaseSpeed;
-            }
-        }
+        highestValue = samples.Max();
+        indexOfHighestValue = samples.ToList().IndexOf(highestValue);
     }
 
-    private void MakeFrequencyBands()
+    private void ChangePitchIndicator()
     {
-        int count = 0;
-
-        for (int i = 0; i < 8; i++)
+        if(indexOfHighestValue > 10 && indexOfHighestValue < 100)
         {
-            float average = 0;
-            int sampleCount = (int)Mathf.Pow(2, i) * 2;
+            Transform startingPosition = pitchIndicator.transform;
 
-            if (i == 7)
-            {
-                sampleCount += 2;
-            }
+            Vector3 endingVector3 = new Vector3(0, (indexOfHighestValue / dividingValue) + startingYPosition, 0);
 
-            for (int j = 0; j < sampleCount; j++)
-            {
-                average += samples[count] * (count + 1);
-                count++;
-            }
-
-            average /= count;
-            frequencyBand[i] = average * 10;
+            pitchIndicator.transform.localPosition = Vector3.Lerp(startingPosition.position, endingVector3, timeToMove);
+            //pitchIndicator.transform.localPosition = new Vector3(transform.localPosition.x, (indexOfHighestValue/dividingValue) + startingYPosition, transform.localPosition.z);
         }
+
     }
+
+    //private void CreateAudioBands()
+    //{
+    //    for (int i = 0; i < 8; i++)
+    //    {
+    //        if (frequencyBand[i] > frequencyBandHighest[i])
+    //        {
+    //            frequencyBandHighest[i] = frequencyBand[i];
+    //        }
+
+    //        audioBand[i] = (frequencyBand[i] / frequencyBandHighest[i]);
+    //        audioBandBuffer[i] = (bandBuffer[i] / frequencyBandHighest[i]);
+    //    }
+    //}
+
+    //private void FrequencyBandBuffer()
+    //{
+    //    for (int g = 0; g < 8; ++g)
+    //    {
+    //        if (frequencyBand[g] > bandBuffer[g])
+    //        {
+    //            bandBuffer[g] = frequencyBand[g];
+    //            bufferDecrease[g] = lowDecreaseSpeed;
+    //        }
+    //        else if (frequencyBand[g] < bandBuffer[g])
+    //        {
+    //            bandBuffer[g] -= bufferDecrease[g];
+    //            bufferDecrease[g] *= highDecreaseSpeed;
+    //        }
+    //    }
+    //}
+
+    //private void MakeFrequencyBands()
+    //{
+    //    int count = 0;
+
+    //    for (int i = 0; i < 8; i++)
+    //    {
+    //        float average = 0;
+    //        int sampleCount = (int)Mathf.Pow(2, i) * 2;
+
+    //        if (i == 7)
+    //        {
+    //            sampleCount += 2;
+    //        }
+
+    //        for (int j = 0; j < sampleCount; j++)
+    //        {
+    //            average += samples[count] * (count + 1);
+    //            count++;
+    //        }
+
+    //        average /= count;
+    //        frequencyBand[i] = average * 10;
+    //    }
+    //}
 }
