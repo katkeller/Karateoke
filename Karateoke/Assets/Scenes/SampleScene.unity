@@ -488,9 +488,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b7b5374233264e2fa2ef666157855b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useMicrophone: 1
-  clipToPlayIfNoMicrophone: {fileID: 8300000, guid: d36b870a3c6e6453f94b2aaf91de8a5b,
+  useMicrophone: 0
+  clipToPlayIfNoMicrophone: {fileID: 8300000, guid: 2be0f11bc0214474ba3da67bc076f773,
     type: 3}
+  microphone1MixerGroup: {fileID: -2800009967039727090, guid: d49aa3af8e0d5419f903d34204fbdca2,
+    type: 2}
+  masterMixerGroup: {fileID: 24300002, guid: d49aa3af8e0d5419f903d34204fbdca2, type: 2}
   selectedMicrophoneDevice: 
 --- !u!114 &570069171
 MonoBehaviour:

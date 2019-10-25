@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AudioSampleCollector : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class AudioSampleCollector : MonoBehaviour
 
     [SerializeField]
     private AudioClip clipToPlayIfNoMicrophone;
+
+    [SerializeField]
+    private AudioMixerGroup microphone1MixerGroup, masterMixerGroup;
 
     public string selectedMicrophoneDevice;
 
@@ -39,7 +43,9 @@ public class AudioSampleCollector : MonoBehaviour
             {
                 selectedMicrophoneDevice = Microphone.devices[0].ToString();
                 Debug.Log($"{selectedMicrophoneDevice} is connected and is being used.");
+                audioSource.outputAudioMixerGroup = microphone1MixerGroup;
                 audioSource.clip = Microphone.Start(selectedMicrophoneDevice, true, 10, AudioSettings.outputSampleRate);
+                while (!(Microphone.GetPosition(null) > 0)) { }
                 audioSource.Play();
             }
             else
@@ -52,6 +58,7 @@ public class AudioSampleCollector : MonoBehaviour
         }
         else
         {
+            audioSource.outputAudioMixerGroup = masterMixerGroup;
             audioSource.PlayOneShot(clipToPlayIfNoMicrophone);
         }
     }
