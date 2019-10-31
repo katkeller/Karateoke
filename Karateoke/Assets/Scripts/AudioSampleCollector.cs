@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using System.Linq;
+using UnityEngine.UI;
+using TMPro;
+using System;
 
 public class AudioSampleCollector : MonoBehaviour
 {
@@ -26,13 +29,16 @@ public class AudioSampleCollector : MonoBehaviour
     private GameObject pitchIndicator;
 
     [SerializeField]
-    private float scaleMultiplier = 5;
+    private TextMeshProUGUI rangeText;
 
     [SerializeField]
     private float startingYPosition = 0.25f;
 
     [SerializeField]
     private float dividingValue = 20;
+
+    [SerializeField]
+    private float alphaMultiplier = 100.0f;
 
     [SerializeField]
     private float timeToMove = 0.1f;
@@ -45,13 +51,7 @@ public class AudioSampleCollector : MonoBehaviour
     private int indexOfHighestValue;
     private float highestValue;
 
-    private float[] samples = new float[512];
-    private float[] frequencyBand = new float[8];
-    private float[] bandBuffer = new float[8];
-    private float[] bufferDecrease = new float[8];
-    private float[] frequencyBandHighest = new float[8];
-    private float highDecreaseSpeed = 1.2f;
-    private float lowDecreaseSpeed = 0.005f;
+    private float[] samples = new float[2048];
 
     void Awake()
     {
@@ -86,19 +86,26 @@ public class AudioSampleCollector : MonoBehaviour
     void Update()
     {
         GetSpectrumAudioSource();
-        GetForwardFrequency();
+        GetRelevantFrequency();
         ChangePitchIndicator();
-        //MakeFrequencyBands();
-        //FrequencyBandBuffer();
-        //CreateAudioBands();
+        SetPitchIndicatorAlpha();
+    }
+
+    private void SetPitchIndicatorAlpha()
+    {
+        float alpha = highestValue * alphaMultiplier;
+
+        Color color = pitchIndicator.GetComponent<SpriteRenderer>().color;
+        color.a = alpha;
+        pitchIndicator.GetComponent<SpriteRenderer>().color = color;
     }
 
     private void GetSpectrumAudioSource()
     {
-        audioSource.GetSpectrumData(samples, 0, FFTWindow.Blackman);
+        audioSource.GetSpectrumData(samples, 0, FFTWindow.BlackmanHarris);
     }
 
-    private void GetForwardFrequency()
+    private void GetRelevantFrequency()
     {
         highestValue = samples.Max();
         indexOfHighestValue = samples.ToList().IndexOf(highestValue);
@@ -106,71 +113,23 @@ public class AudioSampleCollector : MonoBehaviour
 
     private void ChangePitchIndicator()
     {
-        if(indexOfHighestValue > 10 && indexOfHighestValue < 100)
+
+        //element 6 contains 82 hz, which is the lowest note in the human vocal range.
+        //element 97 contains 1047 hz, which is the highest note in the human vocal range.
+        if(indexOfHighestValue > 6 && indexOfHighestValue < 97)
         {
-            Transform startingPosition = pitchIndicator.transform;
+            if(highestValue > 0.01f)
+            {
+                Transform startingPosition = pitchIndicator.transform;
 
-            Vector3 endingVector3 = new Vector3(0, (indexOfHighestValue / dividingValue) + startingYPosition, 0);
+                Vector3 endingVector3 = new Vector3(0, (indexOfHighestValue / dividingValue) + startingYPosition, 0);
 
-            pitchIndicator.transform.localPosition = Vector3.Lerp(startingPosition.position, endingVector3, timeToMove);
-            //pitchIndicator.transform.localPosition = new Vector3(transform.localPosition.x, (indexOfHighestValue/dividingValue) + startingYPosition, transform.localPosition.z);
+                pitchIndicator.transform.localPosition = Vector3.Lerp(startingPosition.position, endingVector3, timeToMove);
+                //pitchIndicator.transform.localPosition = new Vector3(transform.localPosition.x, (indexOfHighestValue/dividingValue) + startingYPosition, transform.localPosition.z);
+            }
+
+            rangeText.text = highestValue.ToString();
         }
 
     }
-
-    //private void CreateAudioBands()
-    //{
-    //    for (int i = 0; i < 8; i++)
-    //    {
-    //        if (frequencyBand[i] > frequencyBandHighest[i])
-    //        {
-    //            frequencyBandHighest[i] = frequencyBand[i];
-    //        }
-
-    //        audioBand[i] = (frequencyBand[i] / frequencyBandHighest[i]);
-    //        audioBandBuffer[i] = (bandBuffer[i] / frequencyBandHighest[i]);
-    //    }
-    //}
-
-    //private void FrequencyBandBuffer()
-    //{
-    //    for (int g = 0; g < 8; ++g)
-    //    {
-    //        if (frequencyBand[g] > bandBuffer[g])
-    //        {
-    //            bandBuffer[g] = frequencyBand[g];
-    //            bufferDecrease[g] = lowDecreaseSpeed;
-    //        }
-    //        else if (frequencyBand[g] < bandBuffer[g])
-    //        {
-    //            bandBuffer[g] -= bufferDecrease[g];
-    //            bufferDecrease[g] *= highDecreaseSpeed;
-    //        }
-    //    }
-    //}
-
-    //private void MakeFrequencyBands()
-    //{
-    //    int count = 0;
-
-    //    for (int i = 0; i < 8; i++)
-    //    {
-    //        float average = 0;
-    //        int sampleCount = (int)Mathf.Pow(2, i) * 2;
-
-    //        if (i == 7)
-    //        {
-    //            sampleCount += 2;
-    //        }
-
-    //        for (int j = 0; j < sampleCount; j++)
-    //        {
-    //            average += samples[count] * (count + 1);
-    //            count++;
-    //        }
-
-    //        average /= count;
-    //        frequencyBand[i] = average * 10;
-    //    }
-    //}
 }
