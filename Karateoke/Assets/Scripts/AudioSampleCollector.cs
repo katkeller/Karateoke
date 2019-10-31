@@ -48,8 +48,8 @@ public class AudioSampleCollector : MonoBehaviour
     public static float[] audioBand = new float[8];
     public static float[] audioBandBuffer = new float[8];
 
-    private int indexOfHighestValue;
-    private float highestValue;
+    public static int indexOfHighestValue;
+    public static float highestValue;
 
     private float[] samples = new float[2048];
 
@@ -113,7 +113,6 @@ public class AudioSampleCollector : MonoBehaviour
 
     private void ChangePitchIndicator()
     {
-
         //element 6 contains 82 hz, which is the lowest note in the human vocal range.
         //element 97 contains 1047 hz, which is the highest note in the human vocal range.
         if(indexOfHighestValue > 6 && indexOfHighestValue < 97)
@@ -122,7 +121,7 @@ public class AudioSampleCollector : MonoBehaviour
             {
                 Transform startingPosition = pitchIndicator.transform;
 
-                Vector3 endingVector3 = new Vector3(0, (indexOfHighestValue / dividingValue) + startingYPosition, 0);
+                Vector3 endingVector3 = new Vector3(startingPosition.position.x, (indexOfHighestValue / dividingValue) + startingYPosition, startingPosition.position.z);
 
                 pitchIndicator.transform.localPosition = Vector3.Lerp(startingPosition.position, endingVector3, timeToMove);
                 //pitchIndicator.transform.localPosition = new Vector3(transform.localPosition.x, (indexOfHighestValue/dividingValue) + startingYPosition, transform.localPosition.z);
