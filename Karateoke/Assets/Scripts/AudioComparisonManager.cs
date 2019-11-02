@@ -16,6 +16,7 @@ public class AudioComparisonManager : MonoBehaviour
     private bool atEndOfPhrase;
     private float differenceBetweenPlayer1AndSource = 0.0f;
     private int player1Index, sourceIndex;
+    private float player1HighestValue, sourceHighestValue;
 
     private float player1Score = 0.0f, player2Score = 0.0f;
 
@@ -44,7 +45,9 @@ public class AudioComparisonManager : MonoBehaviour
     private void RecordSampleValues()
     {
         player1Index = player1AudioSampleCollector.indexOfHighestValue;
+        player1HighestValue = player1AudioSampleCollector.highestValue;
         sourceIndex = sourceAudioSampleCollector.indexOfHighestValue;
+        sourceHighestValue = sourceAudioSampleCollector.highestValue;
 
         differenceBetweenPlayer1AndSource = Math.Abs(sourceIndex - player1Index);
 
@@ -53,7 +56,11 @@ public class AudioComparisonManager : MonoBehaviour
 
     private void UpdateText()
     {
-        player1ScoreText.text = $"Player 1: {player1Score}";
+        if (player1HighestValue > 0.02f)
+        {
+            player1ScoreText.text = $"Player 1: {player1Score}";
+        }
+
         player1DifferenceText.text = $"Difference between player 1 and source: {differenceBetweenPlayer1AndSource}";
     }
 }
