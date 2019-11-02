@@ -48,8 +48,8 @@ public class AudioSampleCollector : MonoBehaviour
     public static float[] audioBand = new float[8];
     public static float[] audioBandBuffer = new float[8];
 
-    public static int indexOfHighestValue;
-    public static float highestValue;
+    public int indexOfHighestValue;
+    public float highestValue;
 
     private float[] samples = new float[2048];
 
