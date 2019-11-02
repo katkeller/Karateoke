@@ -3,25 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Linq;
 
 public class AudioComparisonManager : MonoBehaviour
 {
-    //[SerializeField]
-    //private GameObject player1AudioSampleObject, player2AudioSampleObject, sourceAudioSampleObject;
-
     [SerializeField]
     private GameObject[] audioSampleObject = new GameObject[3];
 
     [SerializeField]
-    private TextMeshProUGUI player1ScoreText, player2ScoreText, player1DifferenceText, player2DifferenceText;
+    private TextMeshProUGUI player1ScoreText, player2ScoreText, player1DifferenceText, player2DifferenceText, timeText, winnerText;
 
     [SerializeField]
-    private float[] phraseEndTimes = new float[4];
+    private List<int> phraseEndTimes = new List<int>();
 
-    //private AudioSampleCollector player1AudioSampleCollector, player2AudioSampleCollector, sourceAudioSampleCollector;
-    //private float differenceBetweenPlayer1AndSource = 0.0f, differenceBetweenPLayer2AndSource = 0.0f;
-    //private int player1Index, player2Index, sourceIndex;
-    //private float player1HighestValue, player2HighestValue, sourceHighestValue;
+    [SerializeField]
+    private float secondsWinnerTextOnScreen = 1.5f;
 
     private AudioSampleCollector[] audioSampleCollector = new AudioSampleCollector[3];
     private int[] index = new int[3];
@@ -32,52 +28,66 @@ public class AudioComparisonManager : MonoBehaviour
     private bool atEndOfPhrase;
     private bool recordingValues;
 
+    private float timeElapsed;
+
     private void Awake()
     {
-
-        //player1AudioSampleCollector = player1AudioSampleObject.GetComponent<AudioSampleCollector>();
-        //player2AudioSampleCollector = player2AudioSampleObject.GetComponent<AudioSampleCollector>();
-        //sourceAudioSampleCollector = sourceAudioSampleObject.GetComponent<AudioSampleCollector>();
-
         for (int i = 0; i < 3; i++)
         {
             audioSampleCollector[i] = audioSampleObject[i].GetComponent<AudioSampleCollector>();
         }
-    }
 
-    void Start()
-    {
-        highestValue[0] = audioSampleCollector[0].highestValue;
-        recordingValues = true;
+        winnerText.text = "";
     }
 
     void Update()
     {
-        //if (sourceHighestValue < 0.1f)
-        //    recordingValues = false;
-        //else
-        //    recordingValues = true;
+        UpdateTime();
 
-        //if (!atEndOfPhrase && recordingValues)
-        //{
-        //    RecordSampleValues();
-        //    UpdateText();
-        //}
+        atEndOfPhrase |= phraseEndTimes.Contains((int)timeElapsed);
 
-        //if (highestValue[0] < 0.1f)
-        //    recordingValues = false;
-        //else
-        //    recordingValues = true;
-
-        if (!atEndOfPhrase && recordingValues)
+        if (!atEndOfPhrase)
         {
             for (int e = 0; e < audioSampleCollector.Length; e++)
             {
                 RecordSampleValues(e);
             }
+
+            UpdateText();
+        }
+        else if (atEndOfPhrase)
+        {
+            DecideWinner();
+        }
+    }
+
+    private void DecideWinner()
+    {
+        if (playerScore[0] < playerScore[1])
+        {
+            StartCoroutine(DisplayWinnerText("Player 1"));
+        }
+        else if (playerScore[0] > playerScore[1])
+        {
+            StartCoroutine(DisplayWinnerText("Player 2"));
         }
 
-        UpdateText();
+        playerScore[0] = 0.0f;
+        playerScore[1] = 0.0f;
+        atEndOfPhrase = false;
+    }
+
+    IEnumerator DisplayWinnerText(string winner)
+    {
+        winnerText.text = $"{winner} wins!";
+        yield return new WaitForSeconds(secondsWinnerTextOnScreen);
+        winnerText.text = "";
+    }
+
+    private void UpdateTime()
+    {
+        timeElapsed += Time.deltaTime;
+        timeText.text = timeElapsed.ToString("F1");
     }
 
     private void RecordSampleValues(int e)
@@ -91,19 +101,8 @@ public class AudioComparisonManager : MonoBehaviour
             int playerSpecificIndex = e - 1;
             differenceBetweenPlayerAndSource[playerSpecificIndex] = Math.Abs(index[0] - index[e]);
             playerScore[playerSpecificIndex] += differenceBetweenPlayerAndSource[playerSpecificIndex];
-            Debug.Log($"Difference between player {e} and source: {differenceBetweenPlayerAndSource[playerSpecificIndex]}");
+            //Debug.Log($"Difference between player {e} and source: {differenceBetweenPlayerAndSource[playerSpecificIndex]}");
         }
-
-        //player1Index = player1AudioSampleCollector.indexOfHighestValue;
-        //player1HighestValue = player1AudioSampleCollector.highestValue;
-        //player2Index = player2AudioSampleCollector.indexOfHighestValue;
-
-        //sourceIndex = sourceAudioSampleCollector.indexOfHighestValue;
-        //sourceHighestValue = sourceAudioSampleCollector.highestValue;
-
-        //differenceBetweenPlayer1AndSource = Math.Abs(sourceIndex - player1Index);
-
-        //player1Score += differenceBetweenPlayer1AndSource;
     }
 
     private void UpdateText()
@@ -111,19 +110,18 @@ public class AudioComparisonManager : MonoBehaviour
         if (highestValue[1] > 0.02f)
         {
             player1ScoreText.text = $"Player 1 Score:\n{playerScore[0]}";
-            Debug.Log($"Player 1 score is {playerScore[0]}");
+            //Debug.Log($"Player 1 score is {playerScore[0]}");
         }
 
         if (highestValue[2] > 0.01f)
-            player2ScoreText.text = $"PLayer 2 Score:\n{playerScore[1]}";
+            player2ScoreText.text = $"Player 2 Score:\n{playerScore[1]}";
 
         player1DifferenceText.text = $"Difference between player 1 and source:\n{differenceBetweenPlayerAndSource[0]}";
         player2DifferenceText.text = $"Difference between player 2 and source:\n{differenceBetweenPlayerAndSource[1]}";
-        //if (player1HighestValue > 0.02f)
-        //{
-        //    player1ScoreText.text = $"Player 1: {player1Score}";
-        //}
 
-            //player1DifferenceText.text = $"Difference between player 1 and source: {differenceBetweenPlayer1AndSource}";
+        //if (highestValue[0] > 0.01f)
+        //    recordingValues = true;
+        //else
+        //    recordingValues = false;
     }
 }
