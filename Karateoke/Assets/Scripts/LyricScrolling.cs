@@ -10,9 +10,6 @@ public class LyricScrolling : MonoBehaviour
     private GameObject wordPrefab;
 
     [SerializeField]
-    private Vector3 spawningPosition;
-
-    [SerializeField]
     private TextMeshProUGUI timerText;
 
     [TextArea(5, 10)]
@@ -20,21 +17,16 @@ public class LyricScrolling : MonoBehaviour
     private string fullLyrics;
 
     [SerializeField]
-    private float[] wordTimes = new float[14];
+    private float[] wordTimes = new float[298];
 
     [SerializeField]
-    private float scrollTimeBuffer = 4.0f;
+    private float spacingMultiplier = 4.0f, spacingSubtraction = 60.0f, speedMultiplier = 4.0f;
 
-    //private List<string> splitLyrics = new List<string>();
     private string[] splitLyrics = new string[298];
-    private string[] wordTimeStrings = new string[14];
-    //private List<float> wordTimesList = new List<float>();
-    private List<string> wordTimesList = new List<string>();
 
     private float timeElapsed;
-    private bool spawnWord;
-    private int indexOfWordToSpawn;
     private TextMeshPro text;
+    private Vector3 scrollingTarget;
     private AudioSource audioSource;
 
     private void Awake()
@@ -45,16 +37,19 @@ public class LyricScrolling : MonoBehaviour
     void Start()
     {
         splitLyrics = fullLyrics.Split(' ');
-        //splitLyrics = splitLyricsArray.OfType<string>().ToList();
 
         for (int i = 0; i < wordTimes.Length; i++)
         {
-            wordTimes[i] -= scrollTimeBuffer;
-            wordTimeStrings[i] = wordTimes[i].ToString("F4");
+            wordTimes[i] = ((wordTimes[i] - 1.0f) * spacingMultiplier) - spacingSubtraction;
+            GameObject a = Instantiate(wordPrefab) as GameObject;
+            text = a.GetComponent<TextMeshPro>();
+            text.text = splitLyrics[i];
+            a.transform.position = new Vector3(wordTimes[i], -3.5f, 0);
+            a.transform.SetParent(this.transform);
         }
 
-        //wordTimesList = wordTimes.OfType<float>().ToList();
-        wordTimesList = wordTimeStrings.OfType<string>().ToList();
+        scrollingTarget = new Vector3(-(transform.position.x * spacingMultiplier) - 1000, transform.position.y, transform.position.z);
+        Debug.Log($"scrolling target: {scrollingTarget}");
 
         audioSource.Play();
     }
@@ -62,19 +57,8 @@ public class LyricScrolling : MonoBehaviour
     void Update()
     {
         timeElapsed += Time.deltaTime;
-        timerText.text = timeElapsed.ToString("F4");
+        timerText.text = timeElapsed.ToString("F2");
 
-        spawnWord |= wordTimesList.Contains(timeElapsed.ToString("F4"));
-
-        if (spawnWord)
-        {
-            Debug.Log($"{splitLyrics[indexOfWordToSpawn]} should spawn");
-
-            GameObject a = Instantiate(wordPrefab) as GameObject;
-            a.transform.position = new Vector3(spawningPosition.x, spawningPosition.y, spawningPosition.z);
-            text = a.GetComponent<TextMeshPro>();
-            text.text = splitLyrics[indexOfWordToSpawn];
-            indexOfWordToSpawn++;
-        }
+        transform.position = Vector3.MoveTowards(transform.position, scrollingTarget, Time.deltaTime * speedMultiplier);
     }
 }
