@@ -115,7 +115,10 @@ public class AudioSampleCollector : MonoBehaviour
     {
         //element 6 contains 82 hz, which is the lowest note in the human vocal range.
         //element 97 contains 1047 hz, which is the highest note in the human vocal range.
-        if(indexOfHighestValue > 6 && indexOfHighestValue < 97)
+
+        //Kat: I changed 97 to 96 because #1, whose voice actually goes that high,
+        // and #2, it makes it much easier to calculate word height for the lyrics.
+        if(indexOfHighestValue > 6 && indexOfHighestValue < 96)
         {
             if(highestValue > 0.01f)
             {
