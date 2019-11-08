@@ -71,8 +71,9 @@ public class LyricHeight : MonoBehaviour
     public void BeginPrinting()
     {
         timeElapsed = 0;
-        //audioSource.Play();
-        StartCoroutine(DelayAudio());
+        audioSource.Play();
+        isPlaying = true;
+        //StartCoroutine(DelayAudio());
     }
 
     IEnumerator DelayAudio()
