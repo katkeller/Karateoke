@@ -7,7 +7,7 @@ using System.Linq;
 public class LyricHeight : MonoBehaviour
 {
     [SerializeField]
-    private TextMeshProUGUI timerText;
+    private TextMeshProUGUI lyricText, timerText;
 
     [SerializeField]
     private TMP_InputField inputField;
@@ -15,15 +15,16 @@ public class LyricHeight : MonoBehaviour
     [SerializeField]
     private float delay = 18f;
 
-    //[TextArea(5, 10)]
-    //[SerializeField]
-    //private string fullLyrics;
+    [TextArea(5, 10)]
+    [SerializeField]
+    private string fullLyrics;
 
     [TextArea(5, 10)]
     [SerializeField]
     private string wordTimeString;
 
     private int indexOfHighestValue;
+    private int indexToPrint;
     private float highestValue;
     private float[] samples = new float[2048];
     private float timeElapsed;
@@ -41,7 +42,7 @@ public class LyricHeight : MonoBehaviour
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        //splitLyrics = fullLyrics.Split(' ');
+        splitLyrics = fullLyrics.Split(' ');
         splitWordTimeString = wordTimeString.Split(' ');
 
         for (int i = 0; i < splitWordTimeString.Length; i++)
@@ -92,12 +93,17 @@ public class LyricHeight : MonoBehaviour
     {
         highestValue = samples.Max();
         indexOfHighestValue = samples.ToList().IndexOf(highestValue);
+        if (indexOfHighestValue > 6 && indexOfHighestValue < 96)
+        {
+            indexToPrint = indexOfHighestValue;
+        }
     }
 
     private void PrintWordHeight()
     {
-        outputText = outputText + $"{indexOfHighestValue} ";
+        outputText = outputText + $"{indexToPrint} ";
         inputField.text = outputText;
+        lyricText.text = splitLyrics[indexOfNextWordTime];
         indexOfNextWordTime++;
     }
 }

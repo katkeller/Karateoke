@@ -775,9 +775,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e93b82fb7c5b1da449f4f7c8b7d45a28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lyricText: {fileID: 833770429}
   timerText: {fileID: 2144335042}
   inputField: {fileID: 1179458702}
-  delay: 18.5
+  delay: 18
+  fullLyrics: Breaking my back just to know your name Seventeen tracks and I've had
+    it with this game I'm breaking my back just to know your name But heaven ain't
+    close in a place like this Anything goes but don't blink, you might miss Cause
+    heaven ain't close in a place like this I said heaven ain't close in a place like
+    this Bring it back down, bring it back down tonight Never thought I'd let a rumor
+    ruin my moonlight Well, somebody told me you had a boyfriend Who looked like a
+    girlfriend That I had in February of last year It's not confidential I've got
+    potential Ready, let's roll onto something new Taking its toll, and I'm leaving
+    without you Cause heaven ain't close in a place like this I said heaven ain't
+    close in a place like this Bring it back down, bring it back down tonight Never
+    thought I'd let a rumor ruin my moonlight Well, somebody told me you had a boyfriend
+    Who looked like a girlfriend That I had in February of last year It's not confidential
+    I've got potential Rushing, rushing around Pace yourself for me I said maybe,
+    baby please But I just don't know now When all I wanna do is try Well somebody
+    told me you had a boyfriend Who looked like a girlfriend That I had in February
+    of last year It's not confidential I've got potential Rushing, rushing around
+    Somebody told me you had a boyfriend Who looked like a girlfriend That I had in
+    February of last year It's not confidential I've got potential Rushing, rushing
+    around Somebody told me you had a boyfriend Who looked like a girlfriend That
+    I had in February of last year It's not confidential I've got potential Rushing,
+    rushing around END
   wordTimeString: 21.40095 21.82994 22.28894 22.72996 22.96796 23.21295 23.62594 23.90595
     24.91396 25.83894 26.23796 26.48995 26.71393 27.05694 27.36495 27.69395 28.13695
     31.6689 31.96992 32.28593 32.72091 33.17693 33.39491 33.61891 33.9489 34.2929
