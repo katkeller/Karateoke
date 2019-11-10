@@ -24,7 +24,7 @@ public class AudioComparisonManager : MonoBehaviour
     private float[] highestValue = new float[3];
 
     private float[] differenceBetweenPlayerAndSource = new float[2];
-    private float[] playerScore = new float[2];
+    public static float[] playerScore = new float[2];
     private bool atEndOfPhrase;
     private bool recordingValues;
 
