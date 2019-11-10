@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7272103301964027055}
   - component: {fileID: 7474643921620797158}
   - component: {fileID: 7166403546710456675}
+  - component: {fileID: 3373315201417607713}
   m_Layer: 0
   m_Name: LyricTextPrefab
   m_TagString: Untagged
@@ -57,7 +58,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  - {fileID: 4986210537617741402, guid: b8c1f1e5466b9ae4fb10339d308d7abe, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -84,13 +85,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3141307221796596484}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ffde542c471e23147a0c6f6d12c60d5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lerpTime: 4
-  endingLocation: {x: -11.5, y: -4, z: 0}
+  activatedColor:
+    serializedVersion: 2
+    rgba: 4294967128
 --- !u!33 &7272103301964027055
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -129,8 +131,9 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: Sample text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b8c1f1e5466b9ae4fb10339d308d7abe, type: 2}
+  m_sharedMaterial: {fileID: 4986210537617741402, guid: b8c1f1e5466b9ae4fb10339d308d7abe,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -219,3 +222,29 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   m_maskType: 0
+--- !u!61 &3373315201417607713
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3141307221796596484}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.13943481, y: 0.00854677}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.27886963, y: 0.47350705}
+  m_EdgeRadius: 0

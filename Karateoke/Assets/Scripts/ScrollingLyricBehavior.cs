@@ -1,33 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class ScrollingLyricBehavior : MonoBehaviour
 {
     [SerializeField]
-    private float lerpTime = 4.0f;
+    private Color32 activatedColor;
 
-    [SerializeField]
-    private Vector3 endingLocation;
-
-    private Vector3 startingLocation;
-    private float currentLerpTime;
+    private TextMeshPro text;
 
     private void Start()
     {
-        startingLocation = this.transform.position;
+        text = GetComponent<TextMeshPro>();
     }
 
-    private void Update()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        currentLerpTime += Time.deltaTime;
-
-        if (currentLerpTime >= lerpTime)
+        if (collision.CompareTag("LyricLine"))
         {
-            Destroy(this.gameObject);
+            text.color = activatedColor;
         }
-
-        float percentage = currentLerpTime / lerpTime;
-        this.transform.position = Vector3.Lerp(startingLocation, endingLocation, percentage);
     }
 }
