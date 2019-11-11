@@ -28,15 +28,20 @@ public class AudioSampleCollector : MonoBehaviour
     [SerializeField]
     private GameObject pitchIndicator;
 
+    [Tooltip("If this is the source, uncheck since the source should not use a pitch indicator.")]
     [SerializeField]
-    private TextMeshProUGUI rangeText;
+    private bool usePitchIndicator;
 
-    [SerializeField]
-    private float startingYPosition = 0.25f;
+    //[SerializeField]
+    //private TextMeshProUGUI rangeText;
 
-    [SerializeField]
-    private float dividingValue = 20;
+    //[SerializeField]
+    //private float startingYPosition = 0.25f;
 
+    //[SerializeField]
+    //private float dividingValue = 20;
+
+    [Tooltip("This value is used to multiply the highest value to get the pitch indicator's alpha so that it's visible when the player is singing.")]
     [SerializeField]
     private float alphaMultiplier = 100.0f;
 
@@ -47,6 +52,7 @@ public class AudioSampleCollector : MonoBehaviour
 
     public static float[] audioBand = new float[8];
     public static float[] audioBandBuffer = new float[8];
+    private float pitchIndicatorHeight;
 
     public int indexOfHighestValue;
     public float highestValue;
@@ -87,17 +93,12 @@ public class AudioSampleCollector : MonoBehaviour
     {
         GetSpectrumAudioSource();
         GetRelevantFrequency();
-        ChangePitchIndicator();
-        SetPitchIndicatorAlpha();
-    }
 
-    private void SetPitchIndicatorAlpha()
-    {
-        float alpha = highestValue * alphaMultiplier;
-
-        Color color = pitchIndicator.GetComponent<SpriteRenderer>().color;
-        color.a = alpha;
-        pitchIndicator.GetComponent<SpriteRenderer>().color = color;
+        if (usePitchIndicator)
+        {
+            ChangePitchIndicator();
+            SetPitchIndicatorAlpha();
+        }
     }
 
     private void GetSpectrumAudioSource()
@@ -123,15 +124,25 @@ public class AudioSampleCollector : MonoBehaviour
             if(highestValue > 0.01f)
             {
                 Transform startingPosition = pitchIndicator.transform;
+                pitchIndicatorHeight = ((indexOfHighestValue - 6) * 0.04f) - 4.6f;
 
-                Vector3 endingVector3 = new Vector3(startingPosition.position.x, (indexOfHighestValue / dividingValue) + startingYPosition, startingPosition.position.z);
+                //Vector3 endingVector3 = new Vector3(startingPosition.position.x, (indexOfHighestValue / dividingValue) + startingYPosition, startingPosition.position.z);
+                Vector3 endingVector3 = new Vector3(startingPosition.position.x, pitchIndicatorHeight, startingPosition.position.z);
 
                 pitchIndicator.transform.localPosition = Vector3.Lerp(startingPosition.position, endingVector3, timeToMove);
-                //pitchIndicator.transform.localPosition = new Vector3(transform.localPosition.x, (indexOfHighestValue/dividingValue) + startingYPosition, transform.localPosition.z);
             }
 
-            rangeText.text = highestValue.ToString();
+            //rangeText.text = highestValue.ToString();
         }
 
+    }
+
+    private void SetPitchIndicatorAlpha()
+    {
+        float alpha = highestValue * alphaMultiplier;
+
+        Color color = pitchIndicator.GetComponent<SpriteRenderer>().color;
+        color.a = alpha;
+        pitchIndicator.GetComponent<SpriteRenderer>().color = color;
     }
 }

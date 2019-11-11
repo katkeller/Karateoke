@@ -9,8 +9,8 @@ public class LyricScrolling : MonoBehaviour
     [SerializeField]
     private GameObject wordPrefab;
 
-    [SerializeField]
-    private TextMeshProUGUI timerText;
+    //[SerializeField]
+    //private TextMeshProUGUI timerText;
 
     [TextArea(5, 10)]
     [SerializeField]
@@ -40,11 +40,12 @@ public class LyricScrolling : MonoBehaviour
     private float timeElapsed;
     private TextMeshPro text;
     private Vector3 scrollingTarget;
-    private AudioSource audioSource;
+    private bool shouldScroll;
+    //private AudioSource audioSource;
 
     private void Awake()
     {
-        audioSource = GetComponent<AudioSource>();
+        //audioSource = GetComponent<AudioSource>();
     }
 
     void Start()
@@ -70,14 +71,22 @@ public class LyricScrolling : MonoBehaviour
 
         scrollingTarget = new Vector3(-(transform.position.x * spacingMultiplier) - 1000, transform.position.y, transform.position.z);
 
-        audioSource.Play();
+        //audioSource.Play();
     }
 
     void Update()
     {
-        timeElapsed += Time.deltaTime;
-        timerText.text = timeElapsed.ToString("F2");
+        if (shouldScroll)
+        {
+            timeElapsed += Time.deltaTime;
+            //timerText.text = timeElapsed.ToString("F2");
 
-        transform.position = Vector3.MoveTowards(transform.position, scrollingTarget, Time.deltaTime * speedMultiplier);
+            transform.position = Vector3.MoveTowards(transform.position, scrollingTarget, Time.deltaTime * speedMultiplier);
+        }
+    }
+
+    public void StartScrolling()
+    {
+        shouldScroll = true;
     }
 }

@@ -7,6 +7,7 @@ using System.Linq;
 
 public class AudioComparisonManager : MonoBehaviour
 {
+    [Tooltip("Element zero should be the vocal source, one should be Player 1, and two should be Player 2.")]
     [SerializeField]
     private GameObject[] audioSampleObject = new GameObject[3];
 
@@ -94,14 +95,12 @@ public class AudioComparisonManager : MonoBehaviour
     {
         index[e] = audioSampleCollector[e].indexOfHighestValue;
         highestValue[e] = audioSampleCollector[e].highestValue;
-        //Debug.Log($"Highest Value of audio sample collector {e}: {highestValue[e]}");
 
         if (e > 0)
         {
             int playerSpecificIndex = e - 1;
             differenceBetweenPlayerAndSource[playerSpecificIndex] = Math.Abs(index[0] - index[e]);
             playerScore[playerSpecificIndex] += differenceBetweenPlayerAndSource[playerSpecificIndex];
-            //Debug.Log($"Difference between player {e} and source: {differenceBetweenPlayerAndSource[playerSpecificIndex]}");
         }
     }
 
