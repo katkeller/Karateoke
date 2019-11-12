@@ -19,7 +19,7 @@ public class AudioSampleCollector : MonoBehaviour
     private AudioClip clipToPlayIfNoMicrophone;
 
     [SerializeField]
-    private AudioMixerGroup microphone1MixerGroup, masterMixerGroup;
+    private AudioMixerGroup microphone1MixerGroup, masterMixerGroup, sourceMixerGroup;
 
     public string selectedMicrophoneDevice;
 
@@ -28,9 +28,9 @@ public class AudioSampleCollector : MonoBehaviour
     [SerializeField]
     private GameObject pitchIndicator;
 
-    [Tooltip("If this is the source, uncheck since the source should not use a pitch indicator.")]
+    [Tooltip("The source will use a seperate mixing group and will not use a pitch indicator.")]
     [SerializeField]
-    private bool usePitchIndicator;
+    private bool isSource;
 
     //[SerializeField]
     //private TextMeshProUGUI rangeText;
@@ -63,7 +63,7 @@ public class AudioSampleCollector : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
 
-        if (useMicrophone)
+        if (useMicrophone && !isSource)
         {
             if (Microphone.devices.Length > 0)
             {
@@ -82,11 +82,20 @@ public class AudioSampleCollector : MonoBehaviour
                 //TODO: Add user facing error popup
             }
         }
-        else
+        else if (!isSource)
         {
             audioSource.outputAudioMixerGroup = masterMixerGroup;
-            audioSource.PlayOneShot(clipToPlayIfNoMicrophone);
+            //audioSource.PlayOneShot(clipToPlayIfNoMicrophone);
         }
+        else
+        {
+            audioSource.outputAudioMixerGroup = sourceMixerGroup;
+        }
+    }
+
+    public void StartMusic()
+    {
+        audioSource.PlayOneShot(clipToPlayIfNoMicrophone);
     }
 
     void Update()
@@ -94,7 +103,7 @@ public class AudioSampleCollector : MonoBehaviour
         GetSpectrumAudioSource();
         GetRelevantFrequency();
 
-        if (usePitchIndicator)
+        if (!isSource)
         {
             ChangePitchIndicator();
             SetPitchIndicatorAlpha();

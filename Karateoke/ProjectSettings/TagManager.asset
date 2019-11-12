@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - LyricLine
+  - TrailTrigger
   layers:
   - Default
   - TransparentFX

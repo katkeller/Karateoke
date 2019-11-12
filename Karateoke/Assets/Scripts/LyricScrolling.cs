@@ -69,7 +69,7 @@ public class LyricScrolling : MonoBehaviour
             a.transform.SetParent(this.transform);
         }
 
-        scrollingTarget = new Vector3(-(transform.position.x * spacingMultiplier) - 1000, transform.position.y, transform.position.z);
+        scrollingTarget = new Vector3(-(transform.position.x * spacingMultiplier) - 1500, transform.position.y, transform.position.z);
 
         //audioSource.Play();
     }
