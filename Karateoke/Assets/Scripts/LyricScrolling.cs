@@ -24,6 +24,12 @@ public class LyricScrolling : MonoBehaviour
     private string wordHeights;
 
     [SerializeField]
+    private int[] indexesOfPhraseEndLyrics = new int[44];
+
+    [SerializeField]
+    private Color32 phraseEndColor;
+
+    [SerializeField]
     private float spacingMultiplier = 4.0f, spacingSubtraction = 60.0f, speedMultiplier = 4.0f;
 
     //this value is 0.0333 because we have 90 samples to put into a 3 unit range, so 3 / 90 = 0.0333
@@ -67,6 +73,18 @@ public class LyricScrolling : MonoBehaviour
             text.text = splitLyrics[i];
             a.transform.position = new Vector3(wordTimes[i], wordHeightFloats[i], 0);
             a.transform.SetParent(this.transform);
+
+            foreach (int element in indexesOfPhraseEndLyrics)
+            {
+                if (i == element)
+                {
+                    a.tag = "PhraseEnd";
+                    text.color = phraseEndColor;
+                    //does this work?
+                }
+            }
+
+            //have to add tag setting for words that are end of phrase triggers
         }
 
         scrollingTarget = new Vector3(-(transform.position.x * spacingMultiplier) - 1500, transform.position.y, transform.position.z);

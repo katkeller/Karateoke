@@ -68,8 +68,22 @@ public class CombatManager : MonoBehaviour
                 player2HasMadeChoice = true;
             }
         }
+    }
 
+    private void OnEndOfPhrase()
+    {
+        StartCoroutine(AllowPlayersToMakeChoice());
+        Debug.Log("Phrase end has been triggered!");
+    }
 
+    private void OnEnable()
+    {
+        PhraseEndTrigger.EndOfPhrase += OnEndOfPhrase;
+    }
+
+    private void OnDisable()
+    {
+        PhraseEndTrigger.EndOfPhrase -= OnEndOfPhrase;
     }
 
     IEnumerator AllowPlayersToMakeChoice()

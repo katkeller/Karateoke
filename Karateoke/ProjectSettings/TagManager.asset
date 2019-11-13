@@ -6,6 +6,7 @@ TagManager:
   tags:
   - LyricLine
   - TrailTrigger
+  - PhraseEnd
   layers:
   - Default
   - TransparentFX
