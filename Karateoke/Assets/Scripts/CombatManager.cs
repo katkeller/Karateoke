@@ -7,16 +7,30 @@ using System;
 public class CombatManager : MonoBehaviour
 {
     [SerializeField]
-    private TextMeshProUGUI player1ActionText, player2ActionText;
+    private TextMeshProUGUI player1ActionText, player2ActionText, countdownText;
 
     [SerializeField]
     private float secondsForChoice = 3.0f;
+
+    [SerializeField]
+    private Color32 lastNumberColor;
+
+    [SerializeField]
+    private AudioClip countdownClipMain, countdownClipEnd;
+
+    [SerializeField]
+    private GameObject[] playerHealthBar = new GameObject[2];
+
+    [SerializeField]
+    private int baseAttackDamage = 5, baseParryDamage = 1;
 
     public int indexOfWinner { get; set; }
     public int indexOfLoser { get; set; }
 
     private int[] playerHealth = new int[2];
-    private int attackDamage = 10;
+
+    private Color32 countdownTextColor;
+    private AudioSource audioSource;
 
     private bool canMakeChoice;
     private bool player1HasMadeChoice, player2HasMadeChoice;
@@ -27,6 +41,10 @@ public class CombatManager : MonoBehaviour
     {
         playerHealth[0] = 100;
         playerHealth[1] = 100;
+        countdownText.text = "";
+        countdownTextColor = countdownText.color;
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -40,6 +58,10 @@ public class CombatManager : MonoBehaviour
                 player1ActionText.text = "Player 1 attacks!";
                 player1Choice = attack;
                 player1HasMadeChoice = true;
+
+                //for testing purposes:
+
+                TransformHealthBar(playerHealthBar[1], 0.4f);
             }
             if (Input.GetButtonDown("Player1Block") && !player1HasMadeChoice)
             {
@@ -94,9 +116,23 @@ public class CombatManager : MonoBehaviour
         player2Choice = " ";
         canMakeChoice = true;
 
-        //Add UI prompt for making choice here, like a countdown
-
-        yield return new WaitForSeconds(secondsForChoice);
+        yield return new WaitForSeconds(1);
+        countdownText.text = "3";
+        audioSource.PlayOneShot(countdownClipMain);
+        yield return new WaitForSeconds(1);
+        countdownText.text = "2";
+        audioSource.PlayOneShot(countdownClipMain);
+        yield return new WaitForSeconds(1);
+        countdownText.text = "1";
+        audioSource.PlayOneShot(countdownClipMain);
+        yield return new WaitForSeconds(1);
+        countdownText.color = lastNumberColor;
+        countdownText.text = "0";
+        audioSource.PlayOneShot(countdownClipEnd);
+        yield return new WaitForSeconds(1);
+        countdownText.text = "";
+        countdownText.color = countdownTextColor;
+        //yield return new WaitForSeconds(secondsForChoice);
         canMakeChoice = false;
 
         DecideOnDamage();
@@ -106,7 +142,7 @@ public class CombatManager : MonoBehaviour
     {
         if (player1Choice == attack && player2Choice == attack)
         {
-            playerHealth[indexOfLoser] -= attackDamage;
+            playerHealth[indexOfLoser] -= baseAttackDamage;
             //Come back to all this to add actual values
         }
         else if (player1Choice == attack && player2Choice == block)
@@ -120,7 +156,7 @@ public class CombatManager : MonoBehaviour
         }
         else if (player1Choice == block && player2Choice == attack)
         {
-            playerHealth[indexOfLoser] -= attackDamage;
+            playerHealth[indexOfLoser] -= baseAttackDamage;
         }
         else if (player1Choice == block && player2Choice == block)
         {
@@ -147,5 +183,10 @@ public class CombatManager : MonoBehaviour
             //This means someone didn't choose, so we have to figure out how to deal with what the other person chose,
             //or what to do if they also chose nothing
         }
+    }
+
+    private void TransformHealthBar(GameObject bar, float sizeNormalized)
+    {
+        bar.transform.localScale = new Vector3(sizeNormalized, 1.0f);
     }
 }
