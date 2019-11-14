@@ -16,7 +16,7 @@ public class CombatManager : MonoBehaviour
     private Color32 lastNumberColor;
 
     [SerializeField]
-    private AudioClip countdownClipMain, countdownClipEnd;
+    private AudioClip[] countdownClip = new AudioClip[4];
 
     [SerializeField]
     private GameObject[] playerHealthBar = new GameObject[2];
@@ -118,17 +118,17 @@ public class CombatManager : MonoBehaviour
 
         yield return new WaitForSeconds(1);
         countdownText.text = "3";
-        audioSource.PlayOneShot(countdownClipMain);
+        audioSource.PlayOneShot(countdownClip[0]);
         yield return new WaitForSeconds(1);
         countdownText.text = "2";
-        audioSource.PlayOneShot(countdownClipMain);
+        audioSource.PlayOneShot(countdownClip[1]);
         yield return new WaitForSeconds(1);
         countdownText.text = "1";
-        audioSource.PlayOneShot(countdownClipMain);
+        audioSource.PlayOneShot(countdownClip[2]);
         yield return new WaitForSeconds(1);
         countdownText.color = lastNumberColor;
         countdownText.text = "0";
-        audioSource.PlayOneShot(countdownClipEnd);
+        audioSource.PlayOneShot(countdownClip[3]);
         yield return new WaitForSeconds(1);
         countdownText.text = "";
         countdownText.color = countdownTextColor;

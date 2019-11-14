@@ -1392,8 +1392,11 @@ MonoBehaviour:
   lastNumberColor:
     serializedVersion: 2
     rgba: 4283433181
-  countdownClipMain: {fileID: 8300000, guid: c583175e67840429db956152b45de0bd, type: 3}
-  countdownClipEnd: {fileID: 8300000, guid: 0d972c88fe9f446a2a02b6b7c5a0cdb1, type: 3}
+  countdownClip:
+  - {fileID: 8300000, guid: 8aa9188fd2e124482a312f4a7b15ed80, type: 3}
+  - {fileID: 8300000, guid: 16271059f486e4da488bb6070bfb51b6, type: 3}
+  - {fileID: 8300000, guid: 57622051490454137b4866b8dd1a1e30, type: 3}
+  - {fileID: 8300000, guid: 2256887f543454d73ace99002ee3947b, type: 3}
   playerHealthBar:
   - {fileID: 1967843827}
   - {fileID: 1474159325}
@@ -1411,7 +1414,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.655
   m_Pitch: 1
   Loop: 0
   Mute: 0
