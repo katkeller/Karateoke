@@ -19,7 +19,10 @@ public class CombatManager : MonoBehaviour
     private AudioClip[] countdownClip = new AudioClip[4];
 
     [SerializeField]
-    private GameObject[] playerHealthBar = new GameObject[2];
+    private GameObject[] playerHealthBarGameObject = new GameObject[2];
+
+    [SerializeField]
+    private int scalingFramesLeft = 10;
 
     [SerializeField]
     private float healthBarScaleRate = 2.0f, healthBarScaleSpeed = 2.0f;
@@ -34,6 +37,7 @@ public class CombatManager : MonoBehaviour
 
     private Color32 countdownTextColor;
     private AudioSource audioSource;
+    private HealthBar[] healthBar = new HealthBar[2];
 
     private bool canMakeChoice;
     private bool player1HasMadeChoice, player2HasMadeChoice;
@@ -46,6 +50,9 @@ public class CombatManager : MonoBehaviour
         playerHealth[1] = 100;
         countdownText.text = "";
         countdownTextColor = countdownText.color;
+
+        healthBar[0] = playerHealthBarGameObject[0].GetComponent<HealthBar>();
+        healthBar[1] = playerHealthBarGameObject[1].GetComponent<HealthBar>();
 
         audioSource = GetComponent<AudioSource>();
     }
@@ -63,9 +70,7 @@ public class CombatManager : MonoBehaviour
                 player1HasMadeChoice = true;
 
                 //for testing purposes:
-
-                //TransformHealthBar(playerHealthBar[1], 0.4f);
-                StartCoroutine(ScaleHealthBar(playerHealthBar[1], 0.4f));
+                healthBar[1].ScaleHealthBar(25);
             }
             if (Input.GetButtonDown("Player1Block") && !player1HasMadeChoice)
             {
@@ -186,26 +191,6 @@ public class CombatManager : MonoBehaviour
         {
             //This means someone didn't choose, so we have to figure out how to deal with what the other person chose,
             //or what to do if they also chose nothing
-        }
-    }
-
-    private void TransformHealthBar(GameObject bar, float sizeNormalized)
-    {
-        bar.transform.localScale = new Vector3(sizeNormalized, 1.0f);
-    }
-
-    IEnumerator ScaleHealthBar(GameObject bar, float newHealthValue)
-    {
-        Vector3 startingScale = bar.transform.localScale;
-        Vector3 newScale = new Vector3(newHealthValue, 1.0f);
-        float i = 0.0f;
-        float rateOfScale = (1.0f / healthBarScaleRate) * healthBarScaleSpeed;
-        
-        while (i > 1.0f)
-        {
-            i += Time.deltaTime * rateOfScale;
-            bar.transform.localScale = Vector3.Lerp(startingScale, newScale, i);
-            yield return null;
         }
     }
 }
