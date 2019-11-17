@@ -22,6 +22,9 @@ public class CombatManager : MonoBehaviour
     private GameObject[] playerHealthBar = new GameObject[2];
 
     [SerializeField]
+    private float healthBarScaleRate = 2.0f, healthBarScaleSpeed = 2.0f;
+
+    [SerializeField]
     private int baseAttackDamage = 5, baseParryDamage = 1;
 
     public int indexOfWinner { get; set; }
@@ -61,7 +64,8 @@ public class CombatManager : MonoBehaviour
 
                 //for testing purposes:
 
-                TransformHealthBar(playerHealthBar[1], 0.4f);
+                //TransformHealthBar(playerHealthBar[1], 0.4f);
+                StartCoroutine(ScaleHealthBar(playerHealthBar[1], 0.4f));
             }
             if (Input.GetButtonDown("Player1Block") && !player1HasMadeChoice)
             {
@@ -188,5 +192,20 @@ public class CombatManager : MonoBehaviour
     private void TransformHealthBar(GameObject bar, float sizeNormalized)
     {
         bar.transform.localScale = new Vector3(sizeNormalized, 1.0f);
+    }
+
+    IEnumerator ScaleHealthBar(GameObject bar, float newHealthValue)
+    {
+        Vector3 startingScale = bar.transform.localScale;
+        Vector3 newScale = new Vector3(newHealthValue, 1.0f);
+        float i = 0.0f;
+        float rateOfScale = (1.0f / healthBarScaleRate) * healthBarScaleSpeed;
+        
+        while (i > 1.0f)
+        {
+            i += Time.deltaTime * rateOfScale;
+            bar.transform.localScale = Vector3.Lerp(startingScale, newScale, i);
+            yield return null;
+        }
     }
 }
