@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
+using UnityEngine.UI;
 
 public class CombatManager : MonoBehaviour
 {
@@ -17,6 +18,12 @@ public class CombatManager : MonoBehaviour
 
     [SerializeField]
     private AudioClip[] countdownClip = new AudioClip[4];
+
+    [SerializeField]
+    private Image player1ActionImage, player2ActionImage;
+
+    [SerializeField]
+    private Sprite attackIcon, blockIcon, grappleIcon;
 
     [SerializeField]
     private GameObject[] playerHealthBarGameObject = new GameObject[2];
@@ -45,6 +52,7 @@ public class CombatManager : MonoBehaviour
     private int indexOfLastRoundWinner;
 
     private Color32 countdownTextColor;
+    private Sprite player1NextImage, player2NextImage;
     private AudioSource audioSource;
     private HealthBar[] healthBar = new HealthBar[2];
     private AudioComparisonManager audioComparisonSript;
@@ -64,6 +72,8 @@ public class CombatManager : MonoBehaviour
         playerStarPower[1] = 0;
         countdownText.text = "";
         countdownTextColor = countdownText.color;
+        player1ActionImage.enabled = false;
+        player2ActionImage.enabled = false;
 
         healthBar[0] = playerHealthBarGameObject[0].GetComponent<HealthBar>();
         healthBar[1] = playerHealthBarGameObject[1].GetComponent<HealthBar>();
@@ -74,6 +84,31 @@ public class CombatManager : MonoBehaviour
 
     void Update()
     {
+        //if (Input.GetButtonDown("Player1Attack"))
+        //{
+        //    Debug.Log("Player 1 Attacks!");
+        //}
+        //if (Input.GetButtonDown("Player1Block"))
+        //{
+        //    Debug.Log("Player 1 Blocks!");
+        //}
+        //if (Input.GetButtonDown("Player1Grapple"))
+        //{
+        //    Debug.Log("Player 1 Grapples!");
+        //}
+        //if (Input.GetButtonDown("Player2Attack"))
+        //{
+        //    Debug.Log("Player 2 Attacks!");
+        //}
+        //if (Input.GetButtonDown("Player2Block"))
+        //{
+        //    Debug.Log("Player 2 Blocks!");
+        //}
+        //if (Input.GetButtonDown("Player2Grapple"))
+        //{
+        //    Debug.Log("Player 2 Grapples!");
+        //}
+
         if (canMakeChoice)
         {
             //we should add a simple (but unique to each player) soundeffect for when they choose
@@ -83,6 +118,7 @@ public class CombatManager : MonoBehaviour
                 player1ActionText.text = "Player 1 attacks!";
                 player1Choice = attack;
                 player1HasMadeChoice = true;
+                player1NextImage = attackIcon;
 
                 //for testing purposes:
                 //healthBar[1].ScaleHealthBar(25);
@@ -92,30 +128,35 @@ public class CombatManager : MonoBehaviour
                 player1ActionText.text = "Player 1 blocks!";
                 player1Choice = block;
                 player1HasMadeChoice = true;
+                player1NextImage = blockIcon;
             }
             if (Input.GetButtonDown("Player1Grapple") && !player1HasMadeChoice)
             {
                 player1ActionText.text = "Player 1 grapples!";
                 player1Choice = grapple;
                 player1HasMadeChoice = true;
+                player1NextImage = grappleIcon;
             }
             if (Input.GetButtonDown("Player2Attack") && !player2HasMadeChoice)
             {
                 player2ActionText.text = "Player 2 attacks!";
                 player2Choice = attack;
                 player2HasMadeChoice = true;
+                player2NextImage = attackIcon;
             }
             if (Input.GetButtonDown("Player2Block") && !player2HasMadeChoice)
             {
                 player2ActionText.text = "Player 2 blocks!";
                 player2Choice = block;
                 player2HasMadeChoice = true;
+                player2NextImage = blockIcon;
             }
             if (Input.GetButtonDown("Player2Grapple") && !player2HasMadeChoice)
             {
                 player2ActionText.text = "Player 2 grapples!";
                 player2Choice = grapple;
                 player2HasMadeChoice = true;
+                player2NextImage = grappleIcon;
             }
         }
     }
@@ -157,14 +198,31 @@ public class CombatManager : MonoBehaviour
         canMakeChoice = true;
         countdownText.text = "CHOOSE!";
         audioSource.PlayOneShot(countdownClip[3]);
-        //Add choosing countdown graphic, maybe a bar or a round pie chart type thing
+        //Add choosing countdown graphic, maybe a bar or a round pie chart type thing?
         yield return new WaitForSeconds(1);
         DecideWinner?.Invoke();
         countdownText.text = "";
         countdownText.color = countdownTextColor;
         canMakeChoice = false;
 
+        UpdateActionImages();
         DecideOnDamage();
+    }
+
+    private void UpdateActionImages()
+    {
+        // We should add a small animation to these as a stretch goal
+
+        if (player1NextImage != null && player1HasMadeChoice)
+        {
+            player1ActionImage.sprite = player1NextImage;
+            player1ActionImage.enabled = true;
+        }
+        if (player2NextImage != null && player2HasMadeChoice)
+        {
+            player2ActionImage.sprite = player2NextImage;
+            player2ActionImage.enabled = true;
+        }
     }
 
     private void DecideOnDamage()
@@ -260,13 +318,14 @@ public class CombatManager : MonoBehaviour
         {
             //This means someone didn't choose, so we have to figure out how to deal with what the other person chose,
             //or what to do if they also chose nothing
+
             if (player1HasMadeChoice == false && player2HasMadeChoice == true)
             {
-
+                //player1NextImage = null;
             }
             else if (player1HasMadeChoice == true && player2HasMadeChoice == false)
             {
-
+                //player2NextImage = null;
             }
             else
             {
