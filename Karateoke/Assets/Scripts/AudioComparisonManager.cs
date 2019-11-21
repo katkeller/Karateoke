@@ -14,15 +14,12 @@ public class AudioComparisonManager : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI winnerText;
 
-    //[SerializeField]
-    //private List<int> phraseEndTimes = new List<int>();
-
     [SerializeField]
     private float secondsWinnerTextOnScreen = 1.5f;
 
     public int IndexOfWinner;
     public int IndexOfLoser;
-    public float WinningDisparity;
+    public float ScoreDisparity;
 
     private AudioSampleCollector[] audioSampleCollector = new AudioSampleCollector[3];
     private int[] index = new int[3];
@@ -30,10 +27,9 @@ public class AudioComparisonManager : MonoBehaviour
 
     private float[] differenceBetweenPlayerAndSource = new float[2];
     private float[] playerScore = new float[2];
-    //private bool atEndOfPhrase;
+
     private bool recordingValues;
 
-    //private float timeElapsed;
 
     private void Awake()
     {
@@ -47,23 +43,10 @@ public class AudioComparisonManager : MonoBehaviour
 
     void Update()
     {
-        //UpdateTime();
-
-        //atEndOfPhrase |= phraseEndTimes.Contains((int)timeElapsed);
-
-        //if (!atEndOfPhrase)
-        //{
-            for (int e = 0; e < audioSampleCollector.Length; e++)
-            {
-                RecordSampleValues(e);
-            }
-
-            //UpdateText();
-        //}
-        //else if (atEndOfPhrase)
-        //{
-        //    OnDecideWinner();
-        //}
+        for (int e = 0; e < audioSampleCollector.Length; e++)
+        {
+            RecordSampleValues(e);
+        }
     }
 
     private void OnDecideWinner()
@@ -72,7 +55,7 @@ public class AudioComparisonManager : MonoBehaviour
         {
             IndexOfWinner = 0;
             IndexOfLoser = 1;
-            WinningDisparity = playerScore[1] - playerScore[0];
+            ScoreDisparity = playerScore[1] - playerScore[0];
             // The winning disparity is how much the losing player's score differed from the better player's score.
             // A higher score is worse, since that means they were far off from the target by a larger amount.
             StartCoroutine(DisplayWinnerText("Player 1"));
@@ -81,7 +64,7 @@ public class AudioComparisonManager : MonoBehaviour
         {
             IndexOfWinner = 1;
             IndexOfLoser = 0;
-            WinningDisparity = playerScore[0] - playerScore[1];
+            ScoreDisparity = playerScore[0] - playerScore[1];
             StartCoroutine(DisplayWinnerText("Player 2"));
         }
 
@@ -107,12 +90,6 @@ public class AudioComparisonManager : MonoBehaviour
         winnerText.text = "";
     }
 
-    //private void UpdateTime()
-    //{
-    //    timeElapsed += Time.deltaTime;
-    //    //timeText.text = timeElapsed.ToString("F1");
-    //}
-
     private void RecordSampleValues(int e)
     {
         index[e] = audioSampleCollector[e].indexOfHighestValue;
@@ -125,23 +102,4 @@ public class AudioComparisonManager : MonoBehaviour
             playerScore[playerSpecificIndex] += differenceBetweenPlayerAndSource[playerSpecificIndex];
         }
     }
-
-    //private void UpdateText()
-    //{
-    //    if (highestValue[1] > 0.02f)
-    //    {
-    //        player1ScoreText.text = $"Player 1 Score:\n{playerScore[0]}";
-    //    }
-
-    //    if (highestValue[2] > 0.01f)
-    //        player2ScoreText.text = $"Player 2 Score:\n{playerScore[1]}";
-
-    //    player1DifferenceText.text = $"Difference between player 1 and source:\n{differenceBetweenPlayerAndSource[0]}";
-    //    player2DifferenceText.text = $"Difference between player 2 and source:\n{differenceBetweenPlayerAndSource[1]}";
-
-    //    if (highestValue[0] > 0.01f)
-    //        recordingValues = true;
-    //    else
-    //        recordingValues = false;
-    //}
 }

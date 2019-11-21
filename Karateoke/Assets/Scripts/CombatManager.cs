@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class CombatManager : MonoBehaviour
 {
     [SerializeField]
-    private TextMeshProUGUI player1ActionText, player2ActionText, countdownText;
+    private TextMeshProUGUI player1ActionText, player2ActionText, countdownText, disparityText, testTimerText;
 
     [SerializeField]
     private float secondsForChoice = 3.0f;
@@ -29,23 +29,22 @@ public class CombatManager : MonoBehaviour
     private GameObject[] playerHealthBarGameObject = new GameObject[2];
 
     [SerializeField]
-    private int scalingFramesLeft = 10;
-
-    [SerializeField]
-    private float healthBarScaleRate = 2.0f, healthBarScaleSpeed = 2.0f;
-
-    [SerializeField]
     private int baseAttackDamage = 5, baseParryDamage = 1, baseStarPowerIncrease = 1;
 
     [SerializeField]
     private float baseStarPowerDecrease = 0.5f;
 
+    [Tooltip("The number that the disparity average will be divided by to get the value added to damage.")]
+    [SerializeField]
+    private float bonusDividingFactor = 100.0f, bonusParryDividingValue = 2.0f;
+
     private int[] playerHealth = new int[2];
     private float[] playerStarPower = new float[2];
     private int indexOfWinner;
     private int indexOfLoser;
-    private float winningDisparity;
+    private float scoreDisparityAveraged;
     private float damageDealt;
+    private float phraseTimeElapsed;
 
     //use these to create star power bonuses
     private int winsInARowCount;
@@ -84,6 +83,7 @@ public class CombatManager : MonoBehaviour
 
     void Update()
     {
+        phraseTimeElapsed += Time.deltaTime;
         //if (Input.GetButtonDown("Player1Attack"))
         //{
         //    Debug.Log("Player 1 Attacks!");
@@ -119,9 +119,6 @@ public class CombatManager : MonoBehaviour
                 player1Choice = attack;
                 player1HasMadeChoice = true;
                 player1NextImage = attackIcon;
-
-                //for testing purposes:
-                //healthBar[1].ScaleHealthBar(25);
             }
             if (Input.GetButtonDown("Player1Block") && !player1HasMadeChoice)
             {
@@ -200,12 +197,21 @@ public class CombatManager : MonoBehaviour
         audioSource.PlayOneShot(countdownClip[3]);
         //Add choosing countdown graphic, maybe a bar or a round pie chart type thing?
         yield return new WaitForSeconds(1);
-        DecideWinner?.Invoke();
         countdownText.text = "";
         countdownText.color = countdownTextColor;
         canMakeChoice = false;
 
+        DecideWinner?.Invoke();
         UpdateActionImages();
+
+        // The disparity average is based on how different the two players' scores were,
+        // and how long the phrase in question was. The higher the score, the worse the
+        // loser did compared to the winner during the phrase. This value is applied to bonuses.
+        scoreDisparityAveraged = audioComparisonSript.ScoreDisparity / phraseTimeElapsed;
+        disparityText.text = scoreDisparityAveraged.ToString();
+        testTimerText.text = phraseTimeElapsed.ToString();
+        phraseTimeElapsed = 0.0f;
+
         DecideOnDamage();
     }
 
@@ -230,12 +236,18 @@ public class CombatManager : MonoBehaviour
         damageDealt = 0;
         indexOfWinner = audioComparisonSript.IndexOfWinner;
         indexOfLoser = audioComparisonSript.IndexOfLoser;
-        winningDisparity = audioComparisonSript.WinningDisparity;
+
+        // The - 1 is there so we can control for one player only doing a bit better than the other,
+        // but I may take it out later after playtesting.
+        int bonus = (int)(scoreDisparityAveraged / bonusDividingFactor) - 1;
+        Debug.Log($"Bonus: {bonus}");
+
+        //scoreDisparity = audioComparisonSript.ScoreDisparity;
 
         if (player1Choice == attack && player2Choice == attack)
         {
             // Player with higher score wins, deals base damage.
-            damageDealt = baseAttackDamage;
+            damageDealt = baseAttackDamage + bonus;
             playerHealth[indexOfLoser] -= (int)damageDealt;
 
             healthBar[indexOfLoser].ScaleHealthBar((int)damageDealt);
@@ -246,21 +258,20 @@ public class CombatManager : MonoBehaviour
             // They deal a small amount of damage if they win singing-wise.
             if (indexOfWinner == 1)
             {
-                damageDealt = baseParryDamage;
+                damageDealt = baseParryDamage + (bonus / bonusParryDividingValue);
                 playerHealth[0] -= (int)damageDealt;
                 healthBar[0].ScaleHealthBar((int)damageDealt);
             }
         }
         else if (player1Choice == attack && player2Choice == grapple)
         {
-            // Attacking player deals damger to grappling player,
+            // Attacking player deals damage to grappling player,
             // with additional damage dealt if the attacking player wins singing-wise.
             damageDealt = baseAttackDamage;
 
             if (indexOfWinner == 0)
             {
-                //placeholder value
-                damageDealt += 1;
+                damageDealt += bonus;
             }
             playerHealth[1] -= (int)damageDealt;
             healthBar[1].ScaleHealthBar((int)damageDealt);
@@ -269,7 +280,7 @@ public class CombatManager : MonoBehaviour
         {
             if (indexOfWinner == 0)
             {
-                damageDealt = baseParryDamage;
+                damageDealt = baseParryDamage + (bonus / bonusParryDividingValue);
                 playerHealth[1] -= (int)damageDealt;
                 healthBar[1].ScaleHealthBar((int)damageDealt);
             }
@@ -277,6 +288,8 @@ public class CombatManager : MonoBehaviour
         else if (player1Choice == block && player2Choice == block)
         {
             //Nothing, idiots!
+
+            //play dissapointed animation for attacking player?
         }
         else if (player1Choice == block && player2Choice == grapple)
         {
@@ -284,8 +297,8 @@ public class CombatManager : MonoBehaviour
             damageDealt = baseStarPowerDecrease;
             if (indexOfWinner == 1)
             {
-                // Placeholder value
-                damageDealt += 0.25f;
+                // Placeholder value?
+                damageDealt += (bonus / 5);
             }
             playerStarPower[0] -= damageDealt;
         }
@@ -294,7 +307,7 @@ public class CombatManager : MonoBehaviour
             damageDealt = baseAttackDamage;
             if (indexOfWinner == 1)
             {
-                damageDealt += 1.0f;
+                damageDealt += bonus;
             }
             playerHealth[0] -= (int)damageDealt;
             healthBar[0].ScaleHealthBar((int)damageDealt);
@@ -304,14 +317,14 @@ public class CombatManager : MonoBehaviour
             damageDealt = baseStarPowerDecrease;
             if (indexOfWinner == 0)
             {
-                damageDealt += 0.25f;
+                damageDealt += (bonus / 5);
             }
             playerStarPower[1] -= damageDealt;
         }
         else if (player1Choice == grapple && player2Choice == grapple)
         {
             // player with higher singing score gets star power increased
-            damageDealt = baseStarPowerIncrease;
+            damageDealt = baseStarPowerIncrease + (bonus / 5);
             playerStarPower[indexOfWinner] += damageDealt;
         }
         else
@@ -321,11 +334,11 @@ public class CombatManager : MonoBehaviour
 
             if (player1HasMadeChoice == false && player2HasMadeChoice == true)
             {
-                //player1NextImage = null;
+                
             }
             else if (player1HasMadeChoice == true && player2HasMadeChoice == false)
             {
-                //player2NextImage = null;
+                
             }
             else
             {
