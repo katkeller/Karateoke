@@ -29,6 +29,9 @@ public class CombatManager : MonoBehaviour
     private GameObject[] playerHealthBarGameObject = new GameObject[2];
 
     [SerializeField]
+    private GameObject[] playerStarPowerBarGameObject = new GameObject[2];
+
+    [SerializeField]
     private int baseAttackDamage = 5, baseParryDamage = 1, baseStarPowerIncrease = 1;
 
     [SerializeField]
@@ -54,6 +57,7 @@ public class CombatManager : MonoBehaviour
     private Sprite player1NextImage, player2NextImage;
     private AudioSource audioSource;
     private HealthBar[] healthBar = new HealthBar[2];
+    private HealthBar[] starPowerBar = new HealthBar[2];
     private AudioComparisonManager audioComparisonSript;
 
     private bool canMakeChoice;
@@ -76,6 +80,8 @@ public class CombatManager : MonoBehaviour
 
         healthBar[0] = playerHealthBarGameObject[0].GetComponent<HealthBar>();
         healthBar[1] = playerHealthBarGameObject[1].GetComponent<HealthBar>();
+        starPowerBar[0] = playerStarPowerBarGameObject[0].GetComponent<HealthBar>();
+        starPowerBar[1] = playerStarPowerBarGameObject[1].GetComponent<HealthBar>();
 
         audioSource = GetComponent<AudioSource>();
         audioComparisonSript = GetComponent<AudioComparisonManager>();
@@ -250,7 +256,7 @@ public class CombatManager : MonoBehaviour
             damageDealt = baseAttackDamage + bonus;
             playerHealth[indexOfLoser] -= (int)damageDealt;
 
-            healthBar[indexOfLoser].ScaleHealthBar((int)damageDealt);
+            healthBar[indexOfLoser].ScaleHealthBar((int)damageDealt, false);
         }
         else if (player1Choice == attack && player2Choice == block)
         {
@@ -260,7 +266,7 @@ public class CombatManager : MonoBehaviour
             {
                 damageDealt = baseParryDamage + (bonus / bonusParryDividingValue);
                 playerHealth[0] -= (int)damageDealt;
-                healthBar[0].ScaleHealthBar((int)damageDealt);
+                healthBar[0].ScaleHealthBar((int)damageDealt, false);
             }
         }
         else if (player1Choice == attack && player2Choice == grapple)
@@ -274,7 +280,7 @@ public class CombatManager : MonoBehaviour
                 damageDealt += bonus;
             }
             playerHealth[1] -= (int)damageDealt;
-            healthBar[1].ScaleHealthBar((int)damageDealt);
+            healthBar[1].ScaleHealthBar((int)damageDealt, false);
         }
         else if (player1Choice == block && player2Choice == attack)
         {
@@ -282,7 +288,7 @@ public class CombatManager : MonoBehaviour
             {
                 damageDealt = baseParryDamage + (bonus / bonusParryDividingValue);
                 playerHealth[1] -= (int)damageDealt;
-                healthBar[1].ScaleHealthBar((int)damageDealt);
+                healthBar[1].ScaleHealthBar((int)damageDealt, false);
             }
         }
         else if (player1Choice == block && player2Choice == block)
@@ -301,6 +307,9 @@ public class CombatManager : MonoBehaviour
                 damageDealt += (bonus / 5);
             }
             playerStarPower[0] -= damageDealt;
+            //need to send a negative value to the scale star power bar so it will decrease?
+            starPowerBar[0].ScaleHealthBar((int)damageDealt, false);
+            Debug.Log($"damage dealt to player 1 star power: {-(int)damageDealt}");
         }
         else if (player1Choice == grapple && player2Choice == attack)
         {
@@ -310,7 +319,7 @@ public class CombatManager : MonoBehaviour
                 damageDealt += bonus;
             }
             playerHealth[0] -= (int)damageDealt;
-            healthBar[0].ScaleHealthBar((int)damageDealt);
+            healthBar[0].ScaleHealthBar((int)damageDealt, false);
         }
         else if (player1Choice == grapple && player2Choice == block)
         {
