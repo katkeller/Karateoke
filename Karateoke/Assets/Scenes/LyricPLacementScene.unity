@@ -475,6 +475,155 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 293631824}
   m_CullTransparentMesh: 0
+--- !u!1 &414560261
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 414560264}
+  - component: {fileID: 414560263}
+  - component: {fileID: 414560262}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &414560262
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 414560261}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: e1b86464ac16e3a4392938c292c5eb9b, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &414560263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 414560261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56ac856dc3031a84995361634fb3a1d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lyricText: {fileID: 833770429}
+  timerText: {fileID: 2144335042}
+  inputField: {fileID: 1179458702}
+  fullLyrics: Ready, let's roll on to some thing new. Taking its toll, and I'm leaving
+    with out you. Cause heaven ain't close in a place like this. I said heaven ain't
+    close in a place like this. Bring it back down, bring it back down tonight. Never
+    thought I'd let a rumor ruin my moonlight. Well, somebody told me you had a boyfriend
+    who looked like a girlfriend that I had in February of last year. It's not confidential,
+    I've got potential. Rushing, rushing around. END
+--- !u!4 &414560264
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 414560261}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 781.1918, y: 482.4681, z: -338}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &466076538
 GameObject:
   m_ObjectHideFlags: 0
@@ -562,27 +711,14 @@ MonoBehaviour:
   lyricText: {fileID: 833770429}
   timerText: {fileID: 2144335042}
   inputField: {fileID: 1179458702}
-  fullLyrics: Breaking my back just to know your name Seventeen tracks and I've had
-    it with this game I'm breaking my back just to know your name But heaven ain't
-    close in a place like this Anything goes but don't blink, you might miss Cause
-    heaven ain't close in a place like this I said heaven ain't close in a place like
-    this Bring it back down, bring it back down tonight Never thought I'd let a rumor
-    ruin my moonlight Well, somebody told me you had a boyfriend Who looked like a
-    girlfriend That I had in February of last year It's not confidential I've got
-    potential Ready, let's roll onto something new Taking its toll, and I'm leaving
-    without you Cause heaven ain't close in a place like this I said heaven ain't
-    close in a place like this Bring it back down, bring it back down tonight Never
-    thought I'd let a rumor ruin my moonlight Well, somebody told me you had a boyfriend
-    Who looked like a girlfriend That I had in February of last year It's not confidential
-    I've got potential Rushing, rushing around Pace yourself for me I said maybe,
-    baby please But I just don't know now When all I wanna do is try Well somebody
-    told me you had a boyfriend Who looked like a girlfriend That I had in February
-    of last year It's not confidential I've got potential Rushing, rushing around
-    Somebody told me you had a boyfriend Who looked like a girlfriend That I had in
-    February of last year It's not confidential I've got potential Rushing, rushing
-    around Somebody told me you had a boyfriend Who looked like a girlfriend That
-    I had in February of last year It's not confidential I've got potential Rushing,
-    rushing around END
+  fullLyrics: Breaking my back just to know your name. Seven teen tracks and I've
+    had it with this game. I'm breaking my back just to know your name. But heaven
+    ain't close in a place like this. Any- thing goes but don't blink, you might miss.
+    Cause heaven ain't close in a place like this, I said heaven ain't close in a
+    place like this. Bring it back down, bring it back down tonight. Never thought
+    I'd let a rumor ruin my moonlight. Well, somebody told me you had a boyfriend
+    who looked like a girlfriend that I had in February of last year. It's not confidential,
+    I've got potential.
 --- !u!114 &517398240
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -778,61 +914,62 @@ MonoBehaviour:
   lyricText: {fileID: 833770429}
   timerText: {fileID: 2144335042}
   inputField: {fileID: 1179458702}
-  delay: 18
-  fullLyrics: Breaking my back just to know your name Seventeen tracks and I've had
-    it with this game I'm breaking my back just to know your name But heaven ain't
-    close in a place like this Anything goes but don't blink, you might miss Cause
-    heaven ain't close in a place like this I said heaven ain't close in a place like
-    this Bring it back down, bring it back down tonight Never thought I'd let a rumor
-    ruin my moonlight Well, somebody told me you had a boyfriend Who looked like a
-    girlfriend That I had in February of last year It's not confidential I've got
-    potential Ready, let's roll onto something new Taking its toll, and I'm leaving
-    without you Cause heaven ain't close in a place like this I said heaven ain't
-    close in a place like this Bring it back down, bring it back down tonight Never
-    thought I'd let a rumor ruin my moonlight Well, somebody told me you had a boyfriend
-    Who looked like a girlfriend That I had in February of last year It's not confidential
-    I've got potential Rushing, rushing around Pace yourself for me I said maybe,
-    baby please But I just don't know now When all I wanna do is try Well somebody
-    told me you had a boyfriend Who looked like a girlfriend That I had in February
-    of last year It's not confidential I've got potential Rushing, rushing around
-    Somebody told me you had a boyfriend Who looked like a girlfriend That I had in
-    February of last year It's not confidential I've got potential Rushing, rushing
-    around Somebody told me you had a boyfriend Who looked like a girlfriend That
-    I had in February of last year It's not confidential I've got potential Rushing,
-    rushing around END
-  wordTimeString: 21.40095 21.82994 22.28894 22.72996 22.96796 23.21295 23.62594 23.90595
-    24.91396 25.83894 26.23796 26.48995 26.71393 27.05694 27.36495 27.69395 28.13695
-    31.6689 31.96992 32.28593 32.72091 33.17693 33.39491 33.61891 33.9489 34.2929
-    35.1059 35.35989 35.5569 36.16091 36.58294 36.87894 37.12593 37.35287 37.76894
-    38.90493 39.70993 40.14091 40.43794 40.82692 41.22193 41.67393 42.11891 45.58186
-    45.85885 46.05886 46.30981 46.95085 47.19284 47.41384 47.83785 48.17585 48.59284
-    48.81384 49.08485 49.34185 49.90686 50.43786 50.69585 50.92285 51.27886 51.71184
-    52.99887 53.24286 53.43786 53.69084 54.38385 54.60785 54.81684 55.29986 55.78988
-    59.6979 60.10489 60.56089 61.00188 61.24789 61.52189 62.15289 62.64289 63.46388
-    65.64684 65.94983 66.5058 66.87281 67.43478 67.71777 67.96476 68.23879 68.98381
-    69.2958 69.56479 69.87579 70.34881 70.78679 71.0338 71.31081 71.5668 71.85078
-    73.26173 73.55367 73.95669 74.35366 74.69465 74.95864 76.05561 76.37359 76.67356
-    80.57457 80.95848 81.39857 81.80457 82.23457 82.86356 84.07355 84.45858 84.87958
-    85.30658 85.58056 85.99357 86.33054 87.37471 90.67471 90.94068 91.37571 91.82469
-    92.2177 92.50571 92.75169 92.96571 93.3737 93.80869 94.05569 94.28171 94.47963
-    94.96571 95.37367 95.72665 95.95466 96.20266 96.57563 98.37061 98.65359 98.88554
-    99.28258 99.7126 99.92657 100.1616 100.5865 100.9846 104.8925 105.2895 105.7485
-    106.1944 106.4854 106.7774 107.3213 108.2224 108.6684 110.7784 111.0784 111.7004
-    112.1334 112.6203 112.9204 113.2424 113.6344 114.1883 114.4543 114.6783 114.9093
-    115.1824 115.8664 116.1334 116.3583 116.5903 116.8223 118.3013 118.6373 119.0513
-    119.5423 119.8233 120.0902 121.3032 121.5652 121.8282 123.1041 123.5681 124.3131
-    125.7691 126.697 128.4491 128.8721 131.9036 132.2847 132.7147 134.545 136.2642
-    138.1923 138.4484 138.8174 139.2133 139.6643 140.3133 146.497 146.727 146.935
-    147.15 147.3661 147.9661 148.2591 150.8358 151.1359 151.7118 152.0608 152.6068
-    152.8928 153.1928 153.4789 154.213 154.478 154.702 155.017 155.375 155.958 156.231
-    156.47 156.7009 156.981 158.2881 158.5771 159.0052 159.4891 159.8332 160.0943
-    161.3544 161.6223 161.9395 163.1665 163.7675 164.2945 164.9066 165.3036 165.5576
-    166.0156 166.6956 166.9506 167.2006 168.1077 168.3977 168.6397 168.9587 169.2787
-    169.9248 170.1898 170.4467 170.6887 171.1278 172.2738 172.5288 172.9338 173.4168
-    173.6678 173.8969 174.3079 175.438 175.647 175.863 177.556 178.0381 178.8131 179.099
-    179.3091 180.4092 180.6763 180.9563 181.6403 182.1453 182.3633 182.5692 182.8503
-    183.1103 183.8044 184.0434 184.2834 184.5445 184.8625 186.1386 186.5067 186.8797
-    187.3787 187.6597 188.0887 189.1348 189.4949 189.9109 190.969 191.6042 192.2162
+  delay: 0.1
+  fullLyrics: Breaking my back just to know your name. Seven teen tracks and I've
+    had it with this game. I'm breaking my back just to know your name. But heaven
+    ain't close in a place like this. Any- thing goes but don't blink, you might miss.
+    Cause heaven ain't close in a place like this, I said heaven ain't close in a
+    place like this. Bring it back down, bring it back down tonight. Never thought
+    I'd let a rumor ruin my moonlight. Well, somebody told me you had a boyfriend
+    who looked like a girlfriend that I had in February of last year. It's not confidential,
+    I've got potential. Ready, let's roll on to some thing new. Taking its toll, and
+    I'm leaving with out you. Cause heaven ain't close in a place like this. I said
+    heaven ain't close in a place like this. Bring it back down, bring it back down
+    tonight. Never thought I'd let a rumor ruin my moonlight. Well, somebody told
+    me you had a boyfriend who looked like a girlfriend that I had in February of
+    last year. It's not confidential, I've got potential. Rushing, rushing around.
+    Pace your self for me. I said maybe, baby please. But I just don't know now. When
+    all I wanna do is try. Well somebody told me you had a boyfriend who looked like
+    a girlfriend that I had in February of last year. It's not confidential, I've
+    got potential. Rushing, rushing around. Somebody told me you had a boyfriend who
+    looked like a girlfriend that I had in February of last year. It's not confidential,
+    I've got potential. Rushing, rushing around. Somebody told me you had a boyfriend
+    who looked like a girlfriend that I had in February of last year. It's not confidential,
+    I've got potential. Rushing, rushing around. END
+  wordTimeString: 21.399 21.808 22.23499 22.63399 22.84401 23.09601 23.43705 23.77302
+    24.86496 25.28301 25.696 26.10602 26.39299 26.63099 26.85499 27.29599 27.68801
+    28.129 31.72097 31.94497 32.30898 32.70798 33.09997 33.33796 33.55995 33.86097
+    34.19096 35.06594 35.45794 35.74493 36.13892 36.51694 36.76193 36.98695 37.21193
+    37.49994 38.79294 39.19294 39.65594 40.04898 40.33693 40.74396 41.18495 41.62695
+    42.08995 45.56092 45.84295 46.18492 46.62794 47.00094 47.22693 47.47393 47.82594
+    48.16492 48.57892 48.77691 48.99594 49.58591 50.1409 50.5209 50.81788 51.06487
+    51.31188 51.69887 53.10887 53.34287 53.5849 54.01494 54.4169 54.69988 54.93488
+    55.3319 55.75588 59.66691 60.09189 60.5439 60.96791 61.20991 61.4659 62.1909 62.95093
+    63.34692 65.59489 65.81686 66.45585 66.81082 67.34679 67.60975 67.85969 68.14476
+    69.00074 69.22274 69.44472 69.7507 70.08472 70.76868 70.99869 71.28167 71.48367
+    71.76163 73.11063 73.36863 73.73861 74.2596 74.53155 74.83855 76.13258 76.41552
+    76.68053 80.60461 81.00662 81.4266 81.81161 82.05657 82.34357 82.59557 83.10352
+    84.00649 84.41943 84.85344 85.26643 85.5784 85.90041 86.4464 86.82442 87.27244
+    90.88538 91.21436 91.53637 91.90741 92.25039 92.4954 92.69841 92.90942 93.32641
+    93.76739 94.0544 94.4324 94.83838 95.28739 95.68838 95.94833 96.23632 96.57232
+    96.91631 98.31429 98.52531 98.7713 99.2133 99.60629 99.83826 100.0422 100.2392
+    100.9522 104.8992 105.3002 105.7393 106.1602 106.4912 106.7802 107.3841 108.1602
+    108.5402 110.8842 111.1171 111.6441 112.0241 112.6291 112.8852 113.1181 113.4641
+    114.1801 114.4631 114.7041 114.9171 115.2191 115.9081 116.1701 116.3981 116.6391
+    116.9581 118.3591 118.6211 119.0031 119.4201 119.7591 120.0431 121.382 121.624
+    121.909 123.0859 123.7139 124.3059 125.8559 126.6809 127.5349 128.4798 128.8629
+    131.9191 132.3111 132.8292 134.5143 136.2083 138.2074 138.4805 138.8236 139.2126
+    139.6957 140.3537 146.4021 146.6821 146.9462 147.1772 147.3942 147.8983 148.2063
+    150.8217 151.0877 151.6968 152.0788 152.6388 152.8978 153.1149 153.4019 154.2561
+    154.4982 154.6942 155.0091 155.2621 155.9982 156.2302 156.4482 156.7152 156.9861
+    158.3382 158.6752 159.0683 159.4656 159.8093 160.0483 161.3384 161.5784 161.9025
+    163.1626 163.7666 164.3075 165.0076 165.5906 165.9427 166.5827 166.8377 167.0927
+    167.3828 168.1269 168.3749 168.6299 168.9549 169.1999 169.9529 170.2009 170.4769
+    170.8019 171.0149 172.193 172.519 172.9221 173.3251 173.6231 173.9701 175.2392
+    175.4952 175.8493 177.0457 177.6448 178.2169 178.802 179.465 179.8959 180.5229
+    180.794 181.03 181.35 182.018 182.289 182.525 182.796 183.046 183.8001 184.0571
+    184.3117 184.5471 184.8602 186.2655 186.5014 186.8968 187.3305 187.6585 187.9866
+    189.188 189.5015 189.9625 190.9345 191.5566 192.1556
 --- !u!1 &710975697
 GameObject:
   m_ObjectHideFlags: 0

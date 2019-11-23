@@ -9,9 +9,6 @@ public class LyricScrolling : MonoBehaviour
     [SerializeField]
     private GameObject wordPrefab;
 
-    //[SerializeField]
-    //private TextMeshProUGUI timerText;
-
     [TextArea(5, 10)]
     [SerializeField]
     private string fullLyrics;
@@ -21,10 +18,14 @@ public class LyricScrolling : MonoBehaviour
 
     [TextArea(5, 10)]
     [SerializeField]
+    private string wordTimesString;
+
+    [TextArea(5, 10)]
+    [SerializeField]
     private string wordHeights;
 
     [SerializeField]
-    private int[] indexesOfPhraseEndLyrics = new int[44];
+    private int[] indexesOfPhraseEndLyrics = new int[30];
 
     [SerializeField]
     private Color32 phraseEndColor;
@@ -39,9 +40,11 @@ public class LyricScrolling : MonoBehaviour
     [SerializeField]
     private float heightMultiplier = 0.04f, yAxisSubtraction = 4.6f;
 
-    private string[] splitLyrics = new string[298];
-    private string[] splitHeights = new string[298];
-    private float[] wordHeightFloats = new float[298];
+    private string[] splitLyrics = new string[304];
+    private string[] splitHeights = new string[304];
+    private string[] splitWordTimesString = new string[304];
+    private float[] splitWordTimes = new float[304];
+    private float[] wordHeightFloats = new float[304];
 
     private float timeElapsed;
     private TextMeshPro text;
@@ -58,20 +61,26 @@ public class LyricScrolling : MonoBehaviour
     {
         splitLyrics = fullLyrics.Split(' ');
         splitHeights = wordHeights.Split(' ');
+        splitWordTimesString = wordTimesString.Split(' ');
 
         for (int e = 0; e < splitHeights.Length; e++)
         {
             wordHeightFloats[e] = float.Parse(splitHeights[e]);
         }
 
-        for (int i = 0; i < wordTimes.Length; i++)
+        for (int k = 0; k < splitWordTimesString.Length; k++)
         {
-            wordTimes[i] = ((wordTimes[i] - 1.0f) * spacingMultiplier) - spacingSubtraction;
+            splitWordTimes[k] = float.Parse(splitWordTimesString[k]);
+        }
+
+        for (int i = 0; i < splitWordTimes.Length; i++)
+        {
+            splitWordTimes[i] = ((splitWordTimes[i] - 1.0f) * spacingMultiplier) - spacingSubtraction;
             wordHeightFloats[i] = ((wordHeightFloats[i] - 6) * heightMultiplier) - yAxisSubtraction;
             GameObject a = Instantiate(wordPrefab) as GameObject;
             text = a.GetComponent<TextMeshPro>();
             text.text = splitLyrics[i];
-            a.transform.position = new Vector3(wordTimes[i], wordHeightFloats[i], 0);
+            a.transform.position = new Vector3(splitWordTimes[i], wordHeightFloats[i], 0);
             a.transform.SetParent(this.transform);
 
             foreach (int element in indexesOfPhraseEndLyrics)

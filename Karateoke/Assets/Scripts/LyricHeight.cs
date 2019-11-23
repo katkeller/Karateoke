@@ -13,7 +13,7 @@ public class LyricHeight : MonoBehaviour
     private TMP_InputField inputField;
 
     [SerializeField]
-    private float delay = 18f;
+    private float delay = 0.1f;
 
     [TextArea(5, 10)]
     [SerializeField]
@@ -33,9 +33,10 @@ public class LyricHeight : MonoBehaviour
     private string currentTimeText;
     private bool isPlaying;
 
-    private string[] splitLyrics = new string[298];
-    private string[] splitWordTimeString = new string[298];
-    private float[] wordTimes = new float[298];
+    // Have to change the length of these with every song since this refers to lyric count.
+    private string[] splitLyrics = new string[304];
+    private string[] splitWordTimeString = new string[304];
+    private float[] wordTimes = new float[304];
 
     private AudioSource audioSource;
 
@@ -72,9 +73,9 @@ public class LyricHeight : MonoBehaviour
     public void BeginPrinting()
     {
         timeElapsed = 0;
-        audioSource.Play();
-        isPlaying = true;
-        //StartCoroutine(DelayAudio());
+        //audioSource.Play();
+        //isPlaying = true;
+        StartCoroutine(DelayAudio());
     }
 
     IEnumerator DelayAudio()

@@ -49,7 +49,8 @@ public class LyricTimingPlacement : MonoBehaviour
         else
         {
             Debug.Log($"{splitLyrics[currentWordIndex]}: {timeElapsed}");
-            outputText = outputText + $"{splitLyrics[currentWordIndex]}: {timeElapsed}, ";
+            //outputText = outputText + $"{splitLyrics[currentWordIndex]}: {timeElapsed}, ";
+            outputText = outputText + $"{timeElapsed} ";
             inputField.text = outputText;
             currentWordIndex++;
             lyricText.text = splitLyrics[currentWordIndex];
