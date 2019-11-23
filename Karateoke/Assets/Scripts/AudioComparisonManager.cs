@@ -85,6 +85,7 @@ public class AudioComparisonManager : MonoBehaviour
 
     IEnumerator DisplayWinnerText(string winner)
     {
+        //change this to a star power logo that shows up over player
         winnerText.text = $"{winner} wins!";
         yield return new WaitForSeconds(secondsWinnerTextOnScreen);
         winnerText.text = "";

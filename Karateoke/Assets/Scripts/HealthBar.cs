@@ -15,13 +15,20 @@ public class HealthBar : MonoBehaviour
     private bool isStarPowerBar;
 
     private int scalingFramesLeft;
-    private float healthValue = 1.0f;
+    private float healthValue;
     private Vector3 newScale;
 
     private void Start()
     {
         if (isStarPowerBar)
+        {
+            healthValue = 0.0f;
             transform.localScale = new Vector3(0, transform.localScale.y);
+        }
+        else
+        {
+            healthValue = 1.0f;
+        }
     }
 
     private void Update()

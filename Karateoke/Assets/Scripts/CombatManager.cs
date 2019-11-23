@@ -32,10 +32,13 @@ public class CombatManager : MonoBehaviour
     private GameObject[] playerStarPowerBarGameObject = new GameObject[2];
 
     [SerializeField]
-    private int baseAttackDamage = 5, baseParryDamage = 1, baseStarPowerIncrease = 1;
+    private int baseAttackDamage = 5, baseParryDamage = 1, baseStarPowerIncrease = 10;
 
     [SerializeField]
-    private float baseStarPowerDecrease = 0.5f;
+    private float baseStarPowerDecrease = 5f;
+
+    [SerializeField]
+    private float starPowerMoveLengthInSeconds = 5.0f;
 
     [Tooltip("The number that the disparity average will be divided by to get the value added to damage.")]
     [SerializeField]
@@ -65,6 +68,9 @@ public class CombatManager : MonoBehaviour
     private string player1Choice, player2Choice;
     private string attack = "attack", block = "block", grapple = "grapple";
 
+    private bool isPerformingStarPowerMove;
+    private bool playerIsDead;
+
     public static event Action DecideWinner;
 
     void Start()
@@ -90,32 +96,10 @@ public class CombatManager : MonoBehaviour
     void Update()
     {
         phraseTimeElapsed += Time.deltaTime;
-        //if (Input.GetButtonDown("Player1Attack"))
-        //{
-        //    Debug.Log("Player 1 Attacks!");
-        //}
-        //if (Input.GetButtonDown("Player1Block"))
-        //{
-        //    Debug.Log("Player 1 Blocks!");
-        //}
-        //if (Input.GetButtonDown("Player1Grapple"))
-        //{
-        //    Debug.Log("Player 1 Grapples!");
-        //}
-        //if (Input.GetButtonDown("Player2Attack"))
-        //{
-        //    Debug.Log("Player 2 Attacks!");
-        //}
-        //if (Input.GetButtonDown("Player2Block"))
-        //{
-        //    Debug.Log("Player 2 Blocks!");
-        //}
-        //if (Input.GetButtonDown("Player2Grapple"))
-        //{
-        //    Debug.Log("Player 2 Grapples!");
-        //}
 
-        if (canMakeChoice)
+        CheckForStarPowerOrDeath();
+
+        if (canMakeChoice && !isPerformingStarPowerMove && !playerIsDead)
         {
             //we should add a simple (but unique to each player) soundeffect for when they choose
 
@@ -164,10 +148,55 @@ public class CombatManager : MonoBehaviour
         }
     }
 
+    private void CheckForStarPowerOrDeath()
+    {
+        if (playerHealth[0] <= 0)
+        {
+            KillPlayer(0);
+        }
+        if (playerHealth[1] <= 0)
+        {
+            KillPlayer(1);
+        }
+        if (playerStarPower[0] >= 100)
+        {
+            StartCoroutine(StarPowerMove("player1"));
+        }
+        if (playerStarPower[1] >= 100)
+        {
+            StartCoroutine(StarPowerMove("player2"));
+        }
+    }
+
+    IEnumerator StarPowerMove(string player)
+    {
+        isPerformingStarPowerMove = true;
+        //animation
+        //damage
+        yield return new WaitForSeconds(starPowerMoveLengthInSeconds);
+        isPerformingStarPowerMove = false;
+    }
+
+    private void KillPlayer(int player)
+    {
+        playerIsDead = true;
+        //die animation
+        //celebration animation
+        //win screen
+    }
+
     private void OnEndOfPhrase()
     {
-        StartCoroutine(AllowPlayersToMakeChoice());
-        Debug.Log("Phrase end has been triggered!");
+        if (!isPerformingStarPowerMove && !playerIsDead)
+        {
+            StartCoroutine(AllowPlayersToMakeChoice());
+            Debug.Log("Phrase end has been triggered!");
+        }
+        else
+        {
+            //this is so the phrase values stay consistent even when a star power move is performed
+            DecideWinner?.Invoke();
+        }
     }
 
     private void OnEnable()
@@ -228,13 +257,27 @@ public class CombatManager : MonoBehaviour
         if (player1NextImage != null && player1HasMadeChoice)
         {
             player1ActionImage.sprite = player1NextImage;
-            player1ActionImage.enabled = true;
+            StartCoroutine(UpdatePlayer1ActionImage());
         }
         if (player2NextImage != null && player2HasMadeChoice)
         {
             player2ActionImage.sprite = player2NextImage;
-            player2ActionImage.enabled = true;
+            StartCoroutine(UpdatePlayer2ActionImage());
         }
+    }
+
+    IEnumerator UpdatePlayer1ActionImage()
+    {
+        player1ActionImage.enabled = true;
+        yield return new WaitForSeconds(2);
+        player1ActionImage.enabled = false;
+    }
+
+    IEnumerator UpdatePlayer2ActionImage()
+    {
+        player2ActionImage.enabled = true;
+        yield return new WaitForSeconds(2);
+        player2ActionImage.enabled = false;
     }
 
     private void DecideOnDamage()
@@ -304,7 +347,7 @@ public class CombatManager : MonoBehaviour
             if (indexOfWinner == 1)
             {
                 // Placeholder value?
-                damageDealt += (bonus / 5);
+                damageDealt += 5;
             }
             playerStarPower[0] -= damageDealt;
             //need to send a negative value to the scale star power bar so it will decrease?
@@ -326,14 +369,14 @@ public class CombatManager : MonoBehaviour
             damageDealt = baseStarPowerDecrease;
             if (indexOfWinner == 0)
             {
-                damageDealt += (bonus / 5);
+                damageDealt += bonus;
             }
             playerStarPower[1] -= damageDealt;
         }
         else if (player1Choice == grapple && player2Choice == grapple)
         {
             // player with higher singing score gets star power increased
-            damageDealt = baseStarPowerIncrease + (bonus / 5);
+            damageDealt = baseStarPowerIncrease + bonus;
             playerStarPower[indexOfWinner] += damageDealt;
         }
         else
