@@ -11,7 +11,7 @@ public class CombatManager : MonoBehaviour
     private TextMeshProUGUI player1ActionText, player2ActionText, countdownText, disparityText, testTimerText;
 
     [SerializeField]
-    private float secondsForChoice = 3.0f;
+    private float secondsForChoice = 1.5f;
 
     [SerializeField]
     private Color32 lastNumberColor;
@@ -24,6 +24,12 @@ public class CombatManager : MonoBehaviour
 
     [SerializeField]
     private Sprite attackIcon, blockIcon, grappleIcon;
+
+    [SerializeField]
+    private GameObject[] playerModel = new GameObject[2];
+
+    [SerializeField]
+    private float getHitAnimationDelay = 1.0f;
 
     [SerializeField]
     private GameObject[] playerHealthBarGameObject = new GameObject[2];
@@ -61,12 +67,13 @@ public class CombatManager : MonoBehaviour
     private AudioSource audioSource;
     private HealthBar[] healthBar = new HealthBar[2];
     private HealthBar[] starPowerBar = new HealthBar[2];
+    private Animator[] playerAnimator = new Animator[2];
     private AudioComparisonManager audioComparisonSript;
 
     private bool canMakeChoice;
     private bool player1HasMadeChoice, player2HasMadeChoice;
     private string player1Choice, player2Choice;
-    private string attack = "attack", block = "block", grapple = "grapple";
+    private string attack = "attack", dodge = "block", sweep = "grapple";
 
     private bool isPerformingStarPowerMove;
     private bool playerIsDead;
@@ -88,6 +95,8 @@ public class CombatManager : MonoBehaviour
         healthBar[1] = playerHealthBarGameObject[1].GetComponent<HealthBar>();
         starPowerBar[0] = playerStarPowerBarGameObject[0].GetComponent<HealthBar>();
         starPowerBar[1] = playerStarPowerBarGameObject[1].GetComponent<HealthBar>();
+        playerAnimator[0] = playerModel[0].GetComponent<Animator>();
+        playerAnimator[1] = playerModel[1].GetComponent<Animator>();
 
         audioSource = GetComponent<AudioSource>();
         audioComparisonSript = GetComponent<AudioComparisonManager>();
@@ -113,14 +122,14 @@ public class CombatManager : MonoBehaviour
             if (Input.GetButtonDown("Player1Block") && !player1HasMadeChoice)
             {
                 player1ActionText.text = "Player 1 blocks!";
-                player1Choice = block;
+                player1Choice = dodge;
                 player1HasMadeChoice = true;
                 player1NextImage = blockIcon;
             }
             if (Input.GetButtonDown("Player1Grapple") && !player1HasMadeChoice)
             {
                 player1ActionText.text = "Player 1 grapples!";
-                player1Choice = grapple;
+                player1Choice = sweep;
                 player1HasMadeChoice = true;
                 player1NextImage = grappleIcon;
             }
@@ -134,14 +143,14 @@ public class CombatManager : MonoBehaviour
             if (Input.GetButtonDown("Player2Block") && !player2HasMadeChoice)
             {
                 player2ActionText.text = "Player 2 blocks!";
-                player2Choice = block;
+                player2Choice = dodge;
                 player2HasMadeChoice = true;
                 player2NextImage = blockIcon;
             }
             if (Input.GetButtonDown("Player2Grapple") && !player2HasMadeChoice)
             {
                 player2ActionText.text = "Player 2 grapples!";
-                player2Choice = grapple;
+                player2Choice = sweep;
                 player2HasMadeChoice = true;
                 player2NextImage = grappleIcon;
             }
@@ -231,7 +240,7 @@ public class CombatManager : MonoBehaviour
         countdownText.text = "CHOOSE!";
         audioSource.PlayOneShot(countdownClip[3]);
         //Add choosing countdown graphic, maybe a bar or a round pie chart type thing?
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(secondsForChoice);
         countdownText.text = "";
         countdownText.color = countdownTextColor;
         canMakeChoice = false;
@@ -300,8 +309,11 @@ public class CombatManager : MonoBehaviour
             playerHealth[indexOfLoser] -= (int)damageDealt;
 
             healthBar[indexOfLoser].ScaleHealthBar((int)damageDealt, false);
+            playerAnimator[indexOfWinner].SetTrigger("kick");
+            //playerAnimator[indexOfLoser].SetTrigger("getHit");
+            StartCoroutine(DelayAnimation(getHitAnimationDelay, indexOfLoser, "getHit"));
         }
-        else if (player1Choice == attack && player2Choice == block)
+        else if (player1Choice == attack && player2Choice == dodge)
         {
             // Blocking player negates attacking player's hit.
             // They deal a small amount of damage if they win singing-wise.
@@ -311,8 +323,10 @@ public class CombatManager : MonoBehaviour
                 playerHealth[0] -= (int)damageDealt;
                 healthBar[0].ScaleHealthBar((int)damageDealt, false);
             }
+            playerAnimator[0].SetTrigger("kick");
+            playerAnimator[1].SetTrigger("dodge");
         }
-        else if (player1Choice == attack && player2Choice == grapple)
+        else if (player1Choice == attack && player2Choice == sweep)
         {
             // Attacking player deals damage to grappling player,
             // with additional damage dealt if the attacking player wins singing-wise.
@@ -324,8 +338,11 @@ public class CombatManager : MonoBehaviour
             }
             playerHealth[1] -= (int)damageDealt;
             healthBar[1].ScaleHealthBar((int)damageDealt, false);
+            playerAnimator[0].SetTrigger("kick");
+            //playerAnimator[1].SetTrigger("getHit");
+            StartCoroutine(DelayAnimation(getHitAnimationDelay, 1, "getHit"));
         }
-        else if (player1Choice == block && player2Choice == attack)
+        else if (player1Choice == dodge && player2Choice == attack)
         {
             if (indexOfWinner == 0)
             {
@@ -333,14 +350,15 @@ public class CombatManager : MonoBehaviour
                 playerHealth[1] -= (int)damageDealt;
                 healthBar[1].ScaleHealthBar((int)damageDealt, false);
             }
+            playerAnimator[0].SetTrigger("dodge");
+            playerAnimator[1].SetTrigger("kick");
         }
-        else if (player1Choice == block && player2Choice == block)
+        else if (player1Choice == dodge && player2Choice == dodge)
         {
-            //Nothing, idiots!
-
-            //play dissapointed animation for attacking player?
+            playerAnimator[indexOfLoser].SetTrigger("dodge");
+            playerAnimator[indexOfWinner].SetTrigger("dodgeToSad");
         }
-        else if (player1Choice == block && player2Choice == grapple)
+        else if (player1Choice == dodge && player2Choice == sweep)
         {
             // The blocking player has their star power lowered
             damageDealt = baseStarPowerDecrease;
@@ -353,8 +371,11 @@ public class CombatManager : MonoBehaviour
             //need to send a negative value to the scale star power bar so it will decrease?
             starPowerBar[0].ScaleHealthBar((int)damageDealt, false);
             Debug.Log($"damage dealt to player 1 star power: {-(int)damageDealt}");
+            playerAnimator[0].SetTrigger("fall");
+            playerAnimator[1].SetTrigger("sweep");
+            Debug.Log("player 1 should be swept by player 2");
         }
-        else if (player1Choice == grapple && player2Choice == attack)
+        else if (player1Choice == sweep && player2Choice == attack)
         {
             damageDealt = baseAttackDamage;
             if (indexOfWinner == 1)
@@ -363,8 +384,11 @@ public class CombatManager : MonoBehaviour
             }
             playerHealth[0] -= (int)damageDealt;
             healthBar[0].ScaleHealthBar((int)damageDealt, false);
+            //playerAnimator[0].SetTrigger("getHit");
+            StartCoroutine(DelayAnimation(getHitAnimationDelay, 0, "getHit"));
+            playerAnimator[1].SetTrigger("kick");
         }
-        else if (player1Choice == grapple && player2Choice == block)
+        else if (player1Choice == sweep && player2Choice == dodge)
         {
             damageDealt = baseStarPowerDecrease;
             if (indexOfWinner == 0)
@@ -372,12 +396,16 @@ public class CombatManager : MonoBehaviour
                 damageDealt += bonus;
             }
             playerStarPower[1] -= damageDealt;
+            playerAnimator[0].SetTrigger("sweep");
+            playerAnimator[1].SetTrigger("fall");
         }
-        else if (player1Choice == grapple && player2Choice == grapple)
+        else if (player1Choice == sweep && player2Choice == sweep)
         {
             // player with higher singing score gets star power increased
             damageDealt = baseStarPowerIncrease + bonus;
             playerStarPower[indexOfWinner] += damageDealt;
+            playerAnimator[indexOfWinner].SetTrigger("sweep");
+            playerAnimator[indexOfLoser].SetTrigger("fall");
         }
         else
         {
@@ -397,5 +425,11 @@ public class CombatManager : MonoBehaviour
                 //this means NO ONE chose anything. Boooooo!
             }
         }
+    }
+
+    IEnumerator DelayAnimation(float time, int indexOfPlayer, string animationTrigger)
+    {
+        yield return new WaitForSeconds(time);
+        playerAnimator[indexOfPlayer].SetTrigger(animationTrigger);
     }
 }
