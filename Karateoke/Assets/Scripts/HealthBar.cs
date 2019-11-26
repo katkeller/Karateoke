@@ -17,6 +17,7 @@ public class HealthBar : MonoBehaviour
     private int scalingFramesLeft;
     private float healthValue;
     private Vector3 newScale;
+    private bool isDead;
 
     private void Start()
     {
@@ -33,7 +34,7 @@ public class HealthBar : MonoBehaviour
 
     private void Update()
     {
-        if (scalingFramesLeft > 0)
+        if (scalingFramesLeft > 0 && !isDead)
         {
             Debug.Log($"{this.name} should scale. New scale is {newScale}");
             transform.localScale = Vector3.Lerp(transform.localScale, newScale, Time.deltaTime * 10);
@@ -45,6 +46,11 @@ public class HealthBar : MonoBehaviour
             //have a glowing red warning animation
             Debug.Log($"{this.name} is below 15%!");
         }
+
+        //if (healthValue <= 0 && !isDead)
+        //{
+        //    isDead = true;
+        //}
     }
 
     public void ScaleHealthBar(float value, bool increase)

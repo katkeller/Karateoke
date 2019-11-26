@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System.Linq;
+using UnityEngine.UI;
 
 public class AudioComparisonManager : MonoBehaviour
 {
@@ -12,10 +13,10 @@ public class AudioComparisonManager : MonoBehaviour
     private GameObject[] audioSampleObject = new GameObject[3];
 
     [SerializeField]
-    private TextMeshProUGUI winnerText;
+    private Image player1WinImage, player2WinImage;
 
     [SerializeField]
-    private float secondsWinnerTextOnScreen = 1.5f;
+    private float secondsWinnerImageOnScreen = 1.5f;
 
     public int IndexOfWinner;
     public int IndexOfLoser;
@@ -38,7 +39,8 @@ public class AudioComparisonManager : MonoBehaviour
             audioSampleCollector[i] = audioSampleObject[i].GetComponent<AudioSampleCollector>();
         }
 
-        winnerText.text = "";
+        player1WinImage.enabled = false;
+        player2WinImage.enabled = false;
     }
 
     void Update()
@@ -58,19 +60,18 @@ public class AudioComparisonManager : MonoBehaviour
             ScoreDisparity = playerScore[1] - playerScore[0];
             // The winning disparity is how much the losing player's score differed from the better player's score.
             // A higher score is worse, since that means they were far off from the target by a larger amount.
-            StartCoroutine(DisplayWinnerText("Player 1"));
+            StartCoroutine(DisplayWinnerImage(player1WinImage));
         }
         else if (playerScore[0] > playerScore[1])
         {
             IndexOfWinner = 1;
             IndexOfLoser = 0;
             ScoreDisparity = playerScore[0] - playerScore[1];
-            StartCoroutine(DisplayWinnerText("Player 2"));
+            StartCoroutine(DisplayWinnerImage(player2WinImage));
         }
 
         playerScore[0] = 0.0f;
         playerScore[1] = 0.0f;
-        //atEndOfPhrase = false;
     }
 
     private void OnEnable()
@@ -83,12 +84,11 @@ public class AudioComparisonManager : MonoBehaviour
         CombatManager.DecideWinner -= OnDecideWinner;
     }
 
-    IEnumerator DisplayWinnerText(string winner)
+    IEnumerator DisplayWinnerImage(Image image)
     {
-        //change this to a star power logo that shows up over player
-        winnerText.text = $"{winner} wins!";
-        yield return new WaitForSeconds(secondsWinnerTextOnScreen);
-        winnerText.text = "";
+        image.enabled = true;
+        yield return new WaitForSeconds(secondsWinnerImageOnScreen);
+        image.enabled = false;
     }
 
     private void RecordSampleValues(int e)
