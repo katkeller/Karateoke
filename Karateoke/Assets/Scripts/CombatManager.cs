@@ -542,15 +542,15 @@ public class CombatManager : MonoBehaviour
         if (indexOfWinner == indexOfLastRoundWinner)
         {
             winsInARowCount++;
-            if (winsInARowCount == 1)
+            if (winsInARowCount == 2)
             {
                 playerAnimator[indexOfWinner].SetBool("isOnFirstBonus", true);
-                //playerAnimator[indexOfWinner].SetBool("isOnSecondBonus", false);
+                playerAnimator[indexOfWinner].SetBool("isOnSecondBonus", false);
             }
-            else if (winsInARowCount >= 2)
+            else if (winsInARowCount >= 3)
             {
-                //playerAnimator[indexOfWinner].SetBool("isOnFirstBonus", false);
                 playerAnimator[indexOfWinner].SetBool("isOnSecondBonus", true);
+                playerAnimator[indexOfWinner].SetBool("isOnFirstBonus", false);
             }
 
             playerStarPower[indexOfWinner] += (baseStarPowerComboIncrease * winsInARowCount);
