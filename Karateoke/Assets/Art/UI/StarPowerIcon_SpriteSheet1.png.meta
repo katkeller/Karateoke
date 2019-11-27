@@ -1,0 +1,389 @@
+fileFormatVersion: 2
+guid: 6a62edcd1663bb54888bca64b18835dd
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8680965811064494030
+    second: StarPowerIcon_SpriteSheet1_0
+  - first:
+      213: -3961059100623256641
+    second: StarPowerIcon_SpriteSheet1_1
+  - first:
+      213: 6332467134139188312
+    second: StarPowerIcon_SpriteSheet1_2
+  - first:
+      213: 3473859526126139609
+    second: StarPowerIcon_SpriteSheet1_3
+  - first:
+      213: -1152097457996611704
+    second: StarPowerIcon_SpriteSheet1_4
+  - first:
+      213: -5128359164575911244
+    second: StarPowerIcon_SpriteSheet1_5
+  - first:
+      213: -2774085214894090032
+    second: StarPowerIcon_SpriteSheet1_6
+  - first:
+      213: 3972099492028487987
+    second: StarPowerIcon_SpriteSheet1_7
+  - first:
+      213: 2431656581039802246
+    second: StarPowerIcon_SpriteSheet1_8
+  - first:
+      213: 2986330903908824627
+    second: StarPowerIcon_SpriteSheet1_9
+  - first:
+      213: 4875603589749433302
+    second: StarPowerIcon_SpriteSheet1_10
+  - first:
+      213: -6344771220629673304
+    second: StarPowerIcon_SpriteSheet1_11
+  externalObjects: {}
+  serializedVersion: 10
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: -1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 300
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 2
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: StarPowerIcon_SpriteSheet1_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 840
+        width: 420
+        height: 420
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b4a6a298a2f7d8488bb68f4e672c045
+      internalID: -8680965811064494030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarPowerIcon_SpriteSheet1_1
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 840
+        width: 420
+        height: 420
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 00f5de4dea0039042b359c6b3a2627e1
+      internalID: -3961059100623256641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarPowerIcon_SpriteSheet1_2
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 840
+        width: 420
+        height: 420
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d078c4fd1080de0478ce26873b4f4a8c
+      internalID: 6332467134139188312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarPowerIcon_SpriteSheet1_3
+      rect:
+        serializedVersion: 2
+        x: 1260
+        y: 840
+        width: 420
+        height: 420
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 87fd87bea51151c4198efa3443e86237
+      internalID: 3473859526126139609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarPowerIcon_SpriteSheet1_4
+      rect:
+        serializedVersion: 2
+        x: 1680
+        y: 840
+        width: 420
+        height: 420
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd4ef98d160830e46b3979c0fbfa64c8
+      internalID: -1152097457996611704
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarPowerIcon_SpriteSheet1_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 420
+        width: 420
+        height: 420
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c7270d6cb324eab41b60a694b6efe787
+      internalID: -5128359164575911244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarPowerIcon_SpriteSheet1_6
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 420
+        width: 420
+        height: 420
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f46175cdf472b94599a9c16dbbbe871
+      internalID: -2774085214894090032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarPowerIcon_SpriteSheet1_7
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 420
+        width: 420
+        height: 420
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c5296794fa17c4743b455dbc5e92482f
+      internalID: 3972099492028487987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarPowerIcon_SpriteSheet1_8
+      rect:
+        serializedVersion: 2
+        x: 1260
+        y: 420
+        width: 420
+        height: 420
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06b9a13323db10843bcb2cc302f95f2d
+      internalID: 2431656581039802246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarPowerIcon_SpriteSheet1_9
+      rect:
+        serializedVersion: 2
+        x: 1680
+        y: 420
+        width: 420
+        height: 420
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1d3ad06e91083664fb04848a85f5dac4
+      internalID: 2986330903908824627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarPowerIcon_SpriteSheet1_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 420
+        height: 420
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4d71876137aee0545aba2e7dafd67461
+      internalID: 4875603589749433302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarPowerIcon_SpriteSheet1_11
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 0
+        width: 420
+        height: 420
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a278fe86d1af01499cc4e3f21717567
+      internalID: -6344771220629673304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 7983ac7822c96cc48a05498788916b32
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

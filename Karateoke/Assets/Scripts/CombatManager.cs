@@ -29,6 +29,18 @@ public class CombatManager : MonoBehaviour
     private GameObject[] playerModel = new GameObject[2];
 
     [SerializeField]
+    private GameObject[] comboImage = new GameObject[2];
+
+    [SerializeField]
+    private ParticleSystem[] sparks = new ParticleSystem[2];
+
+    [SerializeField]
+    private TextMeshProUGUI[] comboText = new TextMeshProUGUI[2];
+
+    [SerializeField]
+    private float comboImageAnimationDelay = 1.5f;
+
+    [SerializeField]
     private float getHitAnimationDelay = 1.0f, victoryAnimationDelay = 2.0f;
 
     [SerializeField]
@@ -41,7 +53,7 @@ public class CombatManager : MonoBehaviour
     private int baseAttackDamage = 5, baseParryDamage = 1, baseStarPowerIncrease = 10;
 
     [SerializeField]
-    private float baseStarPowerDecrease = 5f;
+    private float baseStarPowerDecrease = 5f, baseStarPowerComboIncrease = 1.5f;
 
     [SerializeField]
     private float starPowerMoveLengthInSeconds = 5.0f;
@@ -61,6 +73,7 @@ public class CombatManager : MonoBehaviour
     //use these to create star power bonuses
     private int winsInARowCount;
     private int indexOfLastRoundWinner;
+    private Animator[] comboImageAnimator = new Animator[2];
 
     private Color32 countdownTextColor;
     private Sprite player1NextImage, player2NextImage;
@@ -107,6 +120,10 @@ public class CombatManager : MonoBehaviour
         starPowerBar[1] = playerStarPowerBarGameObject[1].GetComponent<HealthBar>();
         playerAnimator[0] = playerModel[0].GetComponent<Animator>();
         playerAnimator[1] = playerModel[1].GetComponent<Animator>();
+        comboImageAnimator[0] = comboImage[0].GetComponent<Animator>();
+        comboImageAnimator[1] = comboImage[1].GetComponent<Animator>();
+        comboText[0].text = "";
+        comboText[1].text = "";
 
         audioSource = GetComponent<AudioSource>();
         audioComparisonSript = GetComponent<AudioComparisonManager>();
@@ -325,6 +342,8 @@ public class CombatManager : MonoBehaviour
         indexOfWinner = audioComparisonSript.IndexOfWinner;
         indexOfLoser = audioComparisonSript.IndexOfLoser;
 
+        StartCoroutine(DecideComboAndDisplayImage(indexOfWinner, indexOfLoser));
+
         // The - 1 is there so we can control for one player only doing a bit better than the other,
         // but I may take it out later after playtesting.
         int bonus = (int)(scoreDisparityAveraged / bonusDividingFactor) - 1;
@@ -516,6 +535,42 @@ public class CombatManager : MonoBehaviour
         player2Choice = " ";
         Debug.Log($"Player1 health: {playerHealth[0]}");
         Debug.Log($"Player2 health: {playerHealth[1]}");
+    }
+
+    IEnumerator DecideComboAndDisplayImage(int indexOfWinner, int indexOfLoser)
+    {
+        if (indexOfWinner == indexOfLastRoundWinner)
+        {
+            winsInARowCount++;
+            if (winsInARowCount == 1)
+            {
+                playerAnimator[indexOfWinner].SetBool("isOnFirstBonus", true);
+                //playerAnimator[indexOfWinner].SetBool("isOnSecondBonus", false);
+            }
+            else if (winsInARowCount >= 2)
+            {
+                //playerAnimator[indexOfWinner].SetBool("isOnFirstBonus", false);
+                playerAnimator[indexOfWinner].SetBool("isOnSecondBonus", true);
+            }
+
+            playerStarPower[indexOfWinner] += (baseStarPowerComboIncrease * winsInARowCount);
+            //change starpowerbar
+
+        }
+        else
+        {
+            winsInARowCount = 0;
+            playerAnimator[indexOfLoser].SetBool("isOnFirstBonus", false);
+            playerAnimator[indexOfWinner].SetBool("isOnSecondBonus", false);
+        }
+        indexOfLastRoundWinner = indexOfWinner;
+
+        comboImageAnimator[indexOfWinner].SetTrigger("comboIn");
+        comboText[indexOfWinner].text = "star\npower";
+        sparks[indexOfWinner].Play();
+        yield return new WaitForSeconds(comboImageAnimationDelay);
+        comboImageAnimator[indexOfWinner].SetTrigger("comboOut");
+        comboText[indexOfWinner].text = "";
     }
 
     IEnumerator DelayAnimation(float time, int indexOfPlayer, string animationTrigger)
