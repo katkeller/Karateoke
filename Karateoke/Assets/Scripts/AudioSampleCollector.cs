@@ -135,6 +135,7 @@ public class AudioSampleCollector : MonoBehaviour
             {
                 Transform startingPosition = pitchIndicator.transform;
                 pitchIndicatorHeight = ((indexOfHighestValue - 6) * 0.04f) - 4.6f;
+                // TODO: Fix pitch indicator height here.
 
                 //Vector3 endingVector3 = new Vector3(startingPosition.position.x, (indexOfHighestValue / dividingValue) + startingYPosition, startingPosition.position.z);
                 Vector3 endingVector3 = new Vector3(startingPosition.position.x, pitchIndicatorHeight, startingPosition.position.z);

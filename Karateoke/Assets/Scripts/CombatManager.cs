@@ -137,14 +137,14 @@ public class CombatManager : MonoBehaviour
 
         if (canMakeChoice && !isPerformingStarPowerMove && !playerIsDead)
         {
-            //we should add a simple (but unique to each player) soundeffect for when they choose
+            //we should add a simple (but unique to each player) sound effect for when they choose
 
+            // TODO: add soundeffects/visual queue so the player knows when they've made a choice (grayed out logo that fills in? use character portrait w/ sound effect?)
             if (Input.GetButtonDown("Player1Attack") && !player1HasMadeChoice)
             {
                 //player1ActionText.text = "Player 1 attacks!";
                 player1Choice = attack;
                 player1HasMadeChoice = true;
-                //player1NextImage = attackIcon;
                 player1ActionTextNext = "Attack";
 
             }
@@ -153,7 +153,6 @@ public class CombatManager : MonoBehaviour
                // player1ActionText.text = "Player 1 blocks!";
                 player1Choice = dodge;
                 player1HasMadeChoice = true;
-                //player1NextImage = blockIcon;
                 player1ActionTextNext = "Dodge";
             }
             if (Input.GetButtonDown("Player1Grapple") && !player1HasMadeChoice)
@@ -161,7 +160,6 @@ public class CombatManager : MonoBehaviour
                 //player1ActionText.text = "Player 1 grapples!";
                 player1Choice = sweep;
                 player1HasMadeChoice = true;
-                //player1NextImage = grappleIcon;
                 player1ActionTextNext = "Sweep";
             }
             if (Input.GetButtonDown("Player2Attack") && !player2HasMadeChoice)
@@ -169,7 +167,6 @@ public class CombatManager : MonoBehaviour
                 //player2ActionText.text = "Player 2 attacks!";
                 player2Choice = attack;
                 player2HasMadeChoice = true;
-                //player2NextImage = attackIcon;
                 player2ActionTextNext = "Attack";
             }
             if (Input.GetButtonDown("Player2Block") && !player2HasMadeChoice)
@@ -177,7 +174,6 @@ public class CombatManager : MonoBehaviour
                 //player2ActionText.text = "Player 2 blocks!";
                 player2Choice = dodge;
                 player2HasMadeChoice = true;
-                //player2NextImage = blockIcon;
                 player2ActionTextNext = "Dodge";
             }
             if (Input.GetButtonDown("Player2Grapple") && !player2HasMadeChoice)
@@ -185,7 +181,6 @@ public class CombatManager : MonoBehaviour
                 //player2ActionText.text = "Player 2 grapples!";
                 player2Choice = sweep;
                 player2HasMadeChoice = true;
-                //player2NextImage = grappleIcon;
                 player2ActionTextNext = "Sweep";
             }
         }
@@ -205,22 +200,26 @@ public class CombatManager : MonoBehaviour
             }
             if (playerStarPower[0] >= 100)
             {
-                StartCoroutine(StarPowerMove(0));
+                StartCoroutine(StarPowerMove(0, 1));
             }
             if (playerStarPower[1] >= 100)
             {
-                StartCoroutine(StarPowerMove(1));
+                StartCoroutine(StarPowerMove(1, 0));
             }
         }
     }
 
-    IEnumerator StarPowerMove(int indexOfPlayer)
+    IEnumerator StarPowerMove(int indexOfWinner, int indexOfLoser)
     {
         isPerformingStarPowerMove = true;
-        //animation
-        //damage
+        playerAnimator[indexOfWinner].SetTrigger("starPower");
+        playerAnimator[indexOfLoser].SetTrigger("getBlasted");
         yield return new WaitForSeconds(starPowerMoveLengthInSeconds);
+        playerAnimator[indexOfWinner].SetTrigger("starPowerEnd");
+        playerAnimator[indexOfLoser].SetTrigger("getBlastedEnd");
         isPerformingStarPowerMove = false;
+
+        // TODO: add star power damage and make sure animations match up
     }
 
     IEnumerator KillPlayer(int indexOfLoser, int indexOfWinner)
@@ -424,7 +423,6 @@ public class CombatManager : MonoBehaviour
                 Debug.Log($"damage dealt to player 1 star power: {-(int)damageDealt}");
                 playerAnimator[0].SetTrigger("fall");
                 playerAnimator[1].SetTrigger("sweep");
-                Debug.Log("player 1 should be swept by player 2");
             }
             else if (player1Choice == sweep && player2Choice == attack)
             {
@@ -435,7 +433,6 @@ public class CombatManager : MonoBehaviour
                 }
                 playerHealth[0] -= (int)damageDealt;
                 healthBar[0].ScaleHealthBar((int)damageDealt, false);
-                //playerAnimator[0].SetTrigger("getHit");
                 StartCoroutine(DelayAnimation(getHitAnimationDelay, 0, "getHit"));
                 playerAnimator[1].SetTrigger("kick");
             }
@@ -449,6 +446,7 @@ public class CombatManager : MonoBehaviour
                 playerStarPower[1] -= damageDealt;
                 playerAnimator[0].SetTrigger("sweep");
                 playerAnimator[1].SetTrigger("fall");
+                // TODO: add starpower bar animations where needed in combat
             }
             else if (player1Choice == sweep && player2Choice == sweep)
             {
@@ -554,7 +552,7 @@ public class CombatManager : MonoBehaviour
             }
 
             playerStarPower[indexOfWinner] += (baseStarPowerComboIncrease * winsInARowCount);
-            //change starpowerbar
+            // TODO: change starpowerbar
 
         }
         else
@@ -563,6 +561,7 @@ public class CombatManager : MonoBehaviour
             playerAnimator[indexOfLoser].SetBool("isOnFirstBonus", false);
             playerAnimator[indexOfWinner].SetBool("isOnSecondBonus", false);
         }
+
         indexOfLastRoundWinner = indexOfWinner;
 
         comboImageAnimator[indexOfWinner].SetTrigger("comboIn");
