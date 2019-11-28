@@ -32,15 +32,6 @@ public class AudioSampleCollector : MonoBehaviour
     [SerializeField]
     private bool isSource;
 
-    //[SerializeField]
-    //private TextMeshProUGUI rangeText;
-
-    //[SerializeField]
-    //private float startingYPosition = 0.25f;
-
-    //[SerializeField]
-    //private float dividingValue = 20;
-
     [Tooltip("This value is used to multiply the highest value to get the pitch indicator's alpha so that it's visible when the player is singing.")]
     [SerializeField]
     private float alphaMultiplier = 100.0f;
@@ -88,7 +79,6 @@ public class AudioSampleCollector : MonoBehaviour
         else if (!isSource)
         {
             audioSource.outputAudioMixerGroup = masterMixerGroup;
-            //audioSource.PlayOneShot(clipToPlayIfNoMicrophone);
         }
         else
         {
@@ -129,7 +119,7 @@ public class AudioSampleCollector : MonoBehaviour
         //element 6 contains 82 hz, which is the lowest note in the human vocal range.
         //element 97 contains 1047 hz, which is the highest note in the human vocal range.
 
-        // Kat: I changed 97 to 96 because #1, whose voice actually goes that high,
+        // I changed 97 to 96 because #1, whose voice actually goes that high,
         // and #2, it makes it much easier to calculate word height for the lyrics
         // since then we only have 90 samples.
         if(indexOfHighestValue > 6 && indexOfHighestValue < 96)
@@ -138,15 +128,10 @@ public class AudioSampleCollector : MonoBehaviour
             {
                 Transform startingPosition = pitchIndicator.transform;
                 pitchIndicatorHeight = ((indexOfHighestValue - 6) * pitchIndicatorHeightMultiplier) - 4.6f;
-                // TODO: Fix pitch indicator height here.
-
-                //Vector3 endingVector3 = new Vector3(startingPosition.position.x, (indexOfHighestValue / dividingValue) + startingYPosition, startingPosition.position.z);
                 Vector3 endingVector3 = new Vector3(startingPosition.position.x, pitchIndicatorHeight, startingPosition.position.z);
 
                 pitchIndicator.transform.localPosition = Vector3.Lerp(startingPosition.position, endingVector3, timeToMove);
             }
-
-            //rangeText.text = highestValue.ToString();
         }
 
     }

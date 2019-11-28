@@ -914,7 +914,7 @@ MonoBehaviour:
   lyricText: {fileID: 833770429}
   timerText: {fileID: 2144335042}
   inputField: {fileID: 1179458702}
-  delay: 0.1
+  delay: 0
   fullLyrics: Breaking my back just to know your name. Seven teen tracks and I've
     had it with this game. I'm breaking my back just to know your name. But heaven
     ain't close in a place like this. Any- thing goes but don't blink, you might miss.
