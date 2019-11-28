@@ -38,6 +38,12 @@ public class CombatManager : MonoBehaviour
     private TextMeshProUGUI[] comboText = new TextMeshProUGUI[2];
 
     [SerializeField]
+    private GameObject player1Portrait, player2Portrait;
+
+    [SerializeField]
+    private Sprite player1NoChoicePortrait, player1ChoiceMadePortrait, player2NoChoicePortrait, player2ChoiceMadePortrait;
+
+    [SerializeField]
     private float comboImageAnimationDelay = 1.5f;
 
     [SerializeField]
@@ -77,8 +83,10 @@ public class CombatManager : MonoBehaviour
 
     private Color32 countdownTextColor;
     private Sprite player1NextImage, player2NextImage;
+    private SpriteRenderer player1PortraitRenderer, player2PortraitRenderer;
     private string player1ActionTextNext, player2ActionTextNext;
     private AudioSource audioSource;
+    private AudioSource player1AudioSource, player2AudioSource;
     private HealthBar[] healthBar = new HealthBar[2];
     private HealthBar[] starPowerBar = new HealthBar[2];
     private Animator[] playerAnimator = new Animator[2];
@@ -120,8 +128,12 @@ public class CombatManager : MonoBehaviour
         starPowerBar[1] = playerStarPowerBarGameObject[1].GetComponent<HealthBar>();
         playerAnimator[0] = playerModel[0].GetComponent<Animator>();
         playerAnimator[1] = playerModel[1].GetComponent<Animator>();
+        player1AudioSource = playerModel[0].GetComponent<AudioSource>();
+        player2AudioSource = playerModel[1].GetComponent<AudioSource>();
         comboImageAnimator[0] = comboImage[0].GetComponent<Animator>();
         comboImageAnimator[1] = comboImage[1].GetComponent<Animator>();
+        player1PortraitRenderer = player1Portrait.GetComponent<SpriteRenderer>();
+        player2PortraitRenderer = player2Portrait.GetComponent<SpriteRenderer>();
         comboText[0].text = "";
         comboText[1].text = "";
 
@@ -146,7 +158,8 @@ public class CombatManager : MonoBehaviour
                 player1Choice = attack;
                 player1HasMadeChoice = true;
                 player1ActionTextNext = "Attack";
-
+                player1PortraitRenderer.sprite = player1ChoiceMadePortrait;
+                player1AudioSource.Play();
             }
             if (Input.GetButtonDown("Player1Block") && !player1HasMadeChoice)
             {
@@ -154,6 +167,8 @@ public class CombatManager : MonoBehaviour
                 player1Choice = dodge;
                 player1HasMadeChoice = true;
                 player1ActionTextNext = "Dodge";
+                player1PortraitRenderer.sprite = player1ChoiceMadePortrait;
+                player1AudioSource.Play();
             }
             if (Input.GetButtonDown("Player1Grapple") && !player1HasMadeChoice)
             {
@@ -161,6 +176,8 @@ public class CombatManager : MonoBehaviour
                 player1Choice = sweep;
                 player1HasMadeChoice = true;
                 player1ActionTextNext = "Sweep";
+                player1PortraitRenderer.sprite = player1ChoiceMadePortrait;
+                player1AudioSource.Play();
             }
             if (Input.GetButtonDown("Player2Attack") && !player2HasMadeChoice)
             {
@@ -168,6 +185,8 @@ public class CombatManager : MonoBehaviour
                 player2Choice = attack;
                 player2HasMadeChoice = true;
                 player2ActionTextNext = "Attack";
+                player2PortraitRenderer.sprite = player2ChoiceMadePortrait;
+                player2AudioSource.Play();
             }
             if (Input.GetButtonDown("Player2Block") && !player2HasMadeChoice)
             {
@@ -175,6 +194,8 @@ public class CombatManager : MonoBehaviour
                 player2Choice = dodge;
                 player2HasMadeChoice = true;
                 player2ActionTextNext = "Dodge";
+                player2PortraitRenderer.sprite = player2ChoiceMadePortrait;
+                player2AudioSource.Play();
             }
             if (Input.GetButtonDown("Player2Grapple") && !player2HasMadeChoice)
             {
@@ -182,6 +203,8 @@ public class CombatManager : MonoBehaviour
                 player2Choice = sweep;
                 player2HasMadeChoice = true;
                 player2ActionTextNext = "Sweep";
+                player2PortraitRenderer.sprite = player2ChoiceMadePortrait;
+                player2AudioSource.Play();
             }
         }
     }
@@ -286,6 +309,8 @@ public class CombatManager : MonoBehaviour
         yield return new WaitForSeconds(1);
         countdownText.color = lastNumberColor;
         countdownText.text = "CHOOSE!";
+        player1PortraitRenderer.sprite = player1NoChoicePortrait;
+        player2PortraitRenderer.sprite = player2NoChoicePortrait;
         audioSource.PlayOneShot(countdownClip[3]);
         //Add choosing countdown graphic, maybe a bar or a round pie chart type thing?
         yield return new WaitForSeconds(secondsForChoice);
@@ -531,6 +556,8 @@ public class CombatManager : MonoBehaviour
         player2HasMadeChoice = false;
         player1Choice = " ";
         player2Choice = " ";
+        player1PortraitRenderer.sprite = player1ChoiceMadePortrait;
+        player2PortraitRenderer.sprite = player2ChoiceMadePortrait;
         Debug.Log($"Player1 health: {playerHealth[0]}");
         Debug.Log($"Player2 health: {playerHealth[1]}");
     }
