@@ -41,7 +41,7 @@ public class CombatManager : MonoBehaviour
     private GameObject player1Portrait, player2Portrait;
 
     [SerializeField]
-    private Sprite player1NoChoicePortrait, player1ChoiceMadePortrait, player2NoChoicePortrait, player2ChoiceMadePortrait;
+    private Sprite player1RegularPortrait, player1NoChoicePortrait, player1ChoiceMadePortrait, player2RegularPortrait, player2NoChoicePortrait, player2ChoiceMadePortrait;
 
     [SerializeField]
     private float comboImageAnimationDelay = 1.5f;
@@ -77,7 +77,7 @@ public class CombatManager : MonoBehaviour
     private float phraseTimeElapsed;
 
     //use these to create star power bonuses
-    private int winsInARowCount;
+    private int timesWonInRowAfterFirst;
     private int indexOfLastRoundWinner;
     private Animator[] comboImageAnimator = new Animator[2];
 
@@ -121,6 +121,7 @@ public class CombatManager : MonoBehaviour
         player1ActionText.text = "";
         player2ActionText.text = "";
         countdownTextColor = countdownText.color;
+        indexOfLastRoundWinner = 3;
 
         healthBar[0] = playerHealthBarGameObject[0].GetComponent<HealthBar>();
         healthBar[1] = playerHealthBarGameObject[1].GetComponent<HealthBar>();
@@ -149,12 +150,8 @@ public class CombatManager : MonoBehaviour
 
         if (canMakeChoice && !isPerformingStarPowerMove && !playerIsDead)
         {
-            //we should add a simple (but unique to each player) sound effect for when they choose
-
-            // TODO: add soundeffects/visual queue so the player knows when they've made a choice (grayed out logo that fills in? use character portrait w/ sound effect?)
             if (Input.GetButtonDown("Player1Attack") && !player1HasMadeChoice)
             {
-                //player1ActionText.text = "Player 1 attacks!";
                 player1Choice = attack;
                 player1HasMadeChoice = true;
                 player1ActionTextNext = "Attack";
@@ -163,7 +160,6 @@ public class CombatManager : MonoBehaviour
             }
             if (Input.GetButtonDown("Player1Block") && !player1HasMadeChoice)
             {
-               // player1ActionText.text = "Player 1 blocks!";
                 player1Choice = dodge;
                 player1HasMadeChoice = true;
                 player1ActionTextNext = "Dodge";
@@ -172,7 +168,6 @@ public class CombatManager : MonoBehaviour
             }
             if (Input.GetButtonDown("Player1Grapple") && !player1HasMadeChoice)
             {
-                //player1ActionText.text = "Player 1 grapples!";
                 player1Choice = sweep;
                 player1HasMadeChoice = true;
                 player1ActionTextNext = "Sweep";
@@ -181,7 +176,6 @@ public class CombatManager : MonoBehaviour
             }
             if (Input.GetButtonDown("Player2Attack") && !player2HasMadeChoice)
             {
-                //player2ActionText.text = "Player 2 attacks!";
                 player2Choice = attack;
                 player2HasMadeChoice = true;
                 player2ActionTextNext = "Attack";
@@ -190,7 +184,6 @@ public class CombatManager : MonoBehaviour
             }
             if (Input.GetButtonDown("Player2Block") && !player2HasMadeChoice)
             {
-                //player2ActionText.text = "Player 2 blocks!";
                 player2Choice = dodge;
                 player2HasMadeChoice = true;
                 player2ActionTextNext = "Dodge";
@@ -199,7 +192,6 @@ public class CombatManager : MonoBehaviour
             }
             if (Input.GetButtonDown("Player2Grapple") && !player2HasMadeChoice)
             {
-                //player2ActionText.text = "Player 2 grapples!";
                 player2Choice = sweep;
                 player2HasMadeChoice = true;
                 player2ActionTextNext = "Sweep";
@@ -443,7 +435,6 @@ public class CombatManager : MonoBehaviour
                     damageDealt += 5;
                 }
                 playerStarPower[0] -= damageDealt;
-                //need to send a negative value to the scale star power bar so it will decrease?
                 starPowerBar[0].ScaleHealthBar((int)damageDealt, false);
                 Debug.Log($"damage dealt to player 1 star power: {-(int)damageDealt}");
                 playerAnimator[0].SetTrigger("fall");
@@ -469,6 +460,7 @@ public class CombatManager : MonoBehaviour
                     damageDealt += bonus;
                 }
                 playerStarPower[1] -= damageDealt;
+                starPowerBar[1].ScaleHealthBar((int)damageDealt, false);
                 playerAnimator[0].SetTrigger("sweep");
                 playerAnimator[1].SetTrigger("fall");
                 // TODO: add starpower bar animations where needed in combat
@@ -478,6 +470,7 @@ public class CombatManager : MonoBehaviour
                 // player with higher singing score gets star power increased
                 damageDealt = baseStarPowerIncrease + bonus;
                 playerStarPower[indexOfWinner] += damageDealt;
+                starPowerBar[indexOfWinner].ScaleHealthBar((int)damageDealt, true);
                 playerAnimator[indexOfWinner].SetTrigger("sweep");
                 playerAnimator[indexOfLoser].SetTrigger("fall");
             }
@@ -510,6 +503,7 @@ public class CombatManager : MonoBehaviour
                     damageDealt += bonus;
                 }
                 playerStarPower[1] -= damageDealt;
+                starPowerBar[1].ScaleHealthBar((int)damageDealt, false);
                 playerAnimator[0].SetTrigger("sweep");
                 playerAnimator[1].SetTrigger("fall");
             }
@@ -542,13 +536,13 @@ public class CombatManager : MonoBehaviour
                     damageDealt += bonus;
                 }
                 playerStarPower[0] -= damageDealt;
+                starPowerBar[0].ScaleHealthBar((int)damageDealt, false);
                 playerAnimator[1].SetTrigger("sweep");
                 playerAnimator[0].SetTrigger("fall");
             }
         }
         else if(!player1HasMadeChoice && !player2HasMadeChoice)
         {
-            //no one chose anything, so they both look dissapointed in themselves.
             playerAnimator[indexOfWinner].SetTrigger("dissapointed");
         }
 
@@ -556,8 +550,8 @@ public class CombatManager : MonoBehaviour
         player2HasMadeChoice = false;
         player1Choice = " ";
         player2Choice = " ";
-        player1PortraitRenderer.sprite = player1ChoiceMadePortrait;
-        player2PortraitRenderer.sprite = player2ChoiceMadePortrait;
+        player1PortraitRenderer.sprite = player1RegularPortrait;
+        player2PortraitRenderer.sprite = player2RegularPortrait;
         Debug.Log($"Player1 health: {playerHealth[0]}");
         Debug.Log($"Player2 health: {playerHealth[1]}");
     }
@@ -566,25 +560,25 @@ public class CombatManager : MonoBehaviour
     {
         if (indexOfWinner == indexOfLastRoundWinner)
         {
-            winsInARowCount++;
-            if (winsInARowCount == 2)
+            timesWonInRowAfterFirst++;
+            if (timesWonInRowAfterFirst == 1)
             {
                 playerAnimator[indexOfWinner].SetBool("isOnFirstBonus", true);
                 playerAnimator[indexOfWinner].SetBool("isOnSecondBonus", false);
             }
-            else if (winsInARowCount >= 3)
+            else if (timesWonInRowAfterFirst >= 2)
             {
                 playerAnimator[indexOfWinner].SetBool("isOnSecondBonus", true);
                 playerAnimator[indexOfWinner].SetBool("isOnFirstBonus", false);
             }
 
-            playerStarPower[indexOfWinner] += (baseStarPowerComboIncrease * winsInARowCount);
-            // TODO: change starpowerbar
-
+            int starPower = (int)baseStarPowerComboIncrease * timesWonInRowAfterFirst;
+            playerStarPower[indexOfWinner] += starPower;
+            starPowerBar[indexOfWinner].ScaleHealthBar(starPower, true);
         }
         else
         {
-            winsInARowCount = 0;
+            timesWonInRowAfterFirst = 0;
             playerAnimator[indexOfLoser].SetBool("isOnFirstBonus", false);
             playerAnimator[indexOfWinner].SetBool("isOnSecondBonus", false);
         }
