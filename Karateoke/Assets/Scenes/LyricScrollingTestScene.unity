@@ -5587,8 +5587,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 42cb59e182ac1224494a7edeccc86fe1, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 8eaa14e460b1b8e45bec4554e900013e, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.9019608}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -5606,7 +5606,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 321514713}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7.64, y: -3, z: 0}
+  m_LocalPosition: {x: -7.55, y: -3, z: 0}
   m_LocalScale: {x: 0.75, y: 0.75, z: 1}
   m_Children: []
   m_Father: {fileID: 1866712463}
@@ -5945,7 +5945,7 @@ PrefabInstance:
         type: 3}
       propertyPath: clipToPlayIfNoMicrophone
       value: 
-      objectReference: {fileID: 8300000, guid: b2dd2b573294fa3479fbcddba427ea3c, type: 3}
+      objectReference: {fileID: 8300000, guid: 5c7d1452c192b4bffa646f8a52fb76bb, type: 3}
     - target: {fileID: 1961180794547356359, guid: 690e8cc2ca2454131b0446d92914ff57,
         type: 3}
       propertyPath: sourceMixerGroup
@@ -5955,7 +5955,12 @@ PrefabInstance:
     - target: {fileID: 1961180794547356359, guid: 690e8cc2ca2454131b0446d92914ff57,
         type: 3}
       propertyPath: alphaMultiplier
-      value: 20
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1961180794547356359, guid: 690e8cc2ca2454131b0446d92914ff57,
+        type: 3}
+      propertyPath: pitchIndicatorHeightMultiplier
+      value: 0.025
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 690e8cc2ca2454131b0446d92914ff57, type: 3}
@@ -11235,6 +11240,7 @@ MonoBehaviour:
   baseParryDamage: 1
   baseStarPowerIncrease: 10
   baseStarPowerDecrease: 5
+  baseStarPowerComboIncrease: 1.5
   starPowerMoveLengthInSeconds: 5
   bonusDividingFactor: 250
   bonusParryDividingValue: 2
@@ -12267,8 +12273,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 335119e22c2294b4f82bdc98bd9a7dbb, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: ce006b71919f2694db1266a3acf678d1, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.9019608}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -12286,7 +12292,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1038104866}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7.64, y: -3, z: 0}
+  m_LocalPosition: {x: -7.55, y: -3, z: -1}
   m_LocalScale: {x: 0.75, y: 0.75, z: 1}
   m_Children: []
   m_Father: {fileID: 1866712463}
@@ -14002,7 +14008,12 @@ PrefabInstance:
     - target: {fileID: 1808585856852629713, guid: cf1564edd09b34cf89da3b78b01f5044,
         type: 3}
       propertyPath: alphaMultiplier
-      value: 20
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808585856852629713, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: pitchIndicatorHeightMultiplier
+      value: 0.025
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf1564edd09b34cf89da3b78b01f5044, type: 3}

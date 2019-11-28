@@ -46,6 +46,9 @@ public class AudioSampleCollector : MonoBehaviour
     private float alphaMultiplier = 100.0f;
 
     [SerializeField]
+    private float pitchIndicatorHeightMultiplier = 0.04f;
+
+    [SerializeField]
     private float timeToMove = 0.1f;
 
     private AudioSource audioSource;
@@ -134,7 +137,7 @@ public class AudioSampleCollector : MonoBehaviour
             if(highestValue > 0.01f)
             {
                 Transform startingPosition = pitchIndicator.transform;
-                pitchIndicatorHeight = ((indexOfHighestValue - 6) * 0.04f) - 4.6f;
+                pitchIndicatorHeight = ((indexOfHighestValue - 6) * pitchIndicatorHeightMultiplier) - 4.6f;
                 // TODO: Fix pitch indicator height here.
 
                 //Vector3 endingVector3 = new Vector3(startingPosition.position.x, (indexOfHighestValue / dividingValue) + startingYPosition, startingPosition.position.z);
