@@ -6049,18 +6049,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 494161200}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &494161203 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1961180794547356359, guid: 690e8cc2ca2454131b0446d92914ff57,
-    type: 3}
-  m_PrefabInstance: {fileID: 494161200}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 494161201}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b7b5374233264e2fa2ef666157855b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &516403355
 GameObject:
   m_ObjectHideFlags: 0
@@ -11333,7 +11321,7 @@ MonoBehaviour:
   baseParryDamage: 1
   baseStarPowerIncrease: 10
   baseStarPowerDecrease: 5
-  baseStarPowerComboIncrease: 1.5
+  baseStarPowerComboIncrease: 5
   starPowerMoveLengthInSeconds: 5
   bonusDividingFactor: 250
   bonusParryDividingValue: 2
@@ -15322,18 +15310,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1459302148}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1917424559 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1808585856852629713, guid: cf1564edd09b34cf89da3b78b01f5044,
-    type: 3}
-  m_PrefabInstance: {fileID: 1459302148}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1917424557}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b7b5374233264e2fa2ef666157855b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1967843827
 GameObject:
   m_ObjectHideFlags: 0
@@ -15704,18 +15680,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2017223419}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2017223422 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8592189664831406512, guid: 37013f402cdc2412682f174b27995996,
-    type: 3}
-  m_PrefabInstance: {fileID: 2017223419}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2017223420}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b7b5374233264e2fa2ef666157855b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2035334954
 GameObject:
   m_ObjectHideFlags: 0
@@ -15898,63 +15862,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1431509540}
-        m_MethodName: StartScrolling
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 516403358}
-        m_MethodName: StartBackgroundMusic
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1917424559}
-        m_MethodName: StartMusic
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 494161203}
-        m_MethodName: StartMusic
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2017223422}
-        m_MethodName: StartMusic
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 542104825}
-        m_MethodName: StartAnimations
+      - m_Target: {fileID: 1707185754}
+        m_MethodName: StartGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

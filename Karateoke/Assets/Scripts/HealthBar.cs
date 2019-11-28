@@ -31,6 +31,7 @@ public class HealthBar : MonoBehaviour
             healthValue = 1.0f;
         }
     }
+    // TODO: make it so bars can't go into negative
 
     private void Update()
     {

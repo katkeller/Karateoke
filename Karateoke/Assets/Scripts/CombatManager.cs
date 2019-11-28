@@ -56,10 +56,10 @@ public class CombatManager : MonoBehaviour
     private GameObject[] playerStarPowerBarGameObject = new GameObject[2];
 
     [SerializeField]
-    private int baseAttackDamage = 5, baseParryDamage = 1, baseStarPowerIncrease = 10;
+    private int baseAttackDamage = 5, baseParryDamage = 1, baseStarPowerIncrease = 10, starPowerMoveDamage = 20;
 
     [SerializeField]
-    private float baseStarPowerDecrease = 5f, baseStarPowerComboIncrease = 1.5f;
+    private float baseStarPowerDecrease = 5f, baseStarPowerComboIncrease = 2f;
 
     [SerializeField]
     private float starPowerMoveLengthInSeconds = 5.0f;
@@ -146,7 +146,7 @@ public class CombatManager : MonoBehaviour
     {
         phraseTimeElapsed += Time.deltaTime;
 
-        CheckForStarPowerOrDeath();
+        //CheckForStarPowerOrDeath();
 
         if (canMakeChoice && !isPerformingStarPowerMove && !playerIsDead)
         {
@@ -201,62 +201,6 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    private void CheckForStarPowerOrDeath()
-    {
-        if (!playerIsDead)
-        {
-            if (playerHealth[0] <= 0)
-            {
-                StartCoroutine(KillPlayer(0, 1));
-            }
-            if (playerHealth[1] <= 0)
-            {
-                StartCoroutine(KillPlayer(1, 0));
-            }
-            if (playerStarPower[0] >= 100)
-            {
-                StartCoroutine(StarPowerMove(0, 1));
-            }
-            if (playerStarPower[1] >= 100)
-            {
-                StartCoroutine(StarPowerMove(1, 0));
-            }
-        }
-    }
-
-    IEnumerator StarPowerMove(int indexOfWinner, int indexOfLoser)
-    {
-        isPerformingStarPowerMove = true;
-        playerAnimator[indexOfWinner].SetTrigger("starPower");
-        playerAnimator[indexOfLoser].SetTrigger("getBlasted");
-        yield return new WaitForSeconds(starPowerMoveLengthInSeconds);
-        playerAnimator[indexOfWinner].SetTrigger("starPowerEnd");
-        playerAnimator[indexOfLoser].SetTrigger("getBlastedEnd");
-        isPerformingStarPowerMove = false;
-
-        // TODO: add star power damage and make sure animations match up
-    }
-
-    IEnumerator KillPlayer(int indexOfLoser, int indexOfWinner)
-    {
-        playerIsDead = true;
-        playerAnimator[indexOfLoser].SetTrigger("die");
-        StartCoroutine(DelayAnimation(victoryAnimationDelay, indexOfWinner, "victory"));
-        winnerText.text = "VICTORY!";
-
-        yield return new WaitForSeconds(5);
-        winnerText.text = "";
-        if (indexOfWinner == 0)
-        {
-            playerModel[0].transform.Rotate(0, 180, 0);
-        }
-        else
-        {
-            playerModel[1].transform.Rotate(0, -180, 0);
-        }
-        playerAnimator[indexOfWinner].SetTrigger("sing");
-    }
-
     private void OnEndOfPhrase()
     {
         if (!isPerformingStarPowerMove && !playerIsDead)
@@ -283,45 +227,48 @@ public class CombatManager : MonoBehaviour
 
     IEnumerator AllowPlayersToMakeChoice()
     {
-        player1HasMadeChoice = false;
-        player1Choice = " ";
-        player2HasMadeChoice = false;
-        player2Choice = " ";
+        if (!playerIsDead && !isPerformingStarPowerMove)
+        {
+            player1HasMadeChoice = false;
+            player1Choice = " ";
+            player2HasMadeChoice = false;
+            player2Choice = " ";
 
-        yield return new WaitForSeconds(1);
-        countdownText.text = "3";
-        audioSource.PlayOneShot(countdownClip[0]);
-        yield return new WaitForSeconds(1);
-        countdownText.text = "2";
-        audioSource.PlayOneShot(countdownClip[1]);
-        yield return new WaitForSeconds(1);
-        countdownText.text = "1";
-        audioSource.PlayOneShot(countdownClip[2]);
-        canMakeChoice = true;
-        yield return new WaitForSeconds(1);
-        countdownText.color = lastNumberColor;
-        countdownText.text = "CHOOSE!";
-        player1PortraitRenderer.sprite = player1NoChoicePortrait;
-        player2PortraitRenderer.sprite = player2NoChoicePortrait;
-        audioSource.PlayOneShot(countdownClip[3]);
-        //Add choosing countdown graphic, maybe a bar or a round pie chart type thing?
-        yield return new WaitForSeconds(secondsForChoice);
-        countdownText.text = "";
-        countdownText.color = countdownTextColor;
-        canMakeChoice = false;
+            yield return new WaitForSeconds(1);
+            countdownText.text = "3";
+            audioSource.PlayOneShot(countdownClip[0]);
+            yield return new WaitForSeconds(1);
+            countdownText.text = "2";
+            audioSource.PlayOneShot(countdownClip[1]);
+            yield return new WaitForSeconds(1);
+            countdownText.text = "1";
+            audioSource.PlayOneShot(countdownClip[2]);
+            canMakeChoice = true;
+            yield return new WaitForSeconds(1);
+            countdownText.color = lastNumberColor;
+            countdownText.text = "CHOOSE!";
+            player1PortraitRenderer.sprite = player1NoChoicePortrait;
+            player2PortraitRenderer.sprite = player2NoChoicePortrait;
+            audioSource.PlayOneShot(countdownClip[3]);
+            //Add choosing countdown graphic, maybe a bar or a round pie chart type thing?
+            yield return new WaitForSeconds(secondsForChoice);
+            countdownText.text = "";
+            countdownText.color = countdownTextColor;
+            canMakeChoice = false;
 
-        UpdateActionText();
-        DecideWinner?.Invoke();
+            UpdateActionText();
+            DecideWinner?.Invoke();
 
-        // The disparity average is based on how different the two players' scores were,
-        // and how long the phrase in question was. The higher the score, the worse the
-        // loser did compared to the winner during the phrase. This value is applied to bonuses.
-        scoreDisparityAveraged = audioComparisonSript.ScoreDisparity / phraseTimeElapsed;
-        //disparityText.text = scoreDisparityAveraged.ToString();
-        //testTimerText.text = phraseTimeElapsed.ToString();
-        phraseTimeElapsed = 0.0f;
+            // The disparity average is based on how different the two players' scores were,
+            // and how long the phrase in question was. The higher the score, the worse the
+            // loser did compared to the winner during the phrase. This value is applied to bonuses.
+            scoreDisparityAveraged = audioComparisonSript.ScoreDisparity / phraseTimeElapsed;
+            //disparityText.text = scoreDisparityAveraged.ToString();
+            //testTimerText.text = phraseTimeElapsed.ToString();
+            phraseTimeElapsed = 0.0f;
 
-        DecideOnDamage();
+            DecideOnDamage();
+        }
     }
 
     private void UpdateActionText()
@@ -463,7 +410,6 @@ public class CombatManager : MonoBehaviour
                 starPowerBar[1].ScaleHealthBar((int)damageDealt, false);
                 playerAnimator[0].SetTrigger("sweep");
                 playerAnimator[1].SetTrigger("fall");
-                // TODO: add starpower bar animations where needed in combat
             }
             else if (player1Choice == sweep && player2Choice == sweep)
             {
@@ -554,6 +500,8 @@ public class CombatManager : MonoBehaviour
         player2PortraitRenderer.sprite = player2RegularPortrait;
         Debug.Log($"Player1 health: {playerHealth[0]}");
         Debug.Log($"Player2 health: {playerHealth[1]}");
+
+        CheckForStarPowerOrDeath();
     }
 
     IEnumerator DecideComboAndDisplayImage(int indexOfWinner, int indexOfLoser)
@@ -572,7 +520,7 @@ public class CombatManager : MonoBehaviour
                 playerAnimator[indexOfWinner].SetBool("isOnFirstBonus", false);
             }
 
-            int starPower = (int)baseStarPowerComboIncrease * timesWonInRowAfterFirst;
+            int starPower = (int)baseStarPowerComboIncrease + (timesWonInRowAfterFirst * 2);
             playerStarPower[indexOfWinner] += starPower;
             starPowerBar[indexOfWinner].ScaleHealthBar(starPower, true);
         }
@@ -597,5 +545,67 @@ public class CombatManager : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         playerAnimator[indexOfPlayer].SetTrigger(animationTrigger);
+    }
+
+    private void CheckForStarPowerOrDeath()
+    {
+        if (!playerIsDead)
+        {
+            if (playerHealth[0] <= 0)
+            {
+                StartCoroutine(KillPlayer(0, 1));
+            }
+            if (playerHealth[1] <= 0)
+            {
+                StartCoroutine(KillPlayer(1, 0));
+            }
+            if (playerStarPower[0] >= 100)
+            {
+                StartCoroutine(StarPowerMove(0, 1));
+            }
+            if (playerStarPower[1] >= 100)
+            {
+                StartCoroutine(StarPowerMove(1, 0));
+            }
+        }
+    }
+
+    IEnumerator StarPowerMove(int indexOfWinner, int indexOfLoser)
+    {
+        isPerformingStarPowerMove = true;
+        playerAnimator[indexOfWinner].SetTrigger("starPower");
+        yield return new WaitForSeconds(1.5f);
+        playerAnimator[indexOfLoser].SetTrigger("getBlasted");
+        yield return new WaitForSeconds(starPowerMoveLengthInSeconds);
+        playerAnimator[indexOfWinner].SetTrigger("starPowerEnd");
+        yield return new WaitForSeconds(1);
+        playerAnimator[indexOfLoser].SetTrigger("getBlastedEnd");
+        playerStarPower[indexOfWinner] = 0;
+        starPowerBar[indexOfWinner].gameObject.SetActive(false);
+        playerHealth[indexOfLoser] = -starPowerMoveDamage;
+        healthBar[indexOfLoser].ScaleHealthBar(starPowerMoveDamage, false);
+        isPerformingStarPowerMove = false;
+
+        // TODO: add star power damage and make sure animations match up
+    }
+
+    IEnumerator KillPlayer(int indexOfLoser, int indexOfWinner)
+    {
+        playerIsDead = true;
+        playerAnimator[indexOfLoser].SetTrigger("die");
+        StartCoroutine(DelayAnimation(victoryAnimationDelay, indexOfWinner, "victory"));
+        winnerText.text = "VICTORY!";
+
+        yield return new WaitForSeconds(5);
+        winnerText.text = "";
+        if (indexOfWinner == 0)
+        {
+            playerModel[0].transform.Rotate(0, 180, 0);
+        }
+        else
+        {
+            playerModel[1].transform.Rotate(0, -180, 0);
+        }
+        playerAnimator[indexOfWinner].SetTrigger("sing");
     }
 }

@@ -21,7 +21,11 @@ public class AudioSampleCollector : MonoBehaviour
     [SerializeField]
     private AudioMixerGroup microphone1MixerGroup, masterMixerGroup, sourceMixerGroup;
 
+    [SerializeField]
+    private int indexOfMicToUse;
+
     public string selectedMicrophoneDevice;
+
 
     #endregion
 
@@ -61,7 +65,7 @@ public class AudioSampleCollector : MonoBehaviour
         {
             if (Microphone.devices.Length > 0)
             {
-                selectedMicrophoneDevice = Microphone.devices[0].ToString();
+                selectedMicrophoneDevice = Microphone.devices[indexOfMicToUse].ToString();
                 Debug.Log($"{selectedMicrophoneDevice} is connected and is being used.");
                 audioSource.outputAudioMixerGroup = microphone1MixerGroup;
                 audioSource.clip = Microphone.Start(selectedMicrophoneDevice, true, 10, AudioSettings.outputSampleRate);

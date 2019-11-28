@@ -32,15 +32,20 @@ public class GameStartManager : MonoBehaviour
     {
         if (Input.GetButtonDown("Player1Attack") && !hasStarted)
         {
-            hasStarted = true;
-            startButton.enabled = false;
-            startButton.gameObject.SetActive(false);
-            lyricScrolling.StartScrolling();
-            backgroundMusic.StartBackgroundMusic();
-            player1SampleCollector.StartMusic();
-            player2SampleCollector.StartMusic();
-            sourceSampleCollector.StartMusic();
-            combatManager.StartAnimations();
+            StartGame();
         }
+    }
+
+    public void StartGame()
+    {
+        hasStarted = true;
+        startButton.enabled = false;
+        startButton.gameObject.SetActive(false);
+        lyricScrolling.StartScrolling();
+        backgroundMusic.StartBackgroundMusic();
+        player1SampleCollector.StartMusic();
+        player2SampleCollector.StartMusic();
+        sourceSampleCollector.StartMusic();
+        combatManager.StartAnimations();
     }
 }
