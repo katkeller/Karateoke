@@ -35,6 +35,9 @@ public class CombatManager : MonoBehaviour
     private ParticleSystem[] sparks = new ParticleSystem[2];
 
     [SerializeField]
+    private ParticleSystem[] starPowerSparks = new ParticleSystem[2];
+
+    [SerializeField]
     private TextMeshProUGUI[] comboText = new TextMeshProUGUI[2];
 
     [SerializeField]
@@ -78,6 +81,7 @@ public class CombatManager : MonoBehaviour
     private float scoreDisparityAveraged;
     private float damageDealt;
     private float phraseTimeElapsed;
+    private int bonus;
 
     //use these to create star power bonuses
     private int timesWonInRowAfterFirst;
@@ -102,6 +106,7 @@ public class CombatManager : MonoBehaviour
 
     private bool isPerformingStarPowerMove;
     private bool playerIsDead;
+    private bool starPowerHasBeenPerformed;
 
     public static event Action DecideWinner;
 
@@ -148,8 +153,6 @@ public class CombatManager : MonoBehaviour
     void Update()
     {
         phraseTimeElapsed += Time.deltaTime;
-
-        //CheckForStarPowerOrDeath();
 
         if (canMakeChoice && !isPerformingStarPowerMove && !playerIsDead)
         {
@@ -232,10 +235,10 @@ public class CombatManager : MonoBehaviour
     {
         if (!playerIsDead && !isPerformingStarPowerMove)
         {
-            player1HasMadeChoice = false;
-            player1Choice = " ";
-            player2HasMadeChoice = false;
-            player2Choice = " ";
+            //player1HasMadeChoice = false;
+            //player1Choice = " ";
+            //player2HasMadeChoice = false;
+            //player2Choice = " ";
 
             yield return new WaitForSeconds(1);
             countdownText.text = "3";
@@ -312,191 +315,290 @@ public class CombatManager : MonoBehaviour
 
         // The - 1 is there so we can control for one player only doing a bit better than the other,
         // but I may take it out later after playtesting.
-        int bonus = (int)(scoreDisparityAveraged / bonusDividingFactor) - 1;
+        bonus = (int)(scoreDisparityAveraged / bonusDividingFactor) - 1;
         Debug.Log($"Bonus: {bonus}");
 
         //scoreDisparity = audioComparisonSript.ScoreDisparity;
 
         if(player1HasMadeChoice && player2HasMadeChoice)
         {
-            if (player1Choice == attack && player2Choice == attack)
+            if (player1Choice == attack)
             {
-                // Player with higher score wins, deals base damage.
-                damageDealt = baseAttackDamage + bonus;
-                playerHealth[indexOfLoser] -= (int)damageDealt;
-
-                healthBar[indexOfLoser].ScaleHealthBar((int)damageDealt, false);
-                playerAnimator[indexOfWinner].SetTrigger("kick");
-                //playerAnimator[indexOfLoser].SetTrigger("getHit");
-                StartCoroutine(DelayAnimation(getHitAnimationDelay, indexOfLoser, "getHit"));
+                Player1Attack();
             }
-            else if (player1Choice == attack && player2Choice == dodge)
+            else if (player1Choice == dodge)
             {
-                // Blocking player negates attacking player's hit.
-                // They deal a small amount of damage if they win singing-wise.
-                if (indexOfWinner == 1)
-                {
-                    damageDealt = baseParryDamage + (bonus / bonusParryDividingValue);
-                    playerHealth[0] -= (int)damageDealt;
-                    healthBar[0].ScaleHealthBar((int)damageDealt, false);
-                }
-                playerAnimator[0].SetTrigger("kick");
-                playerAnimator[1].SetTrigger("dodge");
+                Player1Dodge();
             }
-            else if (player1Choice == attack && player2Choice == sweep)
+            else if (player1Choice == sweep)
             {
-                // Attacking player deals damage to grappling player,
-                // with additional damage dealt if the attacking player wins singing-wise.
-                damageDealt = baseAttackDamage;
-
-                if (indexOfWinner == 0)
-                {
-                    damageDealt += bonus;
-                }
-                playerHealth[1] -= (int)damageDealt;
-                healthBar[1].ScaleHealthBar((int)damageDealt, false);
-                playerAnimator[0].SetTrigger("kick");
-                //playerAnimator[1].SetTrigger("getHit");
-                StartCoroutine(DelayAnimation(getHitAnimationDelay, 1, "getHit"));
+                Player1Sweep();
             }
-            else if (player1Choice == dodge && player2Choice == attack)
+            else
             {
-                if (indexOfWinner == 0)
-                {
-                    damageDealt = baseParryDamage + (bonus / bonusParryDividingValue);
-                    playerHealth[1] -= (int)damageDealt;
-                    healthBar[1].ScaleHealthBar((int)damageDealt, false);
-                }
-                playerAnimator[0].SetTrigger("dodge");
-                playerAnimator[1].SetTrigger("kick");
-            }
-            else if (player1Choice == dodge && player2Choice == dodge)
-            {
-                playerAnimator[indexOfLoser].SetTrigger("dodge");
-                playerAnimator[indexOfWinner].SetTrigger("dodgeToSad");
-            }
-            else if (player1Choice == dodge && player2Choice == sweep)
-            {
-                // The blocking player has their star power lowered
-                damageDealt = baseStarPowerDecrease;
-                if (indexOfWinner == 1)
-                {
-                    // Placeholder value?
-                    damageDealt += 5;
-                }
-                playerStarPower[0] -= damageDealt;
-                starPowerBar[0].ScaleHealthBar((int)damageDealt, false);
-                Debug.Log($"damage dealt to player 1 star power: {-(int)damageDealt}");
-                playerAnimator[0].SetTrigger("fall");
-                playerAnimator[1].SetTrigger("sweep");
-            }
-            else if (player1Choice == sweep && player2Choice == attack)
-            {
-                damageDealt = baseAttackDamage;
-                if (indexOfWinner == 1)
-                {
-                    damageDealt += bonus;
-                }
-                playerHealth[0] -= (int)damageDealt;
-                healthBar[0].ScaleHealthBar((int)damageDealt, false);
-                StartCoroutine(DelayAnimation(getHitAnimationDelay, 0, "getHit"));
-                playerAnimator[1].SetTrigger("kick");
-            }
-            else if (player1Choice == sweep && player2Choice == dodge)
-            {
-                damageDealt = baseStarPowerDecrease;
-                if (indexOfWinner == 0)
-                {
-                    damageDealt += bonus;
-                }
-                playerStarPower[1] -= damageDealt;
-                starPowerBar[1].ScaleHealthBar((int)damageDealt, false);
-                playerAnimator[0].SetTrigger("sweep");
-                playerAnimator[1].SetTrigger("fall");
-            }
-            else if (player1Choice == sweep && player2Choice == sweep)
-            {
-                // player with higher singing score gets star power increased
-                damageDealt = baseStarPowerIncrease + bonus;
-                playerStarPower[indexOfWinner] += damageDealt;
-                starPowerBar[indexOfWinner].ScaleHealthBar((int)damageDealt, true);
-                playerAnimator[indexOfWinner].SetTrigger("sweep");
-                playerAnimator[indexOfLoser].SetTrigger("fall");
+                Debug.Log("Combat error.");
             }
         }
         else if (player1HasMadeChoice && !player2HasMadeChoice)
         {
-            Debug.Log("Player 2 did not make a choice.");
-            if (player1Choice == attack)
-            {
-                damageDealt = baseAttackDamage;
-
-                if (indexOfWinner == 0)
-                {
-                    damageDealt += bonus;
-                }
-                playerHealth[1] -= (int)damageDealt;
-                healthBar[1].ScaleHealthBar((int)damageDealt, false);
-                playerAnimator[0].SetTrigger("kick");
-                StartCoroutine(DelayAnimation(getHitAnimationDelay, 1, "getHit"));
-            }
-            else if (player1Choice == dodge)
-            {
-                playerAnimator[0].SetTrigger("dodge");
-                playerAnimator[1].SetTrigger("dissapointed");
-            }
-            else if (player1Choice == sweep)
-            {
-                damageDealt = baseStarPowerDecrease;
-                if (indexOfWinner == 0)
-                {
-                    damageDealt += bonus;
-                }
-                playerStarPower[1] -= damageDealt;
-                starPowerBar[1].ScaleHealthBar((int)damageDealt, false);
-                playerAnimator[0].SetTrigger("sweep");
-                playerAnimator[1].SetTrigger("fall");
-            }
+            Player2DidNotChoose();
         }
         else if (!player1HasMadeChoice && player2HasMadeChoice)
         {
-            Debug.Log("Player 1 did not make a choice.");
-            if (player2Choice == attack)
-            {
-                damageDealt = baseAttackDamage;
-
-                if (indexOfWinner == 1)
-                {
-                    damageDealt += bonus;
-                }
-                playerHealth[0] -= (int)damageDealt;
-                healthBar[0].ScaleHealthBar((int)damageDealt, false);
-                playerAnimator[1].SetTrigger("kick");
-                StartCoroutine(DelayAnimation(getHitAnimationDelay, 0, "getHit"));
-            }
-            else if (player2Choice == dodge)
-            {
-                playerAnimator[1].SetTrigger("dodge");
-                playerAnimator[0].SetTrigger("dissapointed");
-            }
-            else if (player2Choice == sweep)
-            {
-                damageDealt = baseStarPowerDecrease;
-                if (indexOfWinner == 1)
-                {
-                    damageDealt += bonus;
-                }
-                playerStarPower[0] -= damageDealt;
-                starPowerBar[0].ScaleHealthBar((int)damageDealt, false);
-                playerAnimator[1].SetTrigger("sweep");
-                playerAnimator[0].SetTrigger("fall");
-            }
+            Player1DidNotChoose();
         }
         else if(!player1HasMadeChoice && !player2HasMadeChoice)
         {
             playerAnimator[indexOfWinner].SetTrigger("dissapointed");
+            ResetValues();
+        }
+    }
+
+    private void Player1Attack()
+    {
+        if (player2Choice == attack)
+        {
+            // Player with higher score wins, deals base damage.
+            damageDealt = baseAttackDamage + bonus;
+            playerHealth[indexOfLoser] -= (int)damageDealt;
+
+            healthBar[indexOfLoser].ScaleHealthBar((int)damageDealt, false);
+            playerAnimator[indexOfWinner].SetTrigger("kick");
+            //playerAnimator[indexOfLoser].SetTrigger("getHit");
+            StartCoroutine(DelayAnimation(getHitAnimationDelay, indexOfLoser, "getHit"));
+        }
+        else if (player2Choice == dodge)
+        {
+            // Blocking player negates attacking player's hit.
+            // They deal a small amount of damage if they win singing-wise.
+            if (indexOfWinner == 1)
+            {
+                damageDealt = baseParryDamage + (bonus / bonusParryDividingValue);
+                playerHealth[0] -= (int)damageDealt;
+                healthBar[0].ScaleHealthBar((int)damageDealt, false);
+            }
+            playerAnimator[0].SetTrigger("kick");
+            playerAnimator[1].SetTrigger("dodge");
+        }
+        else if (player2Choice == sweep)
+        {
+            // Attacking player deals damage to grappling player,
+            // with additional damage dealt if the attacking player wins singing-wise.
+            damageDealt = baseAttackDamage;
+
+            if (indexOfWinner == 0)
+            {
+                damageDealt += bonus;
+            }
+            playerHealth[1] -= (int)damageDealt;
+            healthBar[1].ScaleHealthBar((int)damageDealt, false);
+            playerAnimator[0].SetTrigger("kick");
+            //playerAnimator[1].SetTrigger("getHit");
+            StartCoroutine(DelayAnimation(getHitAnimationDelay, 1, "getHit"));
         }
 
+        ResetValues();
+    }
+
+    private void Player1Dodge()
+    {
+        if (player2Choice == attack)
+        {
+            if (indexOfWinner == 0)
+            {
+                damageDealt = baseParryDamage + (bonus / bonusParryDividingValue);
+                playerHealth[1] -= (int)damageDealt;
+                healthBar[1].ScaleHealthBar((int)damageDealt, false);
+            }
+            playerAnimator[0].SetTrigger("dodge");
+            playerAnimator[1].SetTrigger("kick");
+        }
+        else if (player2Choice == dodge)
+        {
+            playerAnimator[indexOfLoser].SetTrigger("dodge");
+            playerAnimator[indexOfWinner].SetTrigger("dodgeToSad");
+        }
+        else if (player2Choice == sweep)
+        {
+            // The blocking player has their star power lowered
+            //damageDealt = baseStarPowerDecrease;
+            //if (indexOfWinner == 1)
+            //{
+            //    // Placeholder value?
+            //    damageDealt += 5;
+            //}
+            //playerStarPower[0] -= damageDealt;
+            //starPowerBar[0].ScaleHealthBar((int)damageDealt, false);
+            //Debug.Log($"damage dealt to player 1 star power: {-(int)damageDealt}");
+            //playerAnimator[0].SetTrigger("fall");
+            //playerAnimator[1].SetTrigger("sweep");
+
+            damageDealt = baseStarPowerIncrease;
+            if (indexOfWinner == 1)
+            {
+                damageDealt += bonus;
+            }
+            playerStarPower[1] += damageDealt;
+            starPowerBar[1].ScaleHealthBar((int)damageDealt, true);
+            playerAnimator[1].SetTrigger("sweep");
+            playerAnimator[0].SetTrigger("fall");
+        }
+
+        ResetValues();
+    }
+
+    private void Player1Sweep()
+    {
+        if (player2Choice == attack)
+        {
+            damageDealt = baseAttackDamage;
+            if (indexOfWinner == 1)
+            {
+                damageDealt += bonus;
+            }
+            playerHealth[0] -= (int)damageDealt;
+            healthBar[0].ScaleHealthBar((int)damageDealt, false);
+            StartCoroutine(DelayAnimation(getHitAnimationDelay, 0, "getHit"));
+            playerAnimator[1].SetTrigger("kick");
+        }
+        else if (player2Choice == dodge)
+        {
+            //damageDealt = baseStarPowerDecrease;
+            //if (indexOfWinner == 0)
+            //{
+            //    damageDealt += bonus;
+            //}
+            //playerStarPower[1] -= damageDealt;
+            //starPowerBar[1].ScaleHealthBar((int)damageDealt, false);
+            //playerAnimator[0].SetTrigger("sweep");
+            //playerAnimator[1].SetTrigger("fall");
+
+            damageDealt = baseStarPowerIncrease;
+            if (indexOfWinner == 0)
+            {
+                damageDealt += bonus;
+            }
+            playerStarPower[0] += damageDealt;
+            starPowerBar[0].ScaleHealthBar((int)damageDealt, true);
+            playerAnimator[0].SetTrigger("sweep");
+            playerAnimator[1].SetTrigger("fall");
+        }
+        else if (player2Choice == sweep)
+        {
+            // player with higher singing score gets star power increased
+            // note: chnaged to lowered
+
+            //damageDealt = baseStarPowerIncrease + bonus;
+            //playerStarPower[indexOfWinner] += damageDealt;
+            //starPowerBar[indexOfWinner].ScaleHealthBar((int)damageDealt, true);
+            //playerAnimator[indexOfWinner].SetTrigger("sweep");
+            //playerAnimator[indexOfLoser].SetTrigger("fall");
+            damageDealt = baseStarPowerDecrease + bonus;
+            playerStarPower[indexOfLoser] -= damageDealt;
+            starPowerBar[indexOfLoser].ScaleHealthBar((int)damageDealt, false);
+            playerAnimator[indexOfWinner].SetTrigger("sweep");
+            playerAnimator[indexOfLoser].SetTrigger("fall");
+        }
+
+        ResetValues();
+    }
+
+    private void Player1DidNotChoose()
+    {
+        Debug.Log("Player 1 did not make a choice.");
+        if (player2Choice == attack)
+        {
+            damageDealt = baseAttackDamage;
+
+            if (indexOfWinner == 1)
+            {
+                damageDealt += bonus;
+            }
+            playerHealth[0] -= (int)damageDealt;
+            healthBar[0].ScaleHealthBar((int)damageDealt, false);
+            playerAnimator[1].SetTrigger("kick");
+            StartCoroutine(DelayAnimation(getHitAnimationDelay, 0, "getHit"));
+        }
+        else if (player2Choice == dodge)
+        {
+            playerAnimator[1].SetTrigger("dodge");
+            playerAnimator[0].SetTrigger("dissapointed");
+        }
+        else if (player2Choice == sweep)
+        {
+            //damageDealt = baseStarPowerDecrease;
+            //if (indexOfWinner == 1)
+            //{
+            //    damageDealt += bonus;
+            //}
+            //playerStarPower[0] -= damageDealt;
+            //starPowerBar[0].ScaleHealthBar((int)damageDealt, false);
+            //playerAnimator[1].SetTrigger("sweep");
+            //playerAnimator[0].SetTrigger("fall");
+
+            damageDealt = baseStarPowerIncrease;
+            if (indexOfWinner == 1)
+            {
+                damageDealt += bonus;
+            }
+            playerStarPower[1] += damageDealt;
+            starPowerBar[1].ScaleHealthBar((int)damageDealt, true);
+            playerAnimator[1].SetTrigger("sweep");
+            playerAnimator[0].SetTrigger("fall");
+        }
+
+        ResetValues();
+    }
+
+    private void Player2DidNotChoose()
+    {
+        Debug.Log("Player 2 did not make a choice.");
+        if (player1Choice == attack)
+        {
+            damageDealt = baseAttackDamage;
+
+            if (indexOfWinner == 0)
+            {
+                damageDealt += bonus;
+            }
+            playerHealth[1] -= (int)damageDealt;
+            healthBar[1].ScaleHealthBar((int)damageDealt, false);
+            playerAnimator[0].SetTrigger("kick");
+            StartCoroutine(DelayAnimation(getHitAnimationDelay, 1, "getHit"));
+        }
+        else if (player1Choice == dodge)
+        {
+            playerAnimator[0].SetTrigger("dodge");
+            playerAnimator[1].SetTrigger("dissapointed");
+        }
+        else if (player1Choice == sweep)
+        {
+            //damageDealt = baseStarPowerDecrease;
+            //if (indexOfWinner == 0)
+            //{
+            //    damageDealt += bonus;
+            //}
+            //playerStarPower[1] -= damageDealt;
+            //starPowerBar[1].ScaleHealthBar((int)damageDealt, false);
+            //playerAnimator[0].SetTrigger("sweep");
+            //playerAnimator[1].SetTrigger("fall");
+
+            damageDealt = baseStarPowerIncrease;
+            if (indexOfWinner == 0)
+            {
+                damageDealt += bonus;
+            }
+            playerStarPower[0] += damageDealt;
+            starPowerBar[0].ScaleHealthBar((int)damageDealt, true);
+            playerAnimator[0].SetTrigger("sweep");
+            playerAnimator[1].SetTrigger("fall");
+        }
+
+        ResetValues();
+    }
+
+    private void ResetValues()
+    {
         player1HasMadeChoice = false;
         player2HasMadeChoice = false;
         player1Choice = " ";
@@ -505,8 +607,11 @@ public class CombatManager : MonoBehaviour
         player2PortraitRenderer.sprite = player2RegularPortrait;
         Debug.Log($"Player1 health: {playerHealth[0]}");
         Debug.Log($"Player2 health: {playerHealth[1]}");
+        Debug.Log($"Player1 starpower: {playerStarPower[0]}");
+        Debug.Log($"Player2 starpower: {playerStarPower[1]}");
 
-        CheckForStarPowerOrDeath();
+        CheckForStarPower();
+        CheckForDeath();
     }
 
     IEnumerator DecideComboAndDisplayImage(int indexOfWinner, int indexOfLoser)
@@ -552,18 +657,10 @@ public class CombatManager : MonoBehaviour
         playerAnimator[indexOfPlayer].SetTrigger(animationTrigger);
     }
 
-    private void CheckForStarPowerOrDeath()
+    private void CheckForStarPower()
     {
-        if (!playerIsDead)
+        if (!playerIsDead && !isPerformingStarPowerMove && !starPowerHasBeenPerformed)
         {
-            if (playerHealth[0] <= 0)
-            {
-                StartCoroutine(KillPlayer(0, 1));
-            }
-            if (playerHealth[1] <= 0)
-            {
-                StartCoroutine(KillPlayer(1, 0));
-            }
             if (playerStarPower[0] >= 100)
             {
                 StartCoroutine(StarPowerMove(0, 1));
@@ -575,11 +672,29 @@ public class CombatManager : MonoBehaviour
         }
     }
 
+    private void CheckForDeath()
+    {
+        if (!playerIsDead && !isPerformingStarPowerMove)
+        {
+            if (playerHealth[0] <= 0)
+            {
+                StartCoroutine(KillPlayer(0, 1));
+                Debug.Log($"Player 1 dead health: {playerHealth[0]}");
+            }
+            if (playerHealth[1] <= 0)
+            {
+                Debug.Log($"Player 2 dead health: {playerHealth[1]}");
+                StartCoroutine(KillPlayer(1, 0));
+            }
+        }
+    }
+
     IEnumerator StarPowerMove(int indexOfWinner, int indexOfLoser)
     {
         isPerformingStarPowerMove = true;
         playerAnimator[indexOfWinner].SetTrigger("starPower");
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(4.0f);
+        starPowerSparks[indexOfWinner].Play();
         playerAnimator[indexOfLoser].SetTrigger("getBlasted");
         yield return new WaitForSeconds(starPowerMoveLengthInSeconds);
         playerAnimator[indexOfWinner].SetTrigger("starPowerEnd");
@@ -588,11 +703,11 @@ public class CombatManager : MonoBehaviour
         playerStarPower[indexOfWinner] = 0;
         starPowerBar[indexOfWinner].gameObject.SetActive(false);
         starPowerBackgrounds[indexOfWinner].gameObject.SetActive(false);
-        playerHealth[indexOfLoser] = -starPowerMoveDamage;
+        playerHealth[indexOfLoser] -= starPowerMoveDamage;
         healthBar[indexOfLoser].ScaleHealthBar(starPowerMoveDamage, false);
         isPerformingStarPowerMove = false;
-
-        // TODO: add star power damage and make sure animations match up
+        starPowerHasBeenPerformed = true;
+        CheckForDeath();
     }
 
     IEnumerator KillPlayer(int indexOfLoser, int indexOfWinner)

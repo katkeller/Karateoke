@@ -98,6 +98,15 @@ public class AudioSampleCollector : MonoBehaviour
 
     public void StartMusic()
     {
+        if (isSource)
+        {
+            StartCoroutine(DelayMusic());
+        }
+    }
+
+    IEnumerator DelayMusic()
+    {
+        yield return new WaitForSeconds(0.1f);
         audioSource.PlayOneShot(clipToPlayIfNoMicrophone);
     }
 
