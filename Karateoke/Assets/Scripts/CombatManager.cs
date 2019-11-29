@@ -56,6 +56,9 @@ public class CombatManager : MonoBehaviour
     private GameObject[] playerStarPowerBarGameObject = new GameObject[2];
 
     [SerializeField]
+    private GameObject[] starPowerBackgrounds = new GameObject[2];
+
+    [SerializeField]
     private int baseAttackDamage = 5, baseParryDamage = 1, baseStarPowerIncrease = 10, starPowerMoveDamage = 20;
 
     [SerializeField]
@@ -423,6 +426,7 @@ public class CombatManager : MonoBehaviour
         }
         else if (player1HasMadeChoice && !player2HasMadeChoice)
         {
+            Debug.Log("Player 2 did not make a choice.");
             if (player1Choice == attack)
             {
                 damageDealt = baseAttackDamage;
@@ -456,6 +460,7 @@ public class CombatManager : MonoBehaviour
         }
         else if (!player1HasMadeChoice && player2HasMadeChoice)
         {
+            Debug.Log("Player 1 did not make a choice.");
             if (player2Choice == attack)
             {
                 damageDealt = baseAttackDamage;
@@ -582,6 +587,7 @@ public class CombatManager : MonoBehaviour
         playerAnimator[indexOfLoser].SetTrigger("getBlastedEnd");
         playerStarPower[indexOfWinner] = 0;
         starPowerBar[indexOfWinner].gameObject.SetActive(false);
+        starPowerBackgrounds[indexOfWinner].gameObject.SetActive(false);
         playerHealth[indexOfLoser] = -starPowerMoveDamage;
         healthBar[indexOfLoser].ScaleHealthBar(starPowerMoveDamage, false);
         isPerformingStarPowerMove = false;

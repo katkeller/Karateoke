@@ -61,8 +61,14 @@ public class AudioSampleCollector : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
 
+
         if (useMicrophone && !isSource)
         {
+            for (int i = 0; i < Microphone.devices.Length; i++)
+            {
+                Debug.Log($"Microphone: {Microphone.devices[i].ToString()}");
+            }
+
             if (Microphone.devices.Length > 0)
             {
                 selectedMicrophoneDevice = Microphone.devices[indexOfMicToUse].ToString();

@@ -14,6 +14,12 @@ public class HealthBar : MonoBehaviour
     [SerializeField]
     private bool isStarPowerBar;
 
+    [SerializeField]
+    private GameObject bar;
+
+    [SerializeField]
+    private Color alertColor;
+
     private int scalingFramesLeft;
     private float healthValue;
     private Vector3 newScale;
@@ -31,35 +37,37 @@ public class HealthBar : MonoBehaviour
             healthValue = 1.0f;
         }
     }
-    // TODO: make it so bars can't go into negative
 
     private void Update()
     {
         if (scalingFramesLeft > 0 && !isDead)
         {
-            Debug.Log($"{this.name} should scale. New scale is {newScale}");
             transform.localScale = Vector3.Lerp(transform.localScale, newScale, Time.deltaTime * 10);
             scalingFramesLeft--;
         }
 
         if (healthValue < 0.15 && !isStarPowerBar)
         {
-            //have a glowing red warning animation
+            bar.GetComponent<SpriteRenderer>().color = alertColor;
             Debug.Log($"{this.name} is below 15%!");
         }
-
-        //if (healthValue <= 0 && !isDead)
-        //{
-        //    isDead = true;
-        //}
     }
 
     public void ScaleHealthBar(float value, bool increase)
     {
         if (increase)
+        {
             healthValue += (value / dividingValue);
+        }
         else
+        {
             healthValue -= (value / dividingValue);
+        }
+
+        if (healthValue < 0)
+            healthValue = 0;
+        else if (healthValue > 1)
+            healthValue = 1;
 
         newScale = new Vector3(healthValue, 1.0f);
         scalingFramesLeft = scalingFrames;
