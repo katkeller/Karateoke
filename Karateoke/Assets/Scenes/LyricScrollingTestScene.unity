@@ -6014,13 +6014,13 @@ PrefabInstance:
     - target: {fileID: 1961180794547356359, guid: 690e8cc2ca2454131b0446d92914ff57,
         type: 3}
       propertyPath: useMicrophone
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1961180794547356359, guid: 690e8cc2ca2454131b0446d92914ff57,
         type: 3}
       propertyPath: clipToPlayIfNoMicrophone
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8300000, guid: 33fd566a20b414c289786295dc253858, type: 3}
     - target: {fileID: 1961180794547356359, guid: 690e8cc2ca2454131b0446d92914ff57,
         type: 3}
       propertyPath: sourceMixerGroup
@@ -11272,6 +11272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 512e71261af5243f49cb208e1b08d4ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsDebugging: 0
   player1ActionText: {fileID: 1573717427}
   player2ActionText: {fileID: 2012706663}
   countdownText: {fileID: 1273202408}
@@ -23867,7 +23868,7 @@ PrefabInstance:
         type: 3}
       propertyPath: clipToPlayIfNoMicrophone
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8300000, guid: 2be0f11bc0214474ba3da67bc076f773, type: 3}
     - target: {fileID: 1808585856852629713, guid: cf1564edd09b34cf89da3b78b01f5044,
         type: 3}
       propertyPath: usePitchIndicator
@@ -23892,7 +23893,7 @@ PrefabInstance:
     - target: {fileID: 1808585856852629713, guid: cf1564edd09b34cf89da3b78b01f5044,
         type: 3}
       propertyPath: useMicrophone
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1808585856852629713, guid: cf1564edd09b34cf89da3b78b01f5044,
         type: 3}

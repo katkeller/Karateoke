@@ -7,6 +7,10 @@ using UnityEngine.UI;
 
 public class CombatManager : MonoBehaviour
 {
+    #region Properties/Fields
+    [SerializeField]
+    private bool IsDebugging;
+
     [SerializeField]
     private TextMeshProUGUI player1ActionText, player2ActionText, countdownText, winnerText;
 
@@ -74,7 +78,47 @@ public class CombatManager : MonoBehaviour
     [SerializeField]
     private float bonusDividingFactor = 100.0f, bonusParryDividingValue = 2.0f;
 
-    private int[] playerHealth = new int[2];
+    //private int[] playerHealth = new int[2];
+    private int playerHealth1;
+    
+    public int PlayerHealth1
+    {
+        get
+        {
+            return playerHealth1;
+        }
+        set
+        {
+            playerHealth1 += value;
+            healthBar[0].ScaleHealthBar(playerHealth1, false);
+
+            if (playerHealth1 <= 0)
+            {
+                StartCoroutine(KillPlayer(0, 1));
+            }
+        }
+    }
+
+    private int playerHealth2;
+
+    public int PlayerHealth2
+    {
+        get
+        {
+            return playerHealth2;
+        }
+        set
+        {
+            playerHealth2 += value;
+            healthBar[1].ScaleHealthBar(playerHealth2, false);
+
+            if (playerHealth2 <= 0)
+            {
+                StartCoroutine(KillPlayer(1, 0));
+            }
+        }
+    }
+
     private float[] playerStarPower = new float[2];
     private int indexOfWinner;
     private int indexOfLoser;
@@ -108,6 +152,8 @@ public class CombatManager : MonoBehaviour
     private bool playerIsDead;
     private bool starPowerHasBeenPerformed;
 
+    #endregion
+
     public static event Action DecideWinner;
 
     public void StartAnimations()
@@ -120,8 +166,10 @@ public class CombatManager : MonoBehaviour
 
     void Start()
     {
-        playerHealth[0] = 100;
-        playerHealth[1] = 100;
+        //playerHealth[0] = 100;
+        //playerHealth[1] = 100;
+        PlayerHealth1 = 100;
+        PlayerHealth2 = 100;
         playerStarPower[0] = 0;
         playerStarPower[1] = 0;
         countdownText.text = "";
@@ -153,6 +201,18 @@ public class CombatManager : MonoBehaviour
     void Update()
     {
         phraseTimeElapsed += Time.deltaTime;
+
+        if (IsDebugging)
+        {
+            if (Input.GetButtonDown("DebugDownHalfPlayer1Health"))
+            {
+                PlayerHealth1 -= 50;
+            }
+            if (Input.GetButtonDown("DebugUpHalfPlayer1StarPower"))
+            {
+                playerStarPower[0] += 50;
+            }
+        }
 
         if (canMakeChoice && !isPerformingStarPowerMove && !playerIsDead)
         {
@@ -360,9 +420,17 @@ public class CombatManager : MonoBehaviour
         {
             // Player with higher score wins, deals base damage.
             damageDealt = baseAttackDamage + bonus;
-            playerHealth[indexOfLoser] -= (int)damageDealt;
+            //playerHealth[indexOfLoser] -= (int)damageDealt;
+            if (indexOfWinner == 0)
+            {
+                PlayerHealth2 -= (int)damageDealt;
+            }
+            else
+            {
+                PlayerHealth1 -= (int)damageDealt;
+            }
 
-            healthBar[indexOfLoser].ScaleHealthBar((int)damageDealt, false);
+            //healthBar[indexOfLoser].ScaleHealthBar((int)damageDealt, false);
             playerAnimator[indexOfWinner].SetTrigger("kick");
             //playerAnimator[indexOfLoser].SetTrigger("getHit");
             StartCoroutine(DelayAnimation(getHitAnimationDelay, indexOfLoser, "getHit"));
@@ -374,8 +442,9 @@ public class CombatManager : MonoBehaviour
             if (indexOfWinner == 1)
             {
                 damageDealt = baseParryDamage + (bonus / bonusParryDividingValue);
-                playerHealth[0] -= (int)damageDealt;
-                healthBar[0].ScaleHealthBar((int)damageDealt, false);
+                //playerHealth[0] -= (int)damageDealt;
+                //healthBar[0].ScaleHealthBar((int)damageDealt, false);
+                PlayerHealth1 -= (int)damageDealt;
             }
             playerAnimator[0].SetTrigger("kick");
             playerAnimator[1].SetTrigger("dodge");
@@ -390,8 +459,9 @@ public class CombatManager : MonoBehaviour
             {
                 damageDealt += bonus;
             }
-            playerHealth[1] -= (int)damageDealt;
-            healthBar[1].ScaleHealthBar((int)damageDealt, false);
+            PlayerHealth2 -= (int)damageDealt;
+            //playerHealth[1] -= (int)damageDealt;
+            //healthBar[1].ScaleHealthBar((int)damageDealt, false);
             playerAnimator[0].SetTrigger("kick");
             //playerAnimator[1].SetTrigger("getHit");
             StartCoroutine(DelayAnimation(getHitAnimationDelay, 1, "getHit"));
@@ -407,8 +477,9 @@ public class CombatManager : MonoBehaviour
             if (indexOfWinner == 0)
             {
                 damageDealt = baseParryDamage + (bonus / bonusParryDividingValue);
-                playerHealth[1] -= (int)damageDealt;
-                healthBar[1].ScaleHealthBar((int)damageDealt, false);
+                //playerHealth[1] -= (int)damageDealt;
+                //healthBar[1].ScaleHealthBar((int)damageDealt, false);
+                playerHealth2 -= (int)damageDealt;
             }
             playerAnimator[0].SetTrigger("dodge");
             playerAnimator[1].SetTrigger("kick");
@@ -420,19 +491,6 @@ public class CombatManager : MonoBehaviour
         }
         else if (player2Choice == sweep)
         {
-            // The blocking player has their star power lowered
-            //damageDealt = baseStarPowerDecrease;
-            //if (indexOfWinner == 1)
-            //{
-            //    // Placeholder value?
-            //    damageDealt += 5;
-            //}
-            //playerStarPower[0] -= damageDealt;
-            //starPowerBar[0].ScaleHealthBar((int)damageDealt, false);
-            //Debug.Log($"damage dealt to player 1 star power: {-(int)damageDealt}");
-            //playerAnimator[0].SetTrigger("fall");
-            //playerAnimator[1].SetTrigger("sweep");
-
             damageDealt = baseStarPowerIncrease;
             if (indexOfWinner == 1)
             {
@@ -456,8 +514,9 @@ public class CombatManager : MonoBehaviour
             {
                 damageDealt += bonus;
             }
-            playerHealth[0] -= (int)damageDealt;
-            healthBar[0].ScaleHealthBar((int)damageDealt, false);
+            PlayerHealth1 -= (int)damageDealt;
+            //playerHealth[0] -= (int)damageDealt;
+            //healthBar[0].ScaleHealthBar((int)damageDealt, false);
             StartCoroutine(DelayAnimation(getHitAnimationDelay, 0, "getHit"));
             playerAnimator[1].SetTrigger("kick");
         }
@@ -514,15 +573,16 @@ public class CombatManager : MonoBehaviour
             {
                 damageDealt += bonus;
             }
-            playerHealth[0] -= (int)damageDealt;
-            healthBar[0].ScaleHealthBar((int)damageDealt, false);
+            //playerHealth[0] -= (int)damageDealt;
+            PlayerHealth1 -= (int)damageDealt;
+            //healthBar[0].ScaleHealthBar((int)damageDealt, false);
             playerAnimator[1].SetTrigger("kick");
             StartCoroutine(DelayAnimation(getHitAnimationDelay, 0, "getHit"));
         }
         else if (player2Choice == dodge)
         {
             playerAnimator[1].SetTrigger("dodge");
-            playerAnimator[0].SetTrigger("dissapointed");
+            //playerAnimator[0].SetTrigger("dissapointed");
         }
         else if (player2Choice == sweep)
         {
@@ -561,8 +621,9 @@ public class CombatManager : MonoBehaviour
             {
                 damageDealt += bonus;
             }
-            playerHealth[1] -= (int)damageDealt;
-            healthBar[1].ScaleHealthBar((int)damageDealt, false);
+            //playerHealth[1] -= (int)damageDealt;
+            //healthBar[1].ScaleHealthBar((int)damageDealt, false);
+            PlayerHealth2 -= (int)damageDealt;
             playerAnimator[0].SetTrigger("kick");
             StartCoroutine(DelayAnimation(getHitAnimationDelay, 1, "getHit"));
         }
@@ -605,13 +666,15 @@ public class CombatManager : MonoBehaviour
         player2Choice = " ";
         player1PortraitRenderer.sprite = player1RegularPortrait;
         player2PortraitRenderer.sprite = player2RegularPortrait;
-        Debug.Log($"Player1 health: {playerHealth[0]}");
-        Debug.Log($"Player2 health: {playerHealth[1]}");
+        //Debug.Log($"Player1 health: {playerHealth[0]}");
+        //Debug.Log($"Player2 health: {playerHealth[1]}");
+        Debug.Log($"Player1 health: {PlayerHealth1}");
+        Debug.Log($"Player2 health: {PlayerHealth2}");
         Debug.Log($"Player1 starpower: {playerStarPower[0]}");
         Debug.Log($"Player2 starpower: {playerStarPower[1]}");
 
         CheckForStarPower();
-        CheckForDeath();
+        //CheckForDeath();
     }
 
     IEnumerator DecideComboAndDisplayImage(int indexOfWinner, int indexOfLoser)
@@ -672,22 +735,22 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    private void CheckForDeath()
-    {
-        if (!playerIsDead && !isPerformingStarPowerMove)
-        {
-            if (playerHealth[0] <= 0)
-            {
-                StartCoroutine(KillPlayer(0, 1));
-                Debug.Log($"Player 1 dead health: {playerHealth[0]}");
-            }
-            if (playerHealth[1] <= 0)
-            {
-                Debug.Log($"Player 2 dead health: {playerHealth[1]}");
-                StartCoroutine(KillPlayer(1, 0));
-            }
-        }
-    }
+    //private void CheckForDeath()
+    //{
+    //    if (!playerIsDead && !isPerformingStarPowerMove)
+    //    {
+    //        if (playerHealth[0] <= 0)
+    //        {
+    //            StartCoroutine(KillPlayer(0, 1));
+    //            Debug.Log($"Player 1 dead health: {playerHealth[0]}");
+    //        }
+    //        if (playerHealth[1] <= 0)
+    //        {
+    //            Debug.Log($"Player 2 dead health: {playerHealth[1]}");
+    //            StartCoroutine(KillPlayer(1, 0));
+    //        }
+    //    }
+    //}
 
     IEnumerator StarPowerMove(int indexOfWinner, int indexOfLoser)
     {
@@ -703,11 +766,19 @@ public class CombatManager : MonoBehaviour
         playerStarPower[indexOfWinner] = 0;
         starPowerBar[indexOfWinner].gameObject.SetActive(false);
         starPowerBackgrounds[indexOfWinner].gameObject.SetActive(false);
-        playerHealth[indexOfLoser] -= starPowerMoveDamage;
+        //playerHealth[indexOfLoser] -= starPowerMoveDamage;
+        if (indexOfLoser == 0)
+        {
+            PlayerHealth1 -= starPowerMoveDamage;
+        }
+        else
+        {
+            PlayerHealth2 -= starPowerMoveDamage;
+        }
         healthBar[indexOfLoser].ScaleHealthBar(starPowerMoveDamage, false);
         isPerformingStarPowerMove = false;
         starPowerHasBeenPerformed = true;
-        CheckForDeath();
+        //CheckForDeath();
     }
 
     IEnumerator KillPlayer(int indexOfLoser, int indexOfWinner)
