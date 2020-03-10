@@ -1,9 +1,19 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    /// <summary>
+    /// This class holds each individual player's health and star power values, and manages their animations and input.
+    /// This is not where damage is dealt/determined, nor is it where animation interruptions are determined. This script acts
+    /// as if it has no knowledge of what the other player's choice may be, i.e. it will play the "dodge" animation even if
+    /// it is going to be interrupted by a sweep from the other player. Reaction animations are mostly decided elsewhere.
+    /// </summary>
+
+    #region Fields/Properties
+
     [SerializeField]
     private HealthBar healthBar;
 
@@ -12,6 +22,9 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private string attackButtonString, dodgeButtonString, sweepButtonString;
+
+    [SerializeField]
+    private string attackAnimationTrigger, dodgeAnimationTrigger, sweepAnimationTrigger, sittingDuckAnimationTrigger;
 
     public enum MoveSet
     {
@@ -33,7 +46,7 @@ public class Player : MonoBehaviour
             {
                 // This makes it so that every time the combat manager asserts that a phrase is about to end,
                 // the player knows that it's time to make a choice again.
-                hasMadeChoiceThisPhrase = false;
+                ResetChoiceValues();
             }
         }
     }
@@ -125,13 +138,13 @@ public class Player : MonoBehaviour
             switch (value)
             {
                 case MoveSet.Attack:
-                    Attack();
+                    animationTrigger = attackAnimationTrigger;
                     break;
                 case MoveSet.Dodge:
-                    Dodge();
+                    animationTrigger = dodgeAnimationTrigger;
                     break;
                 case MoveSet.Sweep:
-                    Sweep();
+                    animationTrigger = sweepAnimationTrigger;
                     break;
                 case MoveSet.Undecided:
                     break;
@@ -144,9 +157,35 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void ExecuteQueuedAnimations(bool overrideAnimation = false, string newAnimation = null)
+    private string animationTrigger;
+
+    private AudioSource audioSource;
+    private Animator animator;
+
+    #endregion
+
+
+    /// <summary>
+    /// Plays the player's queued animation immediately. This should only be called at the end of a phrase.
+    /// </summary>
+    /// <param name="overrideAnimation"></param>
+    /// <param name="newAnimationTrigger"></param>
+    public void ExecuteQueuedAnimations(bool overrideAnimation = false, string newAnimationTrigger = null)
     {
-        //this is where we'll trigger animations from the combat manager script
+        if (overrideAnimation)
+        {
+            //do we ever need to override animations?
+            animationTrigger = newAnimationTrigger;
+        }
+
+        if (string.IsNullOrEmpty(animationTrigger))
+        {
+            // If we get here we can assume the player didn't make a choice,
+            // so we assign the "sitting duck" animation trigger
+            animationTrigger = sittingDuckAnimationTrigger;
+        }
+
+        animator.SetTrigger(animationTrigger);
     }
 
     private void Awake()
@@ -156,7 +195,10 @@ public class Player : MonoBehaviour
         {
             Debug.LogError($"{this.name} does not have input strings assigned to it.");
         }
+
+        animator = GetComponent<Animator>();
     }
+
     void Start()
     {
         
@@ -164,40 +206,38 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (CanMakeChoice && !hasMadeChoiceThisPhrase && !IsDead)
+        if (Input.GetButtonDown(attackButtonString))
         {
-            if (Input.GetButtonDown(attackButtonString))
-            {
-                MoveToExecute = MoveSet.Attack;
-            }
-            if (Input.GetButtonDown(dodgeButtonString))
-            {
-                MoveToExecute = MoveSet.Dodge;
-            }
-            if (Input.GetButtonDown(sweepButtonString))
-            {
-                MoveToExecute = MoveSet.Sweep;
-            }
+            SetChoice(MoveSet.Attack);
+        }
+        if (Input.GetButtonDown(dodgeButtonString))
+        {
+            SetChoice(MoveSet.Dodge);
+        }
+        if (Input.GetButtonDown(sweepButtonString))
+        {
+            SetChoice(MoveSet.Sweep);
         }
     }
 
-    private void Attack()
+    private void SetChoice(MoveSet move)
     {
-        Debug.Log($"{this.name} is attacking.");
+        if (CanMakeChoice && !hasMadeChoiceThisPhrase && !IsDead)
+        {
+            MoveToExecute = move;
+        }
     }
 
-    private void Dodge()
+    private void ResetChoiceValues()
     {
-        Debug.Log($"{this.name} is dodging.");
-    }
-
-    private void Sweep()
-    {
-        Debug.Log($"{this.name} is sweeping.");
+        hasMadeChoiceThisPhrase = false;
+        animationTrigger = null;
+        //reset portrait
     }
 
     private void ExecuteStarPowerMove()
     {
+        Debug.Log($"{this.name} is executing a star power move.");
         //tell combat manager about this here
     }
 
