@@ -12,6 +12,9 @@ public class CombatManager : MonoBehaviour
     private bool IsDebugging;
 
     [SerializeField]
+    private Player[] player = new Player[2];
+
+    [SerializeField]
     private TextMeshProUGUI player1ActionText, player2ActionText, countdownText, winnerText;
 
     [SerializeField]
@@ -166,8 +169,6 @@ public class CombatManager : MonoBehaviour
 
     void Start()
     {
-        //playerHealth[0] = 100;
-        //playerHealth[1] = 100;
         PlayerHealth1 = 100;
         PlayerHealth2 = 100;
         playerStarPower[0] = 0;
@@ -214,57 +215,57 @@ public class CombatManager : MonoBehaviour
             }
         }
 
-        if (canMakeChoice && !isPerformingStarPowerMove && !playerIsDead)
-        {
-            if (Input.GetButtonDown("Player1Attack") && !player1HasMadeChoice)
-            {
-                player1Choice = attack;
-                player1HasMadeChoice = true;
-                player1ActionTextNext = "Attack";
-                player1PortraitRenderer.sprite = player1ChoiceMadePortrait;
-                player1AudioSource.Play();
-            }
-            if (Input.GetButtonDown("Player1Block") && !player1HasMadeChoice)
-            {
-                player1Choice = dodge;
-                player1HasMadeChoice = true;
-                player1ActionTextNext = "Dodge";
-                player1PortraitRenderer.sprite = player1ChoiceMadePortrait;
-                player1AudioSource.Play();
-            }
-            if (Input.GetButtonDown("Player1Grapple") && !player1HasMadeChoice)
-            {
-                player1Choice = sweep;
-                player1HasMadeChoice = true;
-                player1ActionTextNext = "Sweep";
-                player1PortraitRenderer.sprite = player1ChoiceMadePortrait;
-                player1AudioSource.Play();
-            }
-            if (Input.GetButtonDown("Player2Attack") && !player2HasMadeChoice)
-            {
-                player2Choice = attack;
-                player2HasMadeChoice = true;
-                player2ActionTextNext = "Attack";
-                player2PortraitRenderer.sprite = player2ChoiceMadePortrait;
-                player2AudioSource.Play();
-            }
-            if (Input.GetButtonDown("Player2Block") && !player2HasMadeChoice)
-            {
-                player2Choice = dodge;
-                player2HasMadeChoice = true;
-                player2ActionTextNext = "Dodge";
-                player2PortraitRenderer.sprite = player2ChoiceMadePortrait;
-                player2AudioSource.Play();
-            }
-            if (Input.GetButtonDown("Player2Grapple") && !player2HasMadeChoice)
-            {
-                player2Choice = sweep;
-                player2HasMadeChoice = true;
-                player2ActionTextNext = "Sweep";
-                player2PortraitRenderer.sprite = player2ChoiceMadePortrait;
-                player2AudioSource.Play();
-            }
-        }
+        //if (canMakeChoice && !isPerformingStarPowerMove && !playerIsDead)
+        //{
+        //    if (Input.GetButtonDown("Player1Attack") && !player1HasMadeChoice)
+        //    {
+        //        player1Choice = attack;
+        //        player1HasMadeChoice = true;
+        //        player1ActionTextNext = "Attack";
+        //        player1PortraitRenderer.sprite = player1ChoiceMadePortrait;
+        //        player1AudioSource.Play();
+        //    }
+        //    if (Input.GetButtonDown("Player1Block") && !player1HasMadeChoice)
+        //    {
+        //        player1Choice = dodge;
+        //        player1HasMadeChoice = true;
+        //        player1ActionTextNext = "Dodge";
+        //        player1PortraitRenderer.sprite = player1ChoiceMadePortrait;
+        //        player1AudioSource.Play();
+        //    }
+        //    if (Input.GetButtonDown("Player1Grapple") && !player1HasMadeChoice)
+        //    {
+        //        player1Choice = sweep;
+        //        player1HasMadeChoice = true;
+        //        player1ActionTextNext = "Sweep";
+        //        player1PortraitRenderer.sprite = player1ChoiceMadePortrait;
+        //        player1AudioSource.Play();
+        //    }
+        //    if (Input.GetButtonDown("Player2Attack") && !player2HasMadeChoice)
+        //    {
+        //        player2Choice = attack;
+        //        player2HasMadeChoice = true;
+        //        player2ActionTextNext = "Attack";
+        //        player2PortraitRenderer.sprite = player2ChoiceMadePortrait;
+        //        player2AudioSource.Play();
+        //    }
+        //    if (Input.GetButtonDown("Player2Block") && !player2HasMadeChoice)
+        //    {
+        //        player2Choice = dodge;
+        //        player2HasMadeChoice = true;
+        //        player2ActionTextNext = "Dodge";
+        //        player2PortraitRenderer.sprite = player2ChoiceMadePortrait;
+        //        player2AudioSource.Play();
+        //    }
+        //    if (Input.GetButtonDown("Player2Grapple") && !player2HasMadeChoice)
+        //    {
+        //        player2Choice = sweep;
+        //        player2HasMadeChoice = true;
+        //        player2ActionTextNext = "Sweep";
+        //        player2PortraitRenderer.sprite = player2ChoiceMadePortrait;
+        //        player2AudioSource.Play();
+        //    }
+        //}
     }
 
     private void OnEndOfPhrase()
@@ -295,11 +296,6 @@ public class CombatManager : MonoBehaviour
     {
         if (!playerIsDead && !isPerformingStarPowerMove)
         {
-            //player1HasMadeChoice = false;
-            //player1Choice = " ";
-            //player2HasMadeChoice = false;
-            //player2Choice = " ";
-
             yield return new WaitForSeconds(1);
             countdownText.text = "3";
             audioSource.PlayOneShot(countdownClip[0]);
@@ -309,20 +305,24 @@ public class CombatManager : MonoBehaviour
             yield return new WaitForSeconds(1);
             countdownText.text = "1";
             audioSource.PlayOneShot(countdownClip[2]);
-            canMakeChoice = true;
+            //canMakeChoice = true;
+            player[0].CanMakeChoice = true;
+            player[1].CanMakeChoice = true;
             yield return new WaitForSeconds(1);
             countdownText.color = lastNumberColor;
             countdownText.text = "CHOOSE!";
-            player1PortraitRenderer.sprite = player1NoChoicePortrait;
-            player2PortraitRenderer.sprite = player2NoChoicePortrait;
+            //player1PortraitRenderer.sprite = player1NoChoicePortrait;
+            //player2PortraitRenderer.sprite = player2NoChoicePortrait;
             audioSource.PlayOneShot(countdownClip[3]);
             //Add choosing countdown graphic, maybe a bar or a round pie chart type thing?
             yield return new WaitForSeconds(secondsForChoice);
             countdownText.text = "";
             countdownText.color = countdownTextColor;
-            canMakeChoice = false;
+            //canMakeChoice = false;
+            player[0].CanMakeChoice = false;
+            player[1].CanMakeChoice = false;
 
-            UpdateActionText();
+            //UpdateActionText();
             DecideWinner?.Invoke();
 
             // The disparity average is based on how different the two players' scores were,
@@ -333,39 +333,39 @@ public class CombatManager : MonoBehaviour
             //testTimerText.text = phraseTimeElapsed.ToString();
             phraseTimeElapsed = 0.0f;
 
-            DecideOnDamage();
+            ExecuteCombat();
         }
     }
 
-    private void UpdateActionText()
-    {
-        // We should add a small animation to these as a stretch goal
+    //private void UpdateActionText()
+    //{
+    //    // We should add a small animation to these as a stretch goal
 
-        if (player1HasMadeChoice)
-        {
-            StartCoroutine(UpdatePlayer1ActionText(player1ActionTextNext));
-        }
-        if (player2HasMadeChoice)
-        {
-            StartCoroutine(UpdatePlayer2ActionText(player2ActionTextNext));
-        }
-    }
+    //    if (player1HasMadeChoice)
+    //    {
+    //        StartCoroutine(UpdatePlayer1ActionText(player1ActionTextNext));
+    //    }
+    //    if (player2HasMadeChoice)
+    //    {
+    //        StartCoroutine(UpdatePlayer2ActionText(player2ActionTextNext));
+    //    }
+    //}
 
-    IEnumerator UpdatePlayer1ActionText(string text)
-    {
-        player1ActionText.text = text;
-        yield return new WaitForSeconds(2);
-        player1ActionText.text = " ";
-    }
+    //IEnumerator UpdatePlayer1ActionText(string text)
+    //{
+    //    player1ActionText.text = text;
+    //    yield return new WaitForSeconds(2);
+    //    player1ActionText.text = " ";
+    //}
 
-    IEnumerator UpdatePlayer2ActionText(string text)
-    {
-        player2ActionText.text = text;
-        yield return new WaitForSeconds(2);
-        player2ActionText.text = " ";
-    }
+    //IEnumerator UpdatePlayer2ActionText(string text)
+    //{
+    //    player2ActionText.text = text;
+    //    yield return new WaitForSeconds(2);
+    //    player2ActionText.text = " ";
+    //}
 
-    private void DecideOnDamage()
+    private void ExecuteCombat()
     {
         damageDealt = 0;
         indexOfWinner = audioComparisonSript.IndexOfWinner;
@@ -378,41 +378,108 @@ public class CombatManager : MonoBehaviour
         bonus = (int)(scoreDisparityAveraged / bonusDividingFactor) - 1;
         Debug.Log($"Bonus: {bonus}");
 
-        //scoreDisparity = audioComparisonSript.ScoreDisparity;
+        player[0].ExecuteQueuedCombatMove(baseAttackDamage, bonus);
+        player[1].ExecuteQueuedCombatMove(baseAttackDamage, bonus);
 
-        if(player1HasMadeChoice && player2HasMadeChoice)
+        if (player[0].MoveToExecute == Player.MoveSet.Attack)
         {
-            if (player1Choice == attack)
+            switch (player[1].MoveToExecute)
             {
-                Player1Attack();
-            }
-            else if (player1Choice == dodge)
-            {
-                Player1Dodge();
-            }
-            else if (player1Choice == sweep)
-            {
-                Player1Sweep();
-            }
-            else
-            {
-                Debug.Log("Combat error.");
+                case Player.MoveSet.Attack:
+
+                    break;
+                case Player.MoveSet.Dodge:
+
+                    break;
+                case Player.MoveSet.Sweep:
+
+                    break;
+                case Player.MoveSet.Undecided:
+
+                    break;
             }
         }
-        else if (player1HasMadeChoice && !player2HasMadeChoice)
+        else if (player[0].MoveToExecute == Player.MoveSet.Dodge)
         {
-            Player2DidNotChoose();
+            switch (player[1].MoveToExecute)
+            {
+                case Player.MoveSet.Attack:
+
+                    break;
+                case Player.MoveSet.Dodge:
+
+                    break;
+                case Player.MoveSet.Sweep:
+
+                    break;
+                case Player.MoveSet.Undecided:
+
+                    break;
+            }
         }
-        else if (!player1HasMadeChoice && player2HasMadeChoice)
+        else if (player[0].MoveToExecute == Player.MoveSet.Sweep)
         {
-            Player1DidNotChoose();
+            switch (player[1].MoveToExecute)
+            {
+                case Player.MoveSet.Attack:
+
+                    break;
+                case Player.MoveSet.Dodge:
+
+                    break;
+                case Player.MoveSet.Sweep:
+
+                    break;
+                case Player.MoveSet.Undecided:
+
+                    break;
+            }
         }
-        else if(!player1HasMadeChoice && !player2HasMadeChoice)
+        else if (player[0].MoveToExecute == Player.MoveSet.Undecided)
         {
-            playerAnimator[indexOfWinner].SetTrigger("dissapointed");
-            ResetValues();
+            switch (player[1].MoveToExecute)
+            {
+                case Player.MoveSet.Attack:
+
+                    break;
+                case Player.MoveSet.Dodge:
+
+                    break;
+                case Player.MoveSet.Sweep:
+
+                    break;
+                case Player.MoveSet.Undecided:
+
+                    break;
+            }
         }
+
     }
+
+
+    //// each move only needs to check for the one that beats it, otherwise they go as planned
+
+    //public void PlayerAttacks(int indexOfOtherPlayer)
+    //{
+    //    // this animation trigger should occur when the hit makes contact
+    //    if (player[indexOfOtherPlayer].MoveToExecute != Player.MoveSet.Dodge)
+    //    {
+
+    //    }
+    //}
+
+    //public void PlayerDodges(int indexOfOtherPlayer)
+    //{
+    //    // this animation trigger should occur at the very beginning of the animation cycle 
+    //    // so we can keep track of it for attacking
+
+    //}
+
+    //public void PlayerSweeps(int indexOfOtherPlayer)
+    //{
+    //    // this trigger should occur after dodging but before attacking
+
+    //}
 
     private void Player1Attack()
     {

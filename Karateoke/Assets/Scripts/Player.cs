@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -170,7 +171,7 @@ public class Player : MonoBehaviour
     /// </summary>
     /// <param name="overrideAnimation"></param>
     /// <param name="newAnimationTrigger"></param>
-    public void ExecuteQueuedAnimations(bool overrideAnimation = false, string newAnimationTrigger = null)
+    public void ExecuteQueuedCombatMove(int turnDamage, int turnBonus, bool overrideAnimation = false, string newAnimationTrigger = null)
     {
         if (overrideAnimation)
         {
@@ -183,9 +184,14 @@ public class Player : MonoBehaviour
             // If we get here we can assume the player didn't make a choice,
             // so we assign the "sitting duck" animation trigger
             animationTrigger = sittingDuckAnimationTrigger;
+            
         }
 
+        
+
+
         animator.SetTrigger(animationTrigger);
+        //also do action text
     }
 
     private void Awake()
@@ -232,7 +238,22 @@ public class Player : MonoBehaviour
     {
         hasMadeChoiceThisPhrase = false;
         animationTrigger = null;
-        //reset portrait
+        //reset portrait and action text
+    }
+
+    private void Attack()
+    {
+
+    }
+
+    private void Dodge()
+    {
+
+    }
+
+    private void Sweep()
+    {
+
     }
 
     private void ExecuteStarPowerMove()
