@@ -77,9 +77,9 @@ public class HealthBar : MonoBehaviour
 
     public void ScaleHealthBar(float value, bool increase)
     {
-        healthValue = value / dividingValue;
+        HealthValue = value / dividingValue;
 
-        newScale = new Vector3(healthValue, 1.0f);
+        newScale = new Vector3(HealthValue, 1.0f);
         scalingFramesLeft = scalingFrames;
 
         //change this to take in the new total health value instead
