@@ -197,6 +197,11 @@ public class CombatManager : MonoBehaviour
 
         audioSource = GetComponent<AudioSource>();
         audioComparisonSript = GetComponent<AudioComparisonManager>();
+
+        //new stuff
+
+        player[0].IndexAccordingToCombatManager = 0;
+        player[1].IndexAccordingToCombatManager = 1;
     }
 
     void Update()
@@ -456,6 +461,56 @@ public class CombatManager : MonoBehaviour
 
     }
 
+    public void PlayerAttacks(int indexOfOtherPlayer)
+    {
+        player[indexOfOtherPlayer].GetAttcked(damageDealt, bonus, indexOfWinner);
+    }
+
+    public void Player1Sweeps()
+    {
+        bool applyStarPower = true;
+
+        if (player[1].MoveToExecute == Player.MoveSet.Sweep &&
+            indexOfWinner == 1)
+        {
+            // Getting here means player 1 does not successfully sweep since player 2
+            // won the sweep contest by singing better
+            applyStarPower = false;
+        }
+
+        if (applyStarPower)
+        {
+            int starPowerIncrease = baseStarPowerIncrease;
+            if (indexOfWinner == 0)
+            {
+                starPowerIncrease += bonus;
+            }
+            player[0].StarPower += starPowerIncrease;
+        }
+    }
+
+    public void Player2Sweeps()
+    {
+        bool applyStarPower = true;
+
+        if (player[0].MoveToExecute == Player.MoveSet.Sweep &&
+            indexOfWinner == 0)
+        {
+            // Getting here means player 2 does not successfully sweep since player 1
+            // won the sweep contest by singing better
+            applyStarPower = false;
+        }
+
+        if (applyStarPower)
+        {
+            int starPowerIncrease = baseStarPowerIncrease;
+            if (indexOfWinner == 1)
+            {
+                starPowerIncrease += bonus;
+            }
+            player[1].StarPower += starPowerIncrease;
+        }
+    }
 
     //// each move only needs to check for the one that beats it, otherwise they go as planned
 

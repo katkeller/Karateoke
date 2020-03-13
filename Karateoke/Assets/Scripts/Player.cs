@@ -27,12 +27,21 @@ public class Player : MonoBehaviour
     [SerializeField]
     private string attackAnimationTrigger, dodgeAnimationTrigger, sweepAnimationTrigger, sittingDuckAnimationTrigger;
 
+    [SerializeField]
+    private string fallAnimationTrigger, getHitAnimationTrigger, getHitFromSweepAnimationTrigger;
+
     public enum MoveSet
     {
         Attack,
         Dodge,
         Sweep,
         Undecided
+    }
+
+    public int IndexAccordingToCombatManager
+    {
+        get;
+        set;
     }
 
     private bool canMakeChoice;
@@ -193,6 +202,86 @@ public class Player : MonoBehaviour
         animator.SetTrigger(animationTrigger);
         //also do action text
     }
+
+    #region Damage & Animation Interruptions (Triggered From CombatManager)
+
+    public void GetAttcked(float possibleDamage, int bonus, int indexOfWinner)
+    {
+        //this only gets called once choices have been locked in (after phrase end)
+
+        int damage = 0;
+
+        switch (MoveToExecute)
+        {
+            // do we interrupt animations in here?
+            case MoveSet.Attack:
+                if (indexOfWinner != IndexAccordingToCombatManager)
+                {
+                    animator.SetTrigger(getHitAnimationTrigger);
+                    // Apply damage to this player
+                    damage = (int)(possibleDamage + bonus);
+                    Health -= damage;
+                }
+                break;
+            case MoveSet.Dodge:
+                // Nothing for now?
+                Debug.Log($"{this.name} dodged successfully.");
+
+                break;
+            case MoveSet.Sweep:
+                animator.SetTrigger(getHitFromSweepAnimationTrigger);
+                damage = (int)possibleDamage;
+                if (indexOfWinner != IndexAccordingToCombatManager)
+                {
+                    // Apply bonus to damage value
+                    damage += bonus;
+                }
+                Health -= damage;
+                break;
+            case MoveSet.Undecided:
+                animator.SetTrigger(getHitAnimationTrigger);
+                damage = (int)possibleDamage;
+                if (indexOfWinner != IndexAccordingToCombatManager)
+                {
+                    // Apply bonus to damage value
+                    damage += bonus;
+                }
+                Health -= damage;
+                break;
+            default:
+                Debug.Log($"Combat error: getting hit, {this.name}");
+                break;
+        }
+
+    }
+
+    public void GetSwept(int indexOfWinner)
+    {
+        switch (MoveToExecute)
+        {
+            case MoveSet.Attack:
+                // Nothing?
+                break;
+            case MoveSet.Dodge:
+                animator.SetTrigger(fallAnimationTrigger);
+                // do we want to reduce star power here maybe?
+                break;
+            case MoveSet.Sweep:
+                if (indexOfWinner != IndexAccordingToCombatManager)
+                {
+                    animator.SetTrigger(fallAnimationTrigger);
+                }
+                break;
+            case MoveSet.Undecided:
+                animator.SetTrigger(fallAnimationTrigger);
+                break;
+            default:
+                Debug.Log($"Combat error: getting swept, {this.name}");
+                break;
+        }
+    }
+
+    #endregion
 
     private void Awake()
     {
