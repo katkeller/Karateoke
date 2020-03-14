@@ -219,58 +219,6 @@ public class CombatManager : MonoBehaviour
                 playerStarPower[0] += 50;
             }
         }
-
-        //if (canMakeChoice && !isPerformingStarPowerMove && !playerIsDead)
-        //{
-        //    if (Input.GetButtonDown("Player1Attack") && !player1HasMadeChoice)
-        //    {
-        //        player1Choice = attack;
-        //        player1HasMadeChoice = true;
-        //        player1ActionTextNext = "Attack";
-        //        player1PortraitRenderer.sprite = player1ChoiceMadePortrait;
-        //        player1AudioSource.Play();
-        //    }
-        //    if (Input.GetButtonDown("Player1Block") && !player1HasMadeChoice)
-        //    {
-        //        player1Choice = dodge;
-        //        player1HasMadeChoice = true;
-        //        player1ActionTextNext = "Dodge";
-        //        player1PortraitRenderer.sprite = player1ChoiceMadePortrait;
-        //        player1AudioSource.Play();
-        //    }
-        //    if (Input.GetButtonDown("Player1Grapple") && !player1HasMadeChoice)
-        //    {
-        //        player1Choice = sweep;
-        //        player1HasMadeChoice = true;
-        //        player1ActionTextNext = "Sweep";
-        //        player1PortraitRenderer.sprite = player1ChoiceMadePortrait;
-        //        player1AudioSource.Play();
-        //    }
-        //    if (Input.GetButtonDown("Player2Attack") && !player2HasMadeChoice)
-        //    {
-        //        player2Choice = attack;
-        //        player2HasMadeChoice = true;
-        //        player2ActionTextNext = "Attack";
-        //        player2PortraitRenderer.sprite = player2ChoiceMadePortrait;
-        //        player2AudioSource.Play();
-        //    }
-        //    if (Input.GetButtonDown("Player2Block") && !player2HasMadeChoice)
-        //    {
-        //        player2Choice = dodge;
-        //        player2HasMadeChoice = true;
-        //        player2ActionTextNext = "Dodge";
-        //        player2PortraitRenderer.sprite = player2ChoiceMadePortrait;
-        //        player2AudioSource.Play();
-        //    }
-        //    if (Input.GetButtonDown("Player2Grapple") && !player2HasMadeChoice)
-        //    {
-        //        player2Choice = sweep;
-        //        player2HasMadeChoice = true;
-        //        player2ActionTextNext = "Sweep";
-        //        player2PortraitRenderer.sprite = player2ChoiceMadePortrait;
-        //        player2AudioSource.Play();
-        //    }
-        //}
     }
 
     private void OnEndOfPhrase()
@@ -287,14 +235,30 @@ public class CombatManager : MonoBehaviour
         }
     }
 
+    private void OnPlayerDies(int indexOfPlayer)
+    {
+        playerIsDead = true;
+
+    }
+
+    private void OnPlayerHasFullStarPower(int indexOfPlayer)
+    {
+        isPerformingStarPowerMove = true;
+
+    }
+
     private void OnEnable()
     {
         PhraseEndTrigger.EndOfPhrase += OnEndOfPhrase;
+        Player.PlayerDies += OnPlayerDies;
+        Player.PlayerHasFullStarPower += OnPlayerHasFullStarPower;
     }
 
     private void OnDisable()
     {
         PhraseEndTrigger.EndOfPhrase -= OnEndOfPhrase;
+        Player.PlayerDies -= OnPlayerDies;
+        Player.PlayerHasFullStarPower -= OnPlayerHasFullStarPower;
     }
 
     IEnumerator AllowPlayersToMakeChoice()
@@ -383,82 +347,8 @@ public class CombatManager : MonoBehaviour
         bonus = (int)(scoreDisparityAveraged / bonusDividingFactor) - 1;
         Debug.Log($"Bonus: {bonus}");
 
-        player[0].ExecuteQueuedCombatMove(baseAttackDamage, bonus);
-        player[1].ExecuteQueuedCombatMove(baseAttackDamage, bonus);
-
-        if (player[0].MoveToExecute == Player.MoveSet.Attack)
-        {
-            switch (player[1].MoveToExecute)
-            {
-                case Player.MoveSet.Attack:
-
-                    break;
-                case Player.MoveSet.Dodge:
-
-                    break;
-                case Player.MoveSet.Sweep:
-
-                    break;
-                case Player.MoveSet.Undecided:
-
-                    break;
-            }
-        }
-        else if (player[0].MoveToExecute == Player.MoveSet.Dodge)
-        {
-            switch (player[1].MoveToExecute)
-            {
-                case Player.MoveSet.Attack:
-
-                    break;
-                case Player.MoveSet.Dodge:
-
-                    break;
-                case Player.MoveSet.Sweep:
-
-                    break;
-                case Player.MoveSet.Undecided:
-
-                    break;
-            }
-        }
-        else if (player[0].MoveToExecute == Player.MoveSet.Sweep)
-        {
-            switch (player[1].MoveToExecute)
-            {
-                case Player.MoveSet.Attack:
-
-                    break;
-                case Player.MoveSet.Dodge:
-
-                    break;
-                case Player.MoveSet.Sweep:
-
-                    break;
-                case Player.MoveSet.Undecided:
-
-                    break;
-            }
-        }
-        else if (player[0].MoveToExecute == Player.MoveSet.Undecided)
-        {
-            switch (player[1].MoveToExecute)
-            {
-                case Player.MoveSet.Attack:
-
-                    break;
-                case Player.MoveSet.Dodge:
-
-                    break;
-                case Player.MoveSet.Sweep:
-
-                    break;
-                case Player.MoveSet.Undecided:
-
-                    break;
-            }
-        }
-
+        player[0].ExecuteQueuedCombatMove();
+        player[1].ExecuteQueuedCombatMove();
     }
 
     public void PlayerAttacks(int indexOfOtherPlayer)

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -22,13 +23,25 @@ public class Player : MonoBehaviour
     private HealthBar starPowerBar;
 
     [SerializeField]
+    private Text actionText;
+
+    [SerializeField]
+    private GameObject portraitObject;
+
+    [SerializeField]
+    private Sprite activatedPortrait, unactivatedPortrait;
+
+    [SerializeField]
     private string attackButtonString, dodgeButtonString, sweepButtonString;
 
     [SerializeField]
     private string attackAnimationTrigger, dodgeAnimationTrigger, sweepAnimationTrigger, sittingDuckAnimationTrigger;
 
     [SerializeField]
-    private string fallAnimationTrigger, getHitAnimationTrigger, getHitFromSweepAnimationTrigger;
+    private string gettingReadyAnimationTrigger, fallAnimationTrigger, getHitAnimationTrigger, getHitFromSweepAnimationTrigger;
+
+    [SerializeField]
+    private AudioClip choiceMadeClip, getHitClip, fallClip;
 
     public enum MoveSet
     {
@@ -56,7 +69,7 @@ public class Player : MonoBehaviour
             {
                 // This makes it so that every time the combat manager asserts that a phrase is about to end,
                 // the player knows that it's time to make a choice again.
-                ResetChoiceValues();
+                ResetChoiceValuesAndStartChoiceAnimation();
             }
         }
     }
@@ -122,7 +135,8 @@ public class Player : MonoBehaviour
 
             if (starPower >= 10)
             {
-                ExecuteStarPowerMove();
+                SetUpStarPowerMove();
+                //remember to set star power back to a 0
             }
         }
     }
@@ -145,21 +159,24 @@ public class Player : MonoBehaviour
         {
             moveToExecute = value;
 
-            switch (value)
+            switch (moveToExecute)
             {
                 case MoveSet.Attack:
                     animationTrigger = attackAnimationTrigger;
+                    queuedActionText = "ATTACK";
                     break;
                 case MoveSet.Dodge:
                     animationTrigger = dodgeAnimationTrigger;
+                    queuedActionText = "DODGE";
                     break;
                 case MoveSet.Sweep:
                     animationTrigger = sweepAnimationTrigger;
+                    queuedActionText = "SWEEP";
                     break;
                 case MoveSet.Undecided:
                     break;
                 default:
-                    Debug.Log($"{value} unsupported.");
+                    Debug.Log($"MoveToExecute for {this.name}: {value} unsupported.");
                     break;
             }
 
@@ -168,9 +185,18 @@ public class Player : MonoBehaviour
     }
 
     private string animationTrigger;
+    private string queuedActionText;
 
     private AudioSource audioSource;
     private Animator animator;
+    private SpriteRenderer portraitRenderer;
+
+    #endregion
+
+    #region Events
+
+    public static event Action<int> PlayerDies;
+    public static event Action<int> PlayerHasFullStarPower;
 
     #endregion
 
@@ -180,11 +206,11 @@ public class Player : MonoBehaviour
     /// </summary>
     /// <param name="overrideAnimation"></param>
     /// <param name="newAnimationTrigger"></param>
-    public void ExecuteQueuedCombatMove(int turnDamage, int turnBonus, bool overrideAnimation = false, string newAnimationTrigger = null)
+    public void ExecuteQueuedCombatMove(bool overrideAnimation = false, string newAnimationTrigger = null)
     {
-        if (overrideAnimation)
+        if (overrideAnimation && !string.IsNullOrEmpty(newAnimationTrigger))
         {
-            //do we ever need to override animations?
+            // will we ever need to override animations?
             animationTrigger = newAnimationTrigger;
         }
 
@@ -193,14 +219,12 @@ public class Player : MonoBehaviour
             // If we get here we can assume the player didn't make a choice,
             // so we assign the "sitting duck" animation trigger
             animationTrigger = sittingDuckAnimationTrigger;
-            
         }
-
-        
-
 
         animator.SetTrigger(animationTrigger);
         //also do action text
+        StartCoroutine(ShowActionText());
+        
     }
 
     #region Damage & Animation Interruptions (Triggered From CombatManager)
@@ -291,7 +315,11 @@ public class Player : MonoBehaviour
             Debug.LogError($"{this.name} does not have input strings assigned to it.");
         }
 
+        actionText.text = " ";
+
+        audioSource = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
+        portraitRenderer = portraitObject.GetComponent<SpriteRenderer>();
     }
 
     void Start()
@@ -303,57 +331,57 @@ public class Player : MonoBehaviour
     {
         if (Input.GetButtonDown(attackButtonString))
         {
-            SetChoice(MoveSet.Attack);
+            CheckAndSetChoice(MoveSet.Attack);
         }
         if (Input.GetButtonDown(dodgeButtonString))
         {
-            SetChoice(MoveSet.Dodge);
+            CheckAndSetChoice(MoveSet.Dodge);
         }
         if (Input.GetButtonDown(sweepButtonString))
         {
-            SetChoice(MoveSet.Sweep);
+            CheckAndSetChoice(MoveSet.Sweep);
         }
     }
 
-    private void SetChoice(MoveSet move)
+    private void CheckAndSetChoice(MoveSet move)
     {
         if (CanMakeChoice && !hasMadeChoiceThisPhrase && !IsDead)
         {
             MoveToExecute = move;
+            portraitRenderer.sprite = activatedPortrait;
+            audioSource.PlayOneShot(choiceMadeClip);
         }
     }
 
-    private void ResetChoiceValues()
+    private void ResetChoiceValuesAndStartChoiceAnimation()
     {
         hasMadeChoiceThisPhrase = false;
         animationTrigger = null;
-        //reset portrait and action text
+        //reset portrait
+        portraitRenderer.sprite = unactivatedPortrait;
+        queuedActionText = " ";
+
+        animator.SetTrigger(gettingReadyAnimationTrigger);
     }
 
-    private void Attack()
-    {
-
-    }
-
-    private void Dodge()
-    {
-
-    }
-
-    private void Sweep()
-    {
-
-    }
-
-    private void ExecuteStarPowerMove()
+    private void SetUpStarPowerMove()
     {
         Debug.Log($"{this.name} is executing a star power move.");
         //tell combat manager about this here
+        PlayerHasFullStarPower?.Invoke(IndexAccordingToCombatManager);
     }
 
     private void Die()
     {
         Debug.Log($"{this.name} is dead.");
         IsDead = true;
+        PlayerDies?.Invoke(IndexAccordingToCombatManager);
+    }
+
+    IEnumerator ShowActionText()
+    {
+        actionText.text = queuedActionText;
+        yield return new WaitForSeconds(3);
+        actionText.text = " ";
     }
 }
