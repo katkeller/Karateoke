@@ -209,6 +209,56 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 9aff5b6a069444d7d87b16b6f7808851, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad8bb660b01fd204c82098eecf4fd2d9, type: 3}
+--- !u!1 &46371512 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: ad8bb660b01fd204c82098eecf4fd2d9,
+    type: 3}
+  m_PrefabInstance: {fileID: 46371511}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &46371513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46371512}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4115b36982ed1fb489ccc012bb48bff4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthBar: {fileID: 0}
+  starPowerBar: {fileID: 0}
+  actionText: {fileID: 0}
+  portraitObject: {fileID: 0}
+  activatedPortrait: {fileID: 0}
+  unactivatedPortrait: {fileID: 0}
+  attackButtonString: 
+  dodgeButtonString: 
+  sweepButtonString: 
+  attackAnimationTrigger: 
+  dodgeAnimationTrigger: 
+  sweepAnimationTrigger: 
+  sittingDuckAnimationTrigger: 
+  gettingReadyAnimationTrigger: 
+  fallAnimationTrigger: 
+  getHitAnimationTrigger: 
+  getHitFromSweepAnimationTrigger: 
+  choiceMadeClip: {fileID: 0}
+  getHitClip: {fileID: 0}
+  fallClip: {fileID: 0}
+--- !u!114 &46371514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46371512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 993182ec72e23b844bc54bcbcd90b55c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &605887918
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -220,6 +270,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Jackie_nonPBR
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: a8a36f33f5fb2554eb5db50af532f885,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: a8a36f33f5fb2554eb5db50af532f885,
         type: 3}
@@ -293,6 +348,130 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8a36f33f5fb2554eb5db50af532f885, type: 3}
+--- !u!1 &605887919 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: a8a36f33f5fb2554eb5db50af532f885,
+    type: 3}
+  m_PrefabInstance: {fileID: 605887918}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &605887920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 605887919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4115b36982ed1fb489ccc012bb48bff4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthBar: {fileID: 0}
+  starPowerBar: {fileID: 0}
+  actionText: {fileID: 0}
+  portraitObject: {fileID: 0}
+  activatedPortrait: {fileID: 0}
+  unactivatedPortrait: {fileID: 0}
+  attackButtonString: 
+  dodgeButtonString: 
+  sweepButtonString: 
+  attackAnimationTrigger: 
+  dodgeAnimationTrigger: 
+  sweepAnimationTrigger: 
+  sittingDuckAnimationTrigger: 
+  gettingReadyAnimationTrigger: 
+  fallAnimationTrigger: 
+  getHitAnimationTrigger: 
+  getHitFromSweepAnimationTrigger: 
+  choiceMadeClip: {fileID: 0}
+  getHitClip: {fileID: 0}
+  fallClip: {fileID: 0}
+--- !u!1 &940111727
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 940111729}
+  - component: {fileID: 940111728}
+  m_Layer: 0
+  m_Name: TestCombatManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &940111728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 940111727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 512e71261af5243f49cb208e1b08d4ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsDebugging: 0
+  player:
+  - {fileID: 0}
+  - {fileID: 0}
+  countdownText: {fileID: 0}
+  winnerText: {fileID: 0}
+  startButton: {fileID: 0}
+  secondsForChoice: 1.5
+  lastNumberColor:
+    serializedVersion: 2
+    rgba: 4283695318
+  countdownClip:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  comboImage:
+  - {fileID: 0}
+  - {fileID: 0}
+  sparks:
+  - {fileID: 0}
+  - {fileID: 0}
+  starPowerSparks:
+  - {fileID: 0}
+  - {fileID: 0}
+  comboText:
+  - {fileID: 0}
+  - {fileID: 0}
+  comboImageAnimationDelay: 1.5
+  getHitAnimationDelay: 1
+  victoryAnimationDelay: 2
+  starPowerBackgrounds:
+  - {fileID: 0}
+  - {fileID: 0}
+  baseAttackDamage: 5
+  baseParryDamage: 1
+  baseStarPowerIncrease: 10
+  starPowerMoveDamage: 20
+  baseStarPowerDecrease: 5
+  baseStarPowerComboIncrease: 2
+  starPowerMoveLengthInSeconds: 5
+  bonusDividingFactor: 100
+  bonusParryDividingValue: 2
+--- !u!4 &940111729
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 940111727}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 27.584728, y: -0.83529174, z: 2.8963833}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1390945831
 GameObject:
   m_ObjectHideFlags: 0

@@ -187,6 +187,8 @@ public class Player : MonoBehaviour
     private string animationTrigger;
     private string queuedActionText;
 
+    private bool gameHasStarted;
+
     private AudioSource audioSource;
     private Animator animator;
     private SpriteRenderer portraitRenderer;
@@ -197,6 +199,8 @@ public class Player : MonoBehaviour
 
     public static event Action<int> PlayerDies;
     public static event Action<int> PlayerHasFullStarPower;
+    public static event Action<int> AttemptAttack;
+    public static event Action<int> AttemptSweep;
 
     #endregion
 
@@ -225,6 +229,16 @@ public class Player : MonoBehaviour
         //also do action text
         StartCoroutine(ShowActionText());
         
+    }
+
+    public void PlayerAttacksEvent(int indexOfOtherPlayer)
+    {
+        AttemptAttack?.Invoke(indexOfOtherPlayer);
+    }
+
+    public void PlayerSweepsEvent(int indexOfOtherPlayer)
+    {
+        AttemptSweep?.Invoke(indexOfOtherPlayer);
     }
 
     #region Damage & Animation Interruptions (Triggered From CombatManager)
@@ -279,33 +293,54 @@ public class Player : MonoBehaviour
 
     }
 
-    public void GetSwept(int indexOfWinner)
+    public void GetSwept()
     {
-        switch (MoveToExecute)
+        //switch (MoveToExecute)
+        //{
+        //    case MoveSet.Attack:
+        //        // Nothing?
+        //        break;
+        //    case MoveSet.Dodge:
+        //        animator.SetTrigger(fallAnimationTrigger);
+        //        // do we want to reduce star power here maybe?
+        //        break;
+        //    case MoveSet.Sweep:
+        //        if (indexOfWinner != IndexAccordingToCombatManager)
+        //        {
+        //            animator.SetTrigger(fallAnimationTrigger);
+        //        }
+        //        break;
+        //    case MoveSet.Undecided:
+        //        animator.SetTrigger(fallAnimationTrigger);
+        //        break;
+        //    default:
+        //        Debug.Log($"Combat error: getting swept, {this.name}");
+        //        break;
+        //}
+
+        animator.SetTrigger(fallAnimationTrigger);
+    }
+
+    public void SuccessfullySweep(int starPowerIncrease, int bonus, int indexOfWinner)
+    {
+        if (indexOfWinner == IndexAccordingToCombatManager)
         {
-            case MoveSet.Attack:
-                // Nothing?
-                break;
-            case MoveSet.Dodge:
-                animator.SetTrigger(fallAnimationTrigger);
-                // do we want to reduce star power here maybe?
-                break;
-            case MoveSet.Sweep:
-                if (indexOfWinner != IndexAccordingToCombatManager)
-                {
-                    animator.SetTrigger(fallAnimationTrigger);
-                }
-                break;
-            case MoveSet.Undecided:
-                animator.SetTrigger(fallAnimationTrigger);
-                break;
-            default:
-                Debug.Log($"Combat error: getting swept, {this.name}");
-                break;
+            starPowerIncrease += (bonus / 4);
         }
+
+        StarPower += starPowerIncrease;
     }
 
     #endregion
+
+    public void StartGame()
+    {
+        if (!gameHasStarted)
+        {
+            gameHasStarted = true;
+            animator.SetTrigger("Start");
+        }
+    }
 
     private void Awake()
     {
@@ -357,7 +392,6 @@ public class Player : MonoBehaviour
     {
         hasMadeChoiceThisPhrase = false;
         animationTrigger = null;
-        //reset portrait
         portraitRenderer.sprite = unactivatedPortrait;
         queuedActionText = " ";
 
@@ -367,7 +401,6 @@ public class Player : MonoBehaviour
     private void SetUpStarPowerMove()
     {
         Debug.Log($"{this.name} is executing a star power move.");
-        //tell combat manager about this here
         PlayerHasFullStarPower?.Invoke(IndexAccordingToCombatManager);
     }
 

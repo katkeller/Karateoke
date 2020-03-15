@@ -15,7 +15,7 @@ public class CombatManager : MonoBehaviour
     private Player[] player = new Player[2];
 
     [SerializeField]
-    private TextMeshProUGUI player1ActionText, player2ActionText, countdownText, winnerText;
+    private TextMeshProUGUI countdownText, winnerText;
 
     [SerializeField]
     private Button startButton;
@@ -29,11 +29,11 @@ public class CombatManager : MonoBehaviour
     [SerializeField]
     private AudioClip[] countdownClip = new AudioClip[4];
 
-    [SerializeField]
-    private Sprite attackIcon, blockIcon, grappleIcon;
+    //[SerializeField]
+    //private Sprite attackIcon, blockIcon, grappleIcon;
 
-    [SerializeField]
-    private GameObject[] playerModel = new GameObject[2];
+    //[SerializeField]
+    //private GameObject[] playerModel = new GameObject[2];
 
     [SerializeField]
     private GameObject[] comboImage = new GameObject[2];
@@ -47,11 +47,11 @@ public class CombatManager : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI[] comboText = new TextMeshProUGUI[2];
 
-    [SerializeField]
-    private GameObject player1Portrait, player2Portrait;
+    //[SerializeField]
+    //private GameObject player1Portrait, player2Portrait;
 
-    [SerializeField]
-    private Sprite player1RegularPortrait, player1NoChoicePortrait, player1ChoiceMadePortrait, player2RegularPortrait, player2NoChoicePortrait, player2ChoiceMadePortrait;
+    //[SerializeField]
+    //private Sprite player1RegularPortrait, player1NoChoicePortrait, player1ChoiceMadePortrait, player2RegularPortrait, player2NoChoicePortrait, player2ChoiceMadePortrait;
 
     [SerializeField]
     private float comboImageAnimationDelay = 1.5f;
@@ -59,11 +59,11 @@ public class CombatManager : MonoBehaviour
     [SerializeField]
     private float getHitAnimationDelay = 1.0f, victoryAnimationDelay = 2.0f;
 
-    [SerializeField]
-    private GameObject[] playerHealthBarGameObject = new GameObject[2];
+    //[SerializeField]
+    //private GameObject[] playerHealthBarGameObject = new GameObject[2];
 
-    [SerializeField]
-    private GameObject[] playerStarPowerBarGameObject = new GameObject[2];
+    //[SerializeField]
+    //private GameObject[] playerStarPowerBarGameObject = new GameObject[2];
 
     [SerializeField]
     private GameObject[] starPowerBackgrounds = new GameObject[2];
@@ -82,45 +82,45 @@ public class CombatManager : MonoBehaviour
     private float bonusDividingFactor = 100.0f, bonusParryDividingValue = 2.0f;
 
     //private int[] playerHealth = new int[2];
-    private int playerHealth1;
+    //private int playerHealth1;
     
-    public int PlayerHealth1
-    {
-        get
-        {
-            return playerHealth1;
-        }
-        set
-        {
-            playerHealth1 += value;
-            healthBar[0].ScaleHealthBar(playerHealth1, false);
+    //public int PlayerHealth1
+    //{
+    //    get
+    //    {
+    //        return playerHealth1;
+    //    }
+    //    set
+    //    {
+    //        playerHealth1 += value;
+    //        healthBar[0].ScaleHealthBar(playerHealth1, false);
 
-            if (playerHealth1 <= 0)
-            {
-                StartCoroutine(KillPlayer(0, 1));
-            }
-        }
-    }
+    //        if (playerHealth1 <= 0)
+    //        {
+    //            StartCoroutine(KillPlayer(0, 1));
+    //        }
+    //    }
+    //}
 
-    private int playerHealth2;
+    //private int playerHealth2;
 
-    public int PlayerHealth2
-    {
-        get
-        {
-            return playerHealth2;
-        }
-        set
-        {
-            playerHealth2 += value;
-            healthBar[1].ScaleHealthBar(playerHealth2, false);
+    //public int PlayerHealth2
+    //{
+    //    get
+    //    {
+    //        return playerHealth2;
+    //    }
+    //    set
+    //    {
+    //        playerHealth2 += value;
+    //        healthBar[1].ScaleHealthBar(playerHealth2, false);
 
-            if (playerHealth2 <= 0)
-            {
-                StartCoroutine(KillPlayer(1, 0));
-            }
-        }
-    }
+    //        if (playerHealth2 <= 0)
+    //        {
+    //            StartCoroutine(KillPlayer(1, 0));
+    //        }
+    //    }
+    //}
 
     private float[] playerStarPower = new float[2];
     private int indexOfWinner;
@@ -161,37 +161,37 @@ public class CombatManager : MonoBehaviour
 
     public void StartAnimations()
     {
-        playerAnimator[0].SetTrigger("start");
-        playerAnimator[1].SetTrigger("start");
+        //playerAnimator[0].SetTrigger("start");
+        //playerAnimator[1].SetTrigger("start");
+        player[0].StartGame();
+        player[1].StartGame();
         startButton.enabled = false;
         startButton.gameObject.SetActive(false);
     }
 
     void Start()
     {
-        PlayerHealth1 = 100;
-        PlayerHealth2 = 100;
-        playerStarPower[0] = 0;
-        playerStarPower[1] = 0;
+        player[0].Health = 100;
+        player[1].Health = 100;
+        player[0].StarPower = 0;
+        player[1].StarPower = 0;
         countdownText.text = "";
         winnerText.text = "";
-        player1ActionText.text = "";
-        player2ActionText.text = "";
         countdownTextColor = countdownText.color;
         indexOfLastRoundWinner = 3;
 
-        healthBar[0] = playerHealthBarGameObject[0].GetComponent<HealthBar>();
-        healthBar[1] = playerHealthBarGameObject[1].GetComponent<HealthBar>();
-        starPowerBar[0] = playerStarPowerBarGameObject[0].GetComponent<HealthBar>();
-        starPowerBar[1] = playerStarPowerBarGameObject[1].GetComponent<HealthBar>();
-        playerAnimator[0] = playerModel[0].GetComponent<Animator>();
-        playerAnimator[1] = playerModel[1].GetComponent<Animator>();
-        player1AudioSource = playerModel[0].GetComponent<AudioSource>();
-        player2AudioSource = playerModel[1].GetComponent<AudioSource>();
+        //healthBar[0] = playerHealthBarGameObject[0].GetComponent<HealthBar>();
+        //healthBar[1] = playerHealthBarGameObject[1].GetComponent<HealthBar>();
+        //starPowerBar[0] = playerStarPowerBarGameObject[0].GetComponent<HealthBar>();
+        //starPowerBar[1] = playerStarPowerBarGameObject[1].GetComponent<HealthBar>();
+        //playerAnimator[0] = playerModel[0].GetComponent<Animator>();
+        //playerAnimator[1] = playerModel[1].GetComponent<Animator>();
+        //player1AudioSource = playerModel[0].GetComponent<AudioSource>();
+        //player2AudioSource = playerModel[1].GetComponent<AudioSource>();
         comboImageAnimator[0] = comboImage[0].GetComponent<Animator>();
         comboImageAnimator[1] = comboImage[1].GetComponent<Animator>();
-        player1PortraitRenderer = player1Portrait.GetComponent<SpriteRenderer>();
-        player2PortraitRenderer = player2Portrait.GetComponent<SpriteRenderer>();
+        //player1PortraitRenderer = player1Portrait.GetComponent<SpriteRenderer>();
+        //player2PortraitRenderer = player2Portrait.GetComponent<SpriteRenderer>();
         comboText[0].text = "";
         comboText[1].text = "";
 
@@ -212,7 +212,7 @@ public class CombatManager : MonoBehaviour
         {
             if (Input.GetButtonDown("DebugDownHalfPlayer1Health"))
             {
-                PlayerHealth1 -= 50;
+                //PlayerHealth1 -= 50;
             }
             if (Input.GetButtonDown("DebugUpHalfPlayer1StarPower"))
             {
@@ -235,6 +235,39 @@ public class CombatManager : MonoBehaviour
         }
     }
 
+    public void OnPlayerAttacks(int indexOfOtherPlayer)
+    {
+        player[indexOfOtherPlayer].GetAttcked(damageDealt, bonus, indexOfWinner);
+    }
+
+    public void OnPlayerSweeps(int indexOfOtherPlayer)
+    {
+        var indexOfSweeper = 0;
+
+        if (indexOfOtherPlayer == 0)
+        {
+            indexOfSweeper = 1;
+        }
+
+        bool successfullySweep = true;
+
+        if (player[indexOfOtherPlayer].MoveToExecute == Player.MoveSet.Sweep &&
+            indexOfWinner == indexOfOtherPlayer)
+        {
+            successfullySweep = false;
+        }
+        if (player[indexOfOtherPlayer].MoveToExecute == Player.MoveSet.Attack)
+        {
+            successfullySweep = false;
+        }
+
+        if (successfullySweep)
+        {
+            player[indexOfSweeper].SuccessfullySweep(baseStarPowerIncrease, bonus, indexOfWinner);
+            player[indexOfOtherPlayer].GetSwept();
+        }
+    }
+
     private void OnPlayerDies(int indexOfPlayer)
     {
         playerIsDead = true;
@@ -250,6 +283,8 @@ public class CombatManager : MonoBehaviour
     private void OnEnable()
     {
         PhraseEndTrigger.EndOfPhrase += OnEndOfPhrase;
+        Player.AttemptAttack += OnPlayerAttacks;
+        Player.AttemptSweep += OnPlayerSweeps;
         Player.PlayerDies += OnPlayerDies;
         Player.PlayerHasFullStarPower += OnPlayerHasFullStarPower;
     }
@@ -257,6 +292,8 @@ public class CombatManager : MonoBehaviour
     private void OnDisable()
     {
         PhraseEndTrigger.EndOfPhrase -= OnEndOfPhrase;
+        Player.AttemptAttack -= OnPlayerAttacks;
+        Player.AttemptSweep -= OnPlayerSweeps;
         Player.PlayerDies -= OnPlayerDies;
         Player.PlayerHasFullStarPower -= OnPlayerHasFullStarPower;
     }
@@ -274,24 +311,19 @@ public class CombatManager : MonoBehaviour
             yield return new WaitForSeconds(1);
             countdownText.text = "1";
             audioSource.PlayOneShot(countdownClip[2]);
-            //canMakeChoice = true;
             player[0].CanMakeChoice = true;
             player[1].CanMakeChoice = true;
             yield return new WaitForSeconds(1);
             countdownText.color = lastNumberColor;
             countdownText.text = "CHOOSE!";
-            //player1PortraitRenderer.sprite = player1NoChoicePortrait;
-            //player2PortraitRenderer.sprite = player2NoChoicePortrait;
             audioSource.PlayOneShot(countdownClip[3]);
             //Add choosing countdown graphic, maybe a bar or a round pie chart type thing?
             yield return new WaitForSeconds(secondsForChoice);
             countdownText.text = "";
             countdownText.color = countdownTextColor;
-            //canMakeChoice = false;
             player[0].CanMakeChoice = false;
             player[1].CanMakeChoice = false;
 
-            //UpdateActionText();
             DecideWinner?.Invoke();
 
             // The disparity average is based on how different the two players' scores were,
@@ -305,34 +337,6 @@ public class CombatManager : MonoBehaviour
             ExecuteCombat();
         }
     }
-
-    //private void UpdateActionText()
-    //{
-    //    // We should add a small animation to these as a stretch goal
-
-    //    if (player1HasMadeChoice)
-    //    {
-    //        StartCoroutine(UpdatePlayer1ActionText(player1ActionTextNext));
-    //    }
-    //    if (player2HasMadeChoice)
-    //    {
-    //        StartCoroutine(UpdatePlayer2ActionText(player2ActionTextNext));
-    //    }
-    //}
-
-    //IEnumerator UpdatePlayer1ActionText(string text)
-    //{
-    //    player1ActionText.text = text;
-    //    yield return new WaitForSeconds(2);
-    //    player1ActionText.text = " ";
-    //}
-
-    //IEnumerator UpdatePlayer2ActionText(string text)
-    //{
-    //    player2ActionText.text = text;
-    //    yield return new WaitForSeconds(2);
-    //    player2ActionText.text = " ";
-    //}
 
     private void ExecuteCombat()
     {
@@ -351,343 +355,269 @@ public class CombatManager : MonoBehaviour
         player[1].ExecuteQueuedCombatMove();
     }
 
-    public void PlayerAttacks(int indexOfOtherPlayer)
-    {
-        player[indexOfOtherPlayer].GetAttcked(damageDealt, bonus, indexOfWinner);
-    }
-
-    public void Player1Sweeps()
-    {
-        bool applyStarPower = true;
-
-        if (player[1].MoveToExecute == Player.MoveSet.Sweep &&
-            indexOfWinner == 1)
-        {
-            // Getting here means player 1 does not successfully sweep since player 2
-            // won the sweep contest by singing better
-            applyStarPower = false;
-        }
-
-        if (applyStarPower)
-        {
-            int starPowerIncrease = baseStarPowerIncrease;
-            if (indexOfWinner == 0)
-            {
-                starPowerIncrease += bonus;
-            }
-            player[0].StarPower += starPowerIncrease;
-        }
-    }
-
-    public void Player2Sweeps()
-    {
-        bool applyStarPower = true;
-
-        if (player[0].MoveToExecute == Player.MoveSet.Sweep &&
-            indexOfWinner == 0)
-        {
-            // Getting here means player 2 does not successfully sweep since player 1
-            // won the sweep contest by singing better
-            applyStarPower = false;
-        }
-
-        if (applyStarPower)
-        {
-            int starPowerIncrease = baseStarPowerIncrease;
-            if (indexOfWinner == 1)
-            {
-                starPowerIncrease += bonus;
-            }
-            player[1].StarPower += starPowerIncrease;
-        }
-    }
-
-    //// each move only needs to check for the one that beats it, otherwise they go as planned
-
-    //public void PlayerAttacks(int indexOfOtherPlayer)
+    //Old Stuff
+    //private void Player1Attack()
     //{
-    //    // this animation trigger should occur when the hit makes contact
-    //    if (player[indexOfOtherPlayer].MoveToExecute != Player.MoveSet.Dodge)
+    //    if (player2Choice == attack)
     //    {
+    //        // Player with higher score wins, deals base damage.
+    //        damageDealt = baseAttackDamage + bonus;
+    //        //playerHealth[indexOfLoser] -= (int)damageDealt;
+    //        if (indexOfWinner == 0)
+    //        {
+    //            PlayerHealth2 -= (int)damageDealt;
+    //        }
+    //        else
+    //        {
+    //            PlayerHealth1 -= (int)damageDealt;
+    //        }
 
+    //        //healthBar[indexOfLoser].ScaleHealthBar((int)damageDealt, false);
+    //        playerAnimator[indexOfWinner].SetTrigger("kick");
+    //        //playerAnimator[indexOfLoser].SetTrigger("getHit");
+    //        StartCoroutine(DelayAnimation(getHitAnimationDelay, indexOfLoser, "getHit"));
     //    }
+    //    else if (player2Choice == dodge)
+    //    {
+    //        // Blocking player negates attacking player's hit.
+    //        // They deal a small amount of damage if they win singing-wise.
+    //        if (indexOfWinner == 1)
+    //        {
+    //            damageDealt = baseParryDamage + (bonus / bonusParryDividingValue);
+    //            //playerHealth[0] -= (int)damageDealt;
+    //            //healthBar[0].ScaleHealthBar((int)damageDealt, false);
+    //            PlayerHealth1 -= (int)damageDealt;
+    //        }
+    //        playerAnimator[0].SetTrigger("kick");
+    //        playerAnimator[1].SetTrigger("dodge");
+    //    }
+    //    else if (player2Choice == sweep)
+    //    {
+    //        // Attacking player deals damage to grappling player,
+    //        // with additional damage dealt if the attacking player wins singing-wise.
+    //        damageDealt = baseAttackDamage;
+
+    //        if (indexOfWinner == 0)
+    //        {
+    //            damageDealt += bonus;
+    //        }
+    //        PlayerHealth2 -= (int)damageDealt;
+    //        //playerHealth[1] -= (int)damageDealt;
+    //        //healthBar[1].ScaleHealthBar((int)damageDealt, false);
+    //        playerAnimator[0].SetTrigger("kick");
+    //        //playerAnimator[1].SetTrigger("getHit");
+    //        StartCoroutine(DelayAnimation(getHitAnimationDelay, 1, "getHit"));
+    //    }
+
+    //    ResetValues();
     //}
 
-    //public void PlayerDodges(int indexOfOtherPlayer)
+    //private void Player1Dodge()
     //{
-    //    // this animation trigger should occur at the very beginning of the animation cycle 
-    //    // so we can keep track of it for attacking
+    //    if (player2Choice == attack)
+    //    {
+    //        if (indexOfWinner == 0)
+    //        {
+    //            damageDealt = baseParryDamage + (bonus / bonusParryDividingValue);
+    //            //playerHealth[1] -= (int)damageDealt;
+    //            //healthBar[1].ScaleHealthBar((int)damageDealt, false);
+    //            playerHealth2 -= (int)damageDealt;
+    //        }
+    //        playerAnimator[0].SetTrigger("dodge");
+    //        playerAnimator[1].SetTrigger("kick");
+    //    }
+    //    else if (player2Choice == dodge)
+    //    {
+    //        playerAnimator[indexOfLoser].SetTrigger("dodge");
+    //        playerAnimator[indexOfWinner].SetTrigger("dodgeToSad");
+    //    }
+    //    else if (player2Choice == sweep)
+    //    {
+    //        damageDealt = baseStarPowerIncrease;
+    //        if (indexOfWinner == 1)
+    //        {
+    //            damageDealt += bonus;
+    //        }
+    //        playerStarPower[1] += damageDealt;
+    //        starPowerBar[1].ScaleHealthBar((int)damageDealt, true);
+    //        playerAnimator[1].SetTrigger("sweep");
+    //        playerAnimator[0].SetTrigger("fall");
+    //    }
 
+    //    ResetValues();
     //}
 
-    //public void PlayerSweeps(int indexOfOtherPlayer)
+    //private void Player1Sweep()
     //{
-    //    // this trigger should occur after dodging but before attacking
+    //    if (player2Choice == attack)
+    //    {
+    //        damageDealt = baseAttackDamage;
+    //        if (indexOfWinner == 1)
+    //        {
+    //            damageDealt += bonus;
+    //        }
+    //        PlayerHealth1 -= (int)damageDealt;
+    //        //playerHealth[0] -= (int)damageDealt;
+    //        //healthBar[0].ScaleHealthBar((int)damageDealt, false);
+    //        StartCoroutine(DelayAnimation(getHitAnimationDelay, 0, "getHit"));
+    //        playerAnimator[1].SetTrigger("kick");
+    //    }
+    //    else if (player2Choice == dodge)
+    //    {
+    //        //damageDealt = baseStarPowerDecrease;
+    //        //if (indexOfWinner == 0)
+    //        //{
+    //        //    damageDealt += bonus;
+    //        //}
+    //        //playerStarPower[1] -= damageDealt;
+    //        //starPowerBar[1].ScaleHealthBar((int)damageDealt, false);
+    //        //playerAnimator[0].SetTrigger("sweep");
+    //        //playerAnimator[1].SetTrigger("fall");
 
+    //        damageDealt = baseStarPowerIncrease;
+    //        if (indexOfWinner == 0)
+    //        {
+    //            damageDealt += bonus;
+    //        }
+    //        playerStarPower[0] += damageDealt;
+    //        starPowerBar[0].ScaleHealthBar((int)damageDealt, true);
+    //        playerAnimator[0].SetTrigger("sweep");
+    //        playerAnimator[1].SetTrigger("fall");
+    //    }
+    //    else if (player2Choice == sweep)
+    //    {
+    //        // player with higher singing score gets star power increased
+    //        // note: chnaged to lowered
+
+    //        //damageDealt = baseStarPowerIncrease + bonus;
+    //        //playerStarPower[indexOfWinner] += damageDealt;
+    //        //starPowerBar[indexOfWinner].ScaleHealthBar((int)damageDealt, true);
+    //        //playerAnimator[indexOfWinner].SetTrigger("sweep");
+    //        //playerAnimator[indexOfLoser].SetTrigger("fall");
+    //        damageDealt = baseStarPowerDecrease + bonus;
+    //        playerStarPower[indexOfLoser] -= damageDealt;
+    //        starPowerBar[indexOfLoser].ScaleHealthBar((int)damageDealt, false);
+    //        playerAnimator[indexOfWinner].SetTrigger("sweep");
+    //        playerAnimator[indexOfLoser].SetTrigger("fall");
+    //    }
+
+    //    ResetValues();
     //}
 
-    private void Player1Attack()
-    {
-        if (player2Choice == attack)
-        {
-            // Player with higher score wins, deals base damage.
-            damageDealt = baseAttackDamage + bonus;
-            //playerHealth[indexOfLoser] -= (int)damageDealt;
-            if (indexOfWinner == 0)
-            {
-                PlayerHealth2 -= (int)damageDealt;
-            }
-            else
-            {
-                PlayerHealth1 -= (int)damageDealt;
-            }
+    //private void Player1DidNotChoose()
+    //{
+    //    Debug.Log("Player 1 did not make a choice.");
+    //    if (player2Choice == attack)
+    //    {
+    //        damageDealt = baseAttackDamage;
 
-            //healthBar[indexOfLoser].ScaleHealthBar((int)damageDealt, false);
-            playerAnimator[indexOfWinner].SetTrigger("kick");
-            //playerAnimator[indexOfLoser].SetTrigger("getHit");
-            StartCoroutine(DelayAnimation(getHitAnimationDelay, indexOfLoser, "getHit"));
-        }
-        else if (player2Choice == dodge)
-        {
-            // Blocking player negates attacking player's hit.
-            // They deal a small amount of damage if they win singing-wise.
-            if (indexOfWinner == 1)
-            {
-                damageDealt = baseParryDamage + (bonus / bonusParryDividingValue);
-                //playerHealth[0] -= (int)damageDealt;
-                //healthBar[0].ScaleHealthBar((int)damageDealt, false);
-                PlayerHealth1 -= (int)damageDealt;
-            }
-            playerAnimator[0].SetTrigger("kick");
-            playerAnimator[1].SetTrigger("dodge");
-        }
-        else if (player2Choice == sweep)
-        {
-            // Attacking player deals damage to grappling player,
-            // with additional damage dealt if the attacking player wins singing-wise.
-            damageDealt = baseAttackDamage;
+    //        if (indexOfWinner == 1)
+    //        {
+    //            damageDealt += bonus;
+    //        }
+    //        //playerHealth[0] -= (int)damageDealt;
+    //        PlayerHealth1 -= (int)damageDealt;
+    //        //healthBar[0].ScaleHealthBar((int)damageDealt, false);
+    //        playerAnimator[1].SetTrigger("kick");
+    //        StartCoroutine(DelayAnimation(getHitAnimationDelay, 0, "getHit"));
+    //    }
+    //    else if (player2Choice == dodge)
+    //    {
+    //        playerAnimator[1].SetTrigger("dodge");
+    //        //playerAnimator[0].SetTrigger("dissapointed");
+    //    }
+    //    else if (player2Choice == sweep)
+    //    {
+    //        //damageDealt = baseStarPowerDecrease;
+    //        //if (indexOfWinner == 1)
+    //        //{
+    //        //    damageDealt += bonus;
+    //        //}
+    //        //playerStarPower[0] -= damageDealt;
+    //        //starPowerBar[0].ScaleHealthBar((int)damageDealt, false);
+    //        //playerAnimator[1].SetTrigger("sweep");
+    //        //playerAnimator[0].SetTrigger("fall");
 
-            if (indexOfWinner == 0)
-            {
-                damageDealt += bonus;
-            }
-            PlayerHealth2 -= (int)damageDealt;
-            //playerHealth[1] -= (int)damageDealt;
-            //healthBar[1].ScaleHealthBar((int)damageDealt, false);
-            playerAnimator[0].SetTrigger("kick");
-            //playerAnimator[1].SetTrigger("getHit");
-            StartCoroutine(DelayAnimation(getHitAnimationDelay, 1, "getHit"));
-        }
+    //        damageDealt = baseStarPowerIncrease;
+    //        if (indexOfWinner == 1)
+    //        {
+    //            damageDealt += bonus;
+    //        }
+    //        playerStarPower[1] += damageDealt;
+    //        starPowerBar[1].ScaleHealthBar((int)damageDealt, true);
+    //        playerAnimator[1].SetTrigger("sweep");
+    //        playerAnimator[0].SetTrigger("fall");
+    //    }
 
-        ResetValues();
-    }
+    //    ResetValues();
+    //}
 
-    private void Player1Dodge()
-    {
-        if (player2Choice == attack)
-        {
-            if (indexOfWinner == 0)
-            {
-                damageDealt = baseParryDamage + (bonus / bonusParryDividingValue);
-                //playerHealth[1] -= (int)damageDealt;
-                //healthBar[1].ScaleHealthBar((int)damageDealt, false);
-                playerHealth2 -= (int)damageDealt;
-            }
-            playerAnimator[0].SetTrigger("dodge");
-            playerAnimator[1].SetTrigger("kick");
-        }
-        else if (player2Choice == dodge)
-        {
-            playerAnimator[indexOfLoser].SetTrigger("dodge");
-            playerAnimator[indexOfWinner].SetTrigger("dodgeToSad");
-        }
-        else if (player2Choice == sweep)
-        {
-            damageDealt = baseStarPowerIncrease;
-            if (indexOfWinner == 1)
-            {
-                damageDealt += bonus;
-            }
-            playerStarPower[1] += damageDealt;
-            starPowerBar[1].ScaleHealthBar((int)damageDealt, true);
-            playerAnimator[1].SetTrigger("sweep");
-            playerAnimator[0].SetTrigger("fall");
-        }
+    //private void Player2DidNotChoose()
+    //{
+    //    Debug.Log("Player 2 did not make a choice.");
+    //    if (player1Choice == attack)
+    //    {
+    //        damageDealt = baseAttackDamage;
 
-        ResetValues();
-    }
+    //        if (indexOfWinner == 0)
+    //        {
+    //            damageDealt += bonus;
+    //        }
+    //        //playerHealth[1] -= (int)damageDealt;
+    //        //healthBar[1].ScaleHealthBar((int)damageDealt, false);
+    //        PlayerHealth2 -= (int)damageDealt;
+    //        playerAnimator[0].SetTrigger("kick");
+    //        StartCoroutine(DelayAnimation(getHitAnimationDelay, 1, "getHit"));
+    //    }
+    //    else if (player1Choice == dodge)
+    //    {
+    //        playerAnimator[0].SetTrigger("dodge");
+    //        playerAnimator[1].SetTrigger("dissapointed");
+    //    }
+    //    else if (player1Choice == sweep)
+    //    {
+    //        //damageDealt = baseStarPowerDecrease;
+    //        //if (indexOfWinner == 0)
+    //        //{
+    //        //    damageDealt += bonus;
+    //        //}
+    //        //playerStarPower[1] -= damageDealt;
+    //        //starPowerBar[1].ScaleHealthBar((int)damageDealt, false);
+    //        //playerAnimator[0].SetTrigger("sweep");
+    //        //playerAnimator[1].SetTrigger("fall");
 
-    private void Player1Sweep()
-    {
-        if (player2Choice == attack)
-        {
-            damageDealt = baseAttackDamage;
-            if (indexOfWinner == 1)
-            {
-                damageDealt += bonus;
-            }
-            PlayerHealth1 -= (int)damageDealt;
-            //playerHealth[0] -= (int)damageDealt;
-            //healthBar[0].ScaleHealthBar((int)damageDealt, false);
-            StartCoroutine(DelayAnimation(getHitAnimationDelay, 0, "getHit"));
-            playerAnimator[1].SetTrigger("kick");
-        }
-        else if (player2Choice == dodge)
-        {
-            //damageDealt = baseStarPowerDecrease;
-            //if (indexOfWinner == 0)
-            //{
-            //    damageDealt += bonus;
-            //}
-            //playerStarPower[1] -= damageDealt;
-            //starPowerBar[1].ScaleHealthBar((int)damageDealt, false);
-            //playerAnimator[0].SetTrigger("sweep");
-            //playerAnimator[1].SetTrigger("fall");
+    //        damageDealt = baseStarPowerIncrease;
+    //        if (indexOfWinner == 0)
+    //        {
+    //            damageDealt += bonus;
+    //        }
+    //        playerStarPower[0] += damageDealt;
+    //        starPowerBar[0].ScaleHealthBar((int)damageDealt, true);
+    //        playerAnimator[0].SetTrigger("sweep");
+    //        playerAnimator[1].SetTrigger("fall");
+    //    }
 
-            damageDealt = baseStarPowerIncrease;
-            if (indexOfWinner == 0)
-            {
-                damageDealt += bonus;
-            }
-            playerStarPower[0] += damageDealt;
-            starPowerBar[0].ScaleHealthBar((int)damageDealt, true);
-            playerAnimator[0].SetTrigger("sweep");
-            playerAnimator[1].SetTrigger("fall");
-        }
-        else if (player2Choice == sweep)
-        {
-            // player with higher singing score gets star power increased
-            // note: chnaged to lowered
+    //    ResetValues();
+    //}
 
-            //damageDealt = baseStarPowerIncrease + bonus;
-            //playerStarPower[indexOfWinner] += damageDealt;
-            //starPowerBar[indexOfWinner].ScaleHealthBar((int)damageDealt, true);
-            //playerAnimator[indexOfWinner].SetTrigger("sweep");
-            //playerAnimator[indexOfLoser].SetTrigger("fall");
-            damageDealt = baseStarPowerDecrease + bonus;
-            playerStarPower[indexOfLoser] -= damageDealt;
-            starPowerBar[indexOfLoser].ScaleHealthBar((int)damageDealt, false);
-            playerAnimator[indexOfWinner].SetTrigger("sweep");
-            playerAnimator[indexOfLoser].SetTrigger("fall");
-        }
+    //private void ResetValues()
+    //{
+    //    player1HasMadeChoice = false;
+    //    player2HasMadeChoice = false;
+    //    player1Choice = " ";
+    //    player2Choice = " ";
+    //    player1PortraitRenderer.sprite = player1RegularPortrait;
+    //    player2PortraitRenderer.sprite = player2RegularPortrait;
+    //    //Debug.Log($"Player1 health: {playerHealth[0]}");
+    //    //Debug.Log($"Player2 health: {playerHealth[1]}");
+    //    Debug.Log($"Player1 health: {PlayerHealth1}");
+    //    Debug.Log($"Player2 health: {PlayerHealth2}");
+    //    Debug.Log($"Player1 starpower: {playerStarPower[0]}");
+    //    Debug.Log($"Player2 starpower: {playerStarPower[1]}");
 
-        ResetValues();
-    }
-
-    private void Player1DidNotChoose()
-    {
-        Debug.Log("Player 1 did not make a choice.");
-        if (player2Choice == attack)
-        {
-            damageDealt = baseAttackDamage;
-
-            if (indexOfWinner == 1)
-            {
-                damageDealt += bonus;
-            }
-            //playerHealth[0] -= (int)damageDealt;
-            PlayerHealth1 -= (int)damageDealt;
-            //healthBar[0].ScaleHealthBar((int)damageDealt, false);
-            playerAnimator[1].SetTrigger("kick");
-            StartCoroutine(DelayAnimation(getHitAnimationDelay, 0, "getHit"));
-        }
-        else if (player2Choice == dodge)
-        {
-            playerAnimator[1].SetTrigger("dodge");
-            //playerAnimator[0].SetTrigger("dissapointed");
-        }
-        else if (player2Choice == sweep)
-        {
-            //damageDealt = baseStarPowerDecrease;
-            //if (indexOfWinner == 1)
-            //{
-            //    damageDealt += bonus;
-            //}
-            //playerStarPower[0] -= damageDealt;
-            //starPowerBar[0].ScaleHealthBar((int)damageDealt, false);
-            //playerAnimator[1].SetTrigger("sweep");
-            //playerAnimator[0].SetTrigger("fall");
-
-            damageDealt = baseStarPowerIncrease;
-            if (indexOfWinner == 1)
-            {
-                damageDealt += bonus;
-            }
-            playerStarPower[1] += damageDealt;
-            starPowerBar[1].ScaleHealthBar((int)damageDealt, true);
-            playerAnimator[1].SetTrigger("sweep");
-            playerAnimator[0].SetTrigger("fall");
-        }
-
-        ResetValues();
-    }
-
-    private void Player2DidNotChoose()
-    {
-        Debug.Log("Player 2 did not make a choice.");
-        if (player1Choice == attack)
-        {
-            damageDealt = baseAttackDamage;
-
-            if (indexOfWinner == 0)
-            {
-                damageDealt += bonus;
-            }
-            //playerHealth[1] -= (int)damageDealt;
-            //healthBar[1].ScaleHealthBar((int)damageDealt, false);
-            PlayerHealth2 -= (int)damageDealt;
-            playerAnimator[0].SetTrigger("kick");
-            StartCoroutine(DelayAnimation(getHitAnimationDelay, 1, "getHit"));
-        }
-        else if (player1Choice == dodge)
-        {
-            playerAnimator[0].SetTrigger("dodge");
-            playerAnimator[1].SetTrigger("dissapointed");
-        }
-        else if (player1Choice == sweep)
-        {
-            //damageDealt = baseStarPowerDecrease;
-            //if (indexOfWinner == 0)
-            //{
-            //    damageDealt += bonus;
-            //}
-            //playerStarPower[1] -= damageDealt;
-            //starPowerBar[1].ScaleHealthBar((int)damageDealt, false);
-            //playerAnimator[0].SetTrigger("sweep");
-            //playerAnimator[1].SetTrigger("fall");
-
-            damageDealt = baseStarPowerIncrease;
-            if (indexOfWinner == 0)
-            {
-                damageDealt += bonus;
-            }
-            playerStarPower[0] += damageDealt;
-            starPowerBar[0].ScaleHealthBar((int)damageDealt, true);
-            playerAnimator[0].SetTrigger("sweep");
-            playerAnimator[1].SetTrigger("fall");
-        }
-
-        ResetValues();
-    }
-
-    private void ResetValues()
-    {
-        player1HasMadeChoice = false;
-        player2HasMadeChoice = false;
-        player1Choice = " ";
-        player2Choice = " ";
-        player1PortraitRenderer.sprite = player1RegularPortrait;
-        player2PortraitRenderer.sprite = player2RegularPortrait;
-        //Debug.Log($"Player1 health: {playerHealth[0]}");
-        //Debug.Log($"Player2 health: {playerHealth[1]}");
-        Debug.Log($"Player1 health: {PlayerHealth1}");
-        Debug.Log($"Player2 health: {PlayerHealth2}");
-        Debug.Log($"Player1 starpower: {playerStarPower[0]}");
-        Debug.Log($"Player2 starpower: {playerStarPower[1]}");
-
-        CheckForStarPower();
-        //CheckForDeath();
-    }
+    //    //CheckForStarPower();
+    //    //CheckForDeath();
+    //}
 
     IEnumerator DecideComboAndDisplayImage(int indexOfWinner, int indexOfLoser)
     {
@@ -696,24 +626,25 @@ public class CombatManager : MonoBehaviour
             timesWonInRowAfterFirst++;
             if (timesWonInRowAfterFirst == 1)
             {
-                playerAnimator[indexOfWinner].SetBool("isOnFirstBonus", true);
-                playerAnimator[indexOfWinner].SetBool("isOnSecondBonus", false);
+                //playerAnimator[indexOfWinner].SetBool("isOnFirstBonus", true);
+                //playerAnimator[indexOfWinner].SetBool("isOnSecondBonus", false);
             }
             else if (timesWonInRowAfterFirst >= 2)
             {
-                playerAnimator[indexOfWinner].SetBool("isOnSecondBonus", true);
-                playerAnimator[indexOfWinner].SetBool("isOnFirstBonus", false);
+                //playerAnimator[indexOfWinner].SetBool("isOnSecondBonus", true);
+                //playerAnimator[indexOfWinner].SetBool("isOnFirstBonus", false);
             }
 
             int starPower = (int)baseStarPowerComboIncrease + (timesWonInRowAfterFirst * 2);
-            playerStarPower[indexOfWinner] += starPower;
-            starPowerBar[indexOfWinner].ScaleHealthBar(starPower, true);
+            //playerStarPower[indexOfWinner] += starPower;
+            //starPowerBar[indexOfWinner].ScaleHealthBar(starPower, true);
+            player[indexOfWinner].StarPower += starPower;
         }
         else
         {
             timesWonInRowAfterFirst = 0;
-            playerAnimator[indexOfLoser].SetBool("isOnFirstBonus", false);
-            playerAnimator[indexOfWinner].SetBool("isOnSecondBonus", false);
+            //playerAnimator[indexOfLoser].SetBool("isOnFirstBonus", false);
+            //playerAnimator[indexOfWinner].SetBool("isOnSecondBonus", false);
         }
 
         indexOfLastRoundWinner = indexOfWinner;
@@ -732,20 +663,20 @@ public class CombatManager : MonoBehaviour
         playerAnimator[indexOfPlayer].SetTrigger(animationTrigger);
     }
 
-    private void CheckForStarPower()
-    {
-        if (!playerIsDead && !isPerformingStarPowerMove && !starPowerHasBeenPerformed)
-        {
-            if (playerStarPower[0] >= 100)
-            {
-                StartCoroutine(StarPowerMove(0, 1));
-            }
-            if (playerStarPower[1] >= 100)
-            {
-                StartCoroutine(StarPowerMove(1, 0));
-            }
-        }
-    }
+    //private void CheckForStarPower()
+    //{
+    //    if (!playerIsDead && !isPerformingStarPowerMove && !starPowerHasBeenPerformed)
+    //    {
+    //        if (playerStarPower[0] >= 100)
+    //        {
+    //            StartCoroutine(StarPowerMove(0, 1));
+    //        }
+    //        if (playerStarPower[1] >= 100)
+    //        {
+    //            StartCoroutine(StarPowerMove(1, 0));
+    //        }
+    //    }
+    //}
 
     //private void CheckForDeath()
     //{
@@ -781,35 +712,34 @@ public class CombatManager : MonoBehaviour
         //playerHealth[indexOfLoser] -= starPowerMoveDamage;
         if (indexOfLoser == 0)
         {
-            PlayerHealth1 -= starPowerMoveDamage;
+            player[0].Health -= starPowerMoveDamage;
         }
         else
         {
-            PlayerHealth2 -= starPowerMoveDamage;
+            player[1].Health -= starPowerMoveDamage;
         }
-        healthBar[indexOfLoser].ScaleHealthBar(starPowerMoveDamage, false);
         isPerformingStarPowerMove = false;
         starPowerHasBeenPerformed = true;
         //CheckForDeath();
     }
 
-    IEnumerator KillPlayer(int indexOfLoser, int indexOfWinner)
-    {
-        playerIsDead = true;
-        playerAnimator[indexOfLoser].SetTrigger("die");
-        StartCoroutine(DelayAnimation(victoryAnimationDelay, indexOfWinner, "victory"));
-        winnerText.text = "VICTORY!";
+    //IEnumerator KillPlayer(int indexOfLoser, int indexOfWinner)
+    //{
+    //    playerIsDead = true;
+    //    playerAnimator[indexOfLoser].SetTrigger("die");
+    //    StartCoroutine(DelayAnimation(victoryAnimationDelay, indexOfWinner, "victory"));
+    //    winnerText.text = "VICTORY!";
 
-        yield return new WaitForSeconds(5);
-        winnerText.text = "";
-        if (indexOfWinner == 0)
-        {
-            playerModel[0].transform.Rotate(0, 180, 0);
-        }
-        else
-        {
-            playerModel[1].transform.Rotate(0, -180, 0);
-        }
-        playerAnimator[indexOfWinner].SetTrigger("sing");
-    }
+    //    yield return new WaitForSeconds(5);
+    //    winnerText.text = "";
+    //    if (indexOfWinner == 0)
+    //    {
+    //        //playerModel[0].transform.Rotate(0, 180, 0);
+    //    }
+    //    else
+    //    {
+    //        //playerModel[1].transform.Rotate(0, -180, 0);
+    //    }
+    //    playerAnimator[indexOfWinner].SetTrigger("sing");
+    //}
 }
