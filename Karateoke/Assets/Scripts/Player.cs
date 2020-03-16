@@ -97,7 +97,7 @@ public class Player : MonoBehaviour
         set
         {
             health += value;
-            healthBar.ScaleHealthBar(health, false);
+            //healthBar.ScaleHealthBar(health, false);
 
             if (health <= 0)
             {
@@ -121,11 +121,11 @@ public class Player : MonoBehaviour
             starPower += value;
             if (value < 0)
             {
-                starPowerBar.ScaleHealthBar(starPower, false);
+                //starPowerBar.ScaleHealthBar(starPower, false);
             }
             else
             {
-                starPowerBar.ScaleHealthBar(starPower, true);
+                //starPowerBar.ScaleHealthBar(starPower, true);
             }
 
             if (starPower < 0)
@@ -227,7 +227,7 @@ public class Player : MonoBehaviour
 
         animator.SetTrigger(animationTrigger);
         //also do action text
-        StartCoroutine(ShowActionText());
+        //StartCoroutine(ShowActionText());
         
     }
 
@@ -295,29 +295,6 @@ public class Player : MonoBehaviour
 
     public void GetSwept()
     {
-        //switch (MoveToExecute)
-        //{
-        //    case MoveSet.Attack:
-        //        // Nothing?
-        //        break;
-        //    case MoveSet.Dodge:
-        //        animator.SetTrigger(fallAnimationTrigger);
-        //        // do we want to reduce star power here maybe?
-        //        break;
-        //    case MoveSet.Sweep:
-        //        if (indexOfWinner != IndexAccordingToCombatManager)
-        //        {
-        //            animator.SetTrigger(fallAnimationTrigger);
-        //        }
-        //        break;
-        //    case MoveSet.Undecided:
-        //        animator.SetTrigger(fallAnimationTrigger);
-        //        break;
-        //    default:
-        //        Debug.Log($"Combat error: getting swept, {this.name}");
-        //        break;
-        //}
-
         animator.SetTrigger(fallAnimationTrigger);
     }
 
@@ -350,11 +327,11 @@ public class Player : MonoBehaviour
             Debug.LogError($"{this.name} does not have input strings assigned to it.");
         }
 
-        actionText.text = " ";
+        //actionText.text = " ";
 
         audioSource = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
-        portraitRenderer = portraitObject.GetComponent<SpriteRenderer>();
+        //portraitRenderer = portraitObject.GetComponent<SpriteRenderer>();
     }
 
     void Start()
@@ -383,8 +360,8 @@ public class Player : MonoBehaviour
         if (CanMakeChoice && !hasMadeChoiceThisPhrase && !IsDead)
         {
             MoveToExecute = move;
-            portraitRenderer.sprite = activatedPortrait;
-            audioSource.PlayOneShot(choiceMadeClip);
+            //portraitRenderer.sprite = activatedPortrait;
+            //audioSource.PlayOneShot(choiceMadeClip);
         }
     }
 
@@ -392,7 +369,7 @@ public class Player : MonoBehaviour
     {
         hasMadeChoiceThisPhrase = false;
         animationTrigger = null;
-        portraitRenderer.sprite = unactivatedPortrait;
+        //portraitRenderer.sprite = unactivatedPortrait;
         queuedActionText = " ";
 
         animator.SetTrigger(gettingReadyAnimationTrigger);
