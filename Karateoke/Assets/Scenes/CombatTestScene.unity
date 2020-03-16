@@ -233,17 +233,17 @@ MonoBehaviour:
   portraitObject: {fileID: 0}
   activatedPortrait: {fileID: 0}
   unactivatedPortrait: {fileID: 0}
-  attackButtonString: 
-  dodgeButtonString: 
-  sweepButtonString: 
-  attackAnimationTrigger: 
-  dodgeAnimationTrigger: 
-  sweepAnimationTrigger: 
-  sittingDuckAnimationTrigger: 
-  gettingReadyAnimationTrigger: 
-  fallAnimationTrigger: 
-  getHitAnimationTrigger: 
-  getHitFromSweepAnimationTrigger: 
+  attackButtonString: Player1Attack
+  dodgeButtonString: Player1Block
+  sweepButtonString: Player1Grapple
+  attackAnimationTrigger: Attack
+  dodgeAnimationTrigger: Dodge
+  sweepAnimationTrigger: Sweep
+  sittingDuckAnimationTrigger: SittingDuck
+  gettingReadyAnimationTrigger: MakingChoice
+  fallAnimationTrigger: Fall
+  getHitAnimationTrigger: GetHitNormal
+  getHitFromSweepAnimationTrigger: GetHitFromSweep
   choiceMadeClip: {fileID: 0}
   getHitClip: {fileID: 0}
   fallClip: {fileID: 0}
@@ -274,7 +274,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: a8a36f33f5fb2554eb5db50af532f885,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: a8a36f33f5fb2554eb5db50af532f885,
         type: 3}
@@ -346,6 +346,16 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1.65
       objectReference: {fileID: 0}
+    - target: {fileID: -6057140222963153312, guid: a8a36f33f5fb2554eb5db50af532f885,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6f2e0193574c4764b83fe679124bc27e, type: 2}
+    - target: {fileID: -960630046944600353, guid: a8a36f33f5fb2554eb5db50af532f885,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 17c6fd133c1f9504e8527499a3ef8d37, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8a36f33f5fb2554eb5db50af532f885, type: 3}
 --- !u!1 &605887919 stripped
