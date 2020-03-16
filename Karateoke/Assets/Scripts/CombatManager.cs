@@ -184,22 +184,15 @@ public class CombatManager : MonoBehaviour
         //healthBar[1] = playerHealthBarGameObject[1].GetComponent<HealthBar>();
         //starPowerBar[0] = playerStarPowerBarGameObject[0].GetComponent<HealthBar>();
         //starPowerBar[1] = playerStarPowerBarGameObject[1].GetComponent<HealthBar>();
-        //playerAnimator[0] = playerModel[0].GetComponent<Animator>();
-        //playerAnimator[1] = playerModel[1].GetComponent<Animator>();
-        //player1AudioSource = playerModel[0].GetComponent<AudioSource>();
-        //player2AudioSource = playerModel[1].GetComponent<AudioSource>();
         comboImageAnimator[0] = comboImage[0].GetComponent<Animator>();
         comboImageAnimator[1] = comboImage[1].GetComponent<Animator>();
-        //player1PortraitRenderer = player1Portrait.GetComponent<SpriteRenderer>();
-        //player2PortraitRenderer = player2Portrait.GetComponent<SpriteRenderer>();
         comboText[0].text = "";
         comboText[1].text = "";
 
         audioSource = GetComponent<AudioSource>();
-        audioComparisonSript = GetComponent<AudioComparisonManager>();
+        //audioComparisonSript = GetComponent<AudioComparisonManager>();
 
         //new stuff
-
         player[0].IndexAccordingToCombatManager = 0;
         player[1].IndexAccordingToCombatManager = 1;
     }
@@ -282,7 +275,8 @@ public class CombatManager : MonoBehaviour
 
     private void OnEnable()
     {
-        PhraseEndTrigger.EndOfPhrase += OnEndOfPhrase;
+        CombatTestingScript.EndOfPhrase += OnEndOfPhrase;
+        //PhraseEndTrigger.EndOfPhrase += OnEndOfPhrase;
         Player.AttemptAttack += OnPlayerAttacks;
         Player.AttemptSweep += OnPlayerSweeps;
         Player.PlayerDies += OnPlayerDies;
@@ -291,7 +285,8 @@ public class CombatManager : MonoBehaviour
 
     private void OnDisable()
     {
-        PhraseEndTrigger.EndOfPhrase -= OnEndOfPhrase;
+        CombatTestingScript.EndOfPhrase -= OnEndOfPhrase;
+        //PhraseEndTrigger.EndOfPhrase -= OnEndOfPhrase;
         Player.AttemptAttack -= OnPlayerAttacks;
         Player.AttemptSweep -= OnPlayerSweeps;
         Player.PlayerDies -= OnPlayerDies;
@@ -325,11 +320,13 @@ public class CombatManager : MonoBehaviour
             player[1].CanMakeChoice = false;
 
             DecideWinner?.Invoke();
+            //TODO: replace this with a random between 0-1 to give a random "winner" for testing purposes
 
             // The disparity average is based on how different the two players' scores were,
             // and how long the phrase in question was. The higher the score, the worse the
             // loser did compared to the winner during the phrase. This value is applied to bonuses.
-            scoreDisparityAveraged = audioComparisonSript.ScoreDisparity / phraseTimeElapsed;
+            //scoreDisparityAveraged = audioComparisonSript.ScoreDisparity / phraseTimeElapsed;
+            scoreDisparityAveraged = 40;
             //disparityText.text = scoreDisparityAveraged.ToString();
             //testTimerText.text = phraseTimeElapsed.ToString();
             phraseTimeElapsed = 0.0f;

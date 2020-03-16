@@ -107,7 +107,7 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
-    /// This is the value that control the player's "special move". If this value gets above 10,
+    /// This is the value that control the player's "special move". If this value gets above 100,
     /// their move triggers. Pass in a negative value to decrease the player's star power.
     /// </summary>
     public int StarPower
@@ -133,7 +133,7 @@ public class Player : MonoBehaviour
                 starPower = 0;
             }
 
-            if (starPower >= 10)
+            if (starPower >= 100)
             {
                 SetUpStarPowerMove();
                 //remember to set star power back to a 0
