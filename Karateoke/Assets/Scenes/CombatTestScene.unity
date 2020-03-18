@@ -135,17 +135,17 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: ad8bb660b01fd204c82098eecf4fd2d9,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.21
+      value: -1.35
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ad8bb660b01fd204c82098eecf4fd2d9,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.49963212
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ad8bb660b01fd204c82098eecf4fd2d9,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.33
+      value: -6
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ad8bb660b01fd204c82098eecf4fd2d9,
         type: 3}
@@ -222,7 +222,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 46371512}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4115b36982ed1fb489ccc012bb48bff4, type: 3}
   m_Name: 
@@ -243,6 +243,7 @@ MonoBehaviour:
   gettingReadyAnimationTrigger: MakingChoice
   fallAnimationTrigger: Fall
   getHitAnimationTrigger: GetHitNormal
+  getHitFromBlockAnimationTrigger: GetHitFromBlock
   getHitFromSweepAnimationTrigger: GetHitFromSweep
   choiceMadeClip: {fileID: 0}
   getHitClip: {fileID: 0}
@@ -254,7 +255,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 46371512}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 993182ec72e23b844bc54bcbcd90b55c, type: 3}
   m_Name: 
@@ -441,17 +442,17 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: a8a36f33f5fb2554eb5db50af532f885,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.86
+      value: 1.35
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: a8a36f33f5fb2554eb5db50af532f885,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.49963212
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: a8a36f33f5fb2554eb5db50af532f885,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.27
+      value: -6
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: a8a36f33f5fb2554eb5db50af532f885,
         type: 3}
@@ -544,17 +545,18 @@ MonoBehaviour:
   portraitObject: {fileID: 0}
   activatedPortrait: {fileID: 0}
   unactivatedPortrait: {fileID: 0}
-  attackButtonString: 
-  dodgeButtonString: 
-  sweepButtonString: 
-  attackAnimationTrigger: 
-  dodgeAnimationTrigger: 
-  sweepAnimationTrigger: 
-  sittingDuckAnimationTrigger: 
-  gettingReadyAnimationTrigger: 
-  fallAnimationTrigger: 
-  getHitAnimationTrigger: 
-  getHitFromSweepAnimationTrigger: 
+  attackButtonString: Player2Attack
+  dodgeButtonString: Player2Block
+  sweepButtonString: Player2Grapple
+  attackAnimationTrigger: Attack
+  dodgeAnimationTrigger: Dodge
+  sweepAnimationTrigger: Sweep
+  sittingDuckAnimationTrigger: SittingDuck
+  gettingReadyAnimationTrigger: MakingChoice
+  fallAnimationTrigger: Fall
+  getHitAnimationTrigger: GetHitNormal
+  getHitFromBlockAnimationTrigger: GetHitFromBlock
+  getHitFromSweepAnimationTrigger: GetHitFromSweep
   choiceMadeClip: {fileID: 0}
   getHitClip: {fileID: 0}
   fallClip: {fileID: 0}
@@ -821,6 +823,8 @@ GameObject:
   m_Component:
   - component: {fileID: 940111729}
   - component: {fileID: 940111728}
+  - component: {fileID: 940111730}
+  - component: {fileID: 940111731}
   m_Layer: 0
   m_Name: TestCombatManager
   m_TagString: Untagged
@@ -881,7 +885,7 @@ MonoBehaviour:
   baseStarPowerDecrease: 5
   baseStarPowerComboIncrease: 2
   starPowerMoveLengthInSeconds: 5
-  bonusDividingFactor: 100
+  bonusDividingFactor: 10
   bonusParryDividingValue: 2
 --- !u!4 &940111729
 Transform:
@@ -897,6 +901,114 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &940111730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 940111727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb9fdffeec991334eb317fca65d1e2ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!82 &940111731
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 940111727}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1390945831
 GameObject:
   m_ObjectHideFlags: 0

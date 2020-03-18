@@ -38,7 +38,7 @@ public class Player : MonoBehaviour
     private string attackAnimationTrigger, dodgeAnimationTrigger, sweepAnimationTrigger, sittingDuckAnimationTrigger;
 
     [SerializeField]
-    private string gettingReadyAnimationTrigger, fallAnimationTrigger, getHitAnimationTrigger, getHitFromSweepAnimationTrigger;
+    private string gettingReadyAnimationTrigger, fallAnimationTrigger, getHitAnimationTrigger, getHitFromBlockAnimationTrigger, getHitFromSweepAnimationTrigger;
 
     [SerializeField]
     private AudioClip choiceMadeClip, getHitClip, fallClip;
@@ -204,6 +204,10 @@ public class Player : MonoBehaviour
 
     #endregion
 
+    public void ExecuteMakingChoiceAnimations()
+    {
+        animator.SetTrigger(gettingReadyAnimationTrigger);
+    }
 
     /// <summary>
     /// Plays the player's queued animation immediately. This should only be called at the end of a phrase.
@@ -262,9 +266,8 @@ public class Player : MonoBehaviour
                 }
                 break;
             case MoveSet.Dodge:
-                // Nothing for now?
+                animator.SetTrigger(getHitFromBlockAnimationTrigger);
                 Debug.Log($"{this.name} dodged successfully.");
-
                 break;
             case MoveSet.Sweep:
                 animator.SetTrigger(getHitFromSweepAnimationTrigger);
@@ -362,6 +365,7 @@ public class Player : MonoBehaviour
             MoveToExecute = move;
             //portraitRenderer.sprite = activatedPortrait;
             //audioSource.PlayOneShot(choiceMadeClip);
+            Debug.Log($"{this.name} has chosen {move}");
         }
     }
 
@@ -372,7 +376,7 @@ public class Player : MonoBehaviour
         //portraitRenderer.sprite = unactivatedPortrait;
         queuedActionText = " ";
 
-        animator.SetTrigger(gettingReadyAnimationTrigger);
+        //animator.SetTrigger(gettingReadyAnimationTrigger);
     }
 
     private void SetUpStarPowerMove()

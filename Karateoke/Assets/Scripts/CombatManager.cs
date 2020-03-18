@@ -79,7 +79,7 @@ public class CombatManager : MonoBehaviour
 
     [Tooltip("The number that the disparity average will be divided by to get the value added to damage.")]
     [SerializeField]
-    private float bonusDividingFactor = 100.0f, bonusParryDividingValue = 2.0f;
+    private float bonusDividingFactor = 10.0f, bonusParryDividingValue = 2.0f;
 
     //private int[] playerHealth = new int[2];
     //private int playerHealth1;
@@ -165,8 +165,8 @@ public class CombatManager : MonoBehaviour
         //playerAnimator[1].SetTrigger("start");
         player[0].StartGame();
         player[1].StartGame();
-        startButton.enabled = false;
-        startButton.gameObject.SetActive(false);
+        //startButton.enabled = false;
+        //startButton.gameObject.SetActive(false);
     }
 
     void Start()
@@ -176,7 +176,7 @@ public class CombatManager : MonoBehaviour
         player[0].StarPower = 0;
         player[1].StarPower = 0;
         countdownText.text = "";
-        winnerText.text = "";
+        //winnerText.text = "";
         countdownTextColor = countdownText.color;
         indexOfLastRoundWinner = 3;
 
@@ -184,10 +184,10 @@ public class CombatManager : MonoBehaviour
         //healthBar[1] = playerHealthBarGameObject[1].GetComponent<HealthBar>();
         //starPowerBar[0] = playerStarPowerBarGameObject[0].GetComponent<HealthBar>();
         //starPowerBar[1] = playerStarPowerBarGameObject[1].GetComponent<HealthBar>();
-        comboImageAnimator[0] = comboImage[0].GetComponent<Animator>();
-        comboImageAnimator[1] = comboImage[1].GetComponent<Animator>();
-        comboText[0].text = "";
-        comboText[1].text = "";
+        //comboImageAnimator[0] = comboImage[0].GetComponent<Animator>();
+        //comboImageAnimator[1] = comboImage[1].GetComponent<Animator>();
+        //comboText[0].text = "";
+        //comboText[1].text = "";
 
         audioSource = GetComponent<AudioSource>();
         //audioComparisonSript = GetComponent<AudioComparisonManager>();
@@ -230,7 +230,7 @@ public class CombatManager : MonoBehaviour
 
     public void OnPlayerAttacks(int indexOfOtherPlayer)
     {
-        player[indexOfOtherPlayer].GetAttcked(damageDealt, bonus, indexOfWinner);
+        player[indexOfOtherPlayer].GetAttcked(baseAttackDamage, bonus, indexOfWinner);
     }
 
     public void OnPlayerSweeps(int indexOfOtherPlayer)
@@ -297,7 +297,9 @@ public class CombatManager : MonoBehaviour
     {
         if (!playerIsDead && !isPerformingStarPowerMove)
         {
-            yield return new WaitForSeconds(1);
+            //yield return new WaitForSeconds(1);
+            player[0].ExecuteMakingChoiceAnimations();
+            player[1].ExecuteMakingChoiceAnimations();
             countdownText.text = "3";
             audioSource.PlayOneShot(countdownClip[0]);
             yield return new WaitForSeconds(1);
@@ -319,14 +321,14 @@ public class CombatManager : MonoBehaviour
             player[0].CanMakeChoice = false;
             player[1].CanMakeChoice = false;
 
-            DecideWinner?.Invoke();
-            //TODO: replace this with a random between 0-1 to give a random "winner" for testing purposes
+            //DecideWinner?.Invoke();
 
             // The disparity average is based on how different the two players' scores were,
             // and how long the phrase in question was. The higher the score, the worse the
             // loser did compared to the winner during the phrase. This value is applied to bonuses.
+
             //scoreDisparityAveraged = audioComparisonSript.ScoreDisparity / phraseTimeElapsed;
-            scoreDisparityAveraged = 40;
+
             //disparityText.text = scoreDisparityAveraged.ToString();
             //testTimerText.text = phraseTimeElapsed.ToString();
             phraseTimeElapsed = 0.0f;
@@ -337,15 +339,32 @@ public class CombatManager : MonoBehaviour
 
     private void ExecuteCombat()
     {
-        damageDealt = 0;
-        indexOfWinner = audioComparisonSript.IndexOfWinner;
-        indexOfLoser = audioComparisonSript.IndexOfLoser;
+        //indexOfWinner = audioComparisonSript.IndexOfWinner;
+        //indexOfLoser = audioComparisonSript.IndexOfLoser;
+        var rand = new System.Random();
+        indexOfWinner = rand.Next(0, 2);
+        scoreDisparityAveraged = rand.Next(5, 40);
 
-        StartCoroutine(DecideComboAndDisplayImage(indexOfWinner, indexOfLoser));
+        if (indexOfWinner == 0)
+        {
+            indexOfLoser = 1;
+        }
+        else
+        {
+            indexOfLoser = 0;
+        }
+        Debug.Log($"Index of winner: {indexOfWinner}");
+
+        //StartCoroutine(DecideComboAndDisplayImage(indexOfWinner, indexOfLoser));
 
         // The - 1 is there so we can control for one player only doing a bit better than the other,
         // but I may take it out later after playtesting.
         bonus = (int)(scoreDisparityAveraged / bonusDividingFactor) - 1;
+        if (bonus < 1)
+        {
+            // This is to make sure that a fraction bonus below 1 doesn't cause the attack damage to go below the base number.
+            bonus = 1;
+        }
         Debug.Log($"Bonus: {bonus}");
 
         player[0].ExecuteQueuedCombatMove();
