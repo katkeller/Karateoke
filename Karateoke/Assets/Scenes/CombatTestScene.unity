@@ -356,6 +356,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &46371516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46371512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28bda111babb2eb4a9637d621e364844, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackClip: {fileID: 8300000, guid: 03cda9c6f01ccc44a8c6d938b31f65f0, type: 3}
+  sweepClip: {fileID: 0}
+  blockClip: {fileID: 0}
+  successfullyBlockClip: {fileID: 8300000, guid: de2962ddb833a8b42bed9575c225aaa6,
+    type: 3}
+  getHitClip: {fileID: 8300000, guid: c2f6e0a5c70bef84182d73c8710d811b, type: 3}
 --- !u!1 &494791299
 GameObject:
   m_ObjectHideFlags: 0
@@ -656,6 +674,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &605887922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 605887919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28bda111babb2eb4a9637d621e364844, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackClip: {fileID: 8300000, guid: 173df64ae17367a48b10d6f37573b4b2, type: 3}
+  sweepClip: {fileID: 0}
+  blockClip: {fileID: 0}
+  successfullyBlockClip: {fileID: 8300000, guid: de2962ddb833a8b42bed9575c225aaa6,
+    type: 3}
+  getHitClip: {fileID: 8300000, guid: c2f6e0a5c70bef84182d73c8710d811b, type: 3}
 --- !u!1 &825051543
 GameObject:
   m_ObjectHideFlags: 0
