@@ -23,7 +23,7 @@ public class CombatTestingScript : MonoBehaviour
 
     IEnumerator WaitThenTriggerEndOfPhrase()
     {
-        yield return new WaitForSeconds(8);
+        yield return new WaitForSeconds(10);
         EndOfPhrase?.Invoke();
         Debug.Log("Debug phrase end has been triggered from combat test script.");
         StartCoroutine(WaitThenTriggerEndOfPhrase());

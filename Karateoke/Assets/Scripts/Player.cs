@@ -38,7 +38,10 @@ public class Player : MonoBehaviour
     private string attackAnimationTrigger, dodgeAnimationTrigger, sweepAnimationTrigger, sittingDuckAnimationTrigger;
 
     [SerializeField]
-    private string gettingReadyAnimationTrigger, fallAnimationTrigger, getHitAnimationTrigger, getHitFromBlockAnimationTrigger, getHitFromSweepAnimationTrigger;
+    private string gettingReadyAnimationTrigger, fallAnimationTrigger, getHitAnimationTrigger, getHitFromBlockAnimationTrigger;
+
+    [SerializeField]
+    private string getBlockedAnimationTrigger;
 
     [SerializeField]
     private AudioClip choiceMadeClip, getHitClip, fallClip;
@@ -200,6 +203,7 @@ public class Player : MonoBehaviour
     public static event Action<int> PlayerDies;
     public static event Action<int> PlayerHasFullStarPower;
     public static event Action<int> AttemptAttack;
+    public static event Action<int> AttemptBlock;
     public static event Action<int> AttemptSweep;
 
     #endregion
@@ -240,6 +244,12 @@ public class Player : MonoBehaviour
         AttemptAttack?.Invoke(indexOfOtherPlayer);
     }
 
+    public void PlayerBlocksEvent(int indexOfOtherPlayer)
+    {
+        Debug.Log("Block animation event triggered.");
+        AttemptBlock?.Invoke(indexOfOtherPlayer);
+    }
+
     public void PlayerSweepsEvent(int indexOfOtherPlayer)
     {
         AttemptSweep?.Invoke(indexOfOtherPlayer);
@@ -270,7 +280,7 @@ public class Player : MonoBehaviour
                 Debug.Log($"{this.name} dodged successfully.");
                 break;
             case MoveSet.Sweep:
-                animator.SetTrigger(getHitFromSweepAnimationTrigger);
+                animator.SetTrigger(getHitAnimationTrigger);
                 damage = (int)possibleDamage;
                 if (indexOfWinner != IndexAccordingToCombatManager)
                 {
@@ -294,6 +304,14 @@ public class Player : MonoBehaviour
                 break;
         }
 
+    }
+
+    public void GetBlocked()
+    {
+        if(MoveToExecute == MoveSet.Attack)
+        {
+            animator.SetTrigger(getBlockedAnimationTrigger);
+        }
     }
 
     public void GetSwept()

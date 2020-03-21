@@ -136,13 +136,13 @@ public class CombatManager : MonoBehaviour
     private Animator[] comboImageAnimator = new Animator[2];
 
     private Color32 countdownTextColor;
-    private Sprite player1NextImage, player2NextImage;
-    private SpriteRenderer player1PortraitRenderer, player2PortraitRenderer;
-    private string player1ActionTextNext, player2ActionTextNext;
+    //private Sprite player1NextImage, player2NextImage;
+    //private SpriteRenderer player1PortraitRenderer, player2PortraitRenderer;
+    //private string player1ActionTextNext, player2ActionTextNext;
     private AudioSource audioSource;
-    private AudioSource player1AudioSource, player2AudioSource;
-    private HealthBar[] healthBar = new HealthBar[2];
-    private HealthBar[] starPowerBar = new HealthBar[2];
+    //private AudioSource player1AudioSource, player2AudioSource;
+    //private HealthBar[] healthBar = new HealthBar[2];
+    //private HealthBar[] starPowerBar = new HealthBar[2];
     private Animator[] playerAnimator = new Animator[2];
     private AudioComparisonManager audioComparisonSript;
 
@@ -233,6 +233,15 @@ public class CombatManager : MonoBehaviour
         player[indexOfOtherPlayer].GetAttcked(baseAttackDamage, bonus, indexOfWinner);
     }
 
+    public void OnPlayerBlocks(int indexOfOtherPlayer)
+    {
+        Debug.Log("Block event on combat manager triggered.");
+        // This works a little differently than the other two animation triggers,
+        // in that this event is on the block reaction animation. So we know if this
+        // event is triggered, the block was successful and we can interrupt the animation.
+        player[indexOfOtherPlayer].GetBlocked();
+    }
+
     public void OnPlayerSweeps(int indexOfOtherPlayer)
     {
         var indexOfSweeper = 0;
@@ -278,6 +287,7 @@ public class CombatManager : MonoBehaviour
         CombatTestingScript.EndOfPhrase += OnEndOfPhrase;
         //PhraseEndTrigger.EndOfPhrase += OnEndOfPhrase;
         Player.AttemptAttack += OnPlayerAttacks;
+        Player.AttemptBlock += OnPlayerBlocks;
         Player.AttemptSweep += OnPlayerSweeps;
         Player.PlayerDies += OnPlayerDies;
         Player.PlayerHasFullStarPower += OnPlayerHasFullStarPower;
@@ -288,6 +298,7 @@ public class CombatManager : MonoBehaviour
         CombatTestingScript.EndOfPhrase -= OnEndOfPhrase;
         //PhraseEndTrigger.EndOfPhrase -= OnEndOfPhrase;
         Player.AttemptAttack -= OnPlayerAttacks;
+        Player.AttemptBlock -= OnPlayerBlocks;
         Player.AttemptSweep -= OnPlayerSweeps;
         Player.PlayerDies -= OnPlayerDies;
         Player.PlayerHasFullStarPower -= OnPlayerHasFullStarPower;
@@ -673,11 +684,11 @@ public class CombatManager : MonoBehaviour
         comboText[indexOfWinner].text = "";
     }
 
-    IEnumerator DelayAnimation(float time, int indexOfPlayer, string animationTrigger)
-    {
-        yield return new WaitForSeconds(time);
-        playerAnimator[indexOfPlayer].SetTrigger(animationTrigger);
-    }
+    //IEnumerator DelayAnimation(float time, int indexOfPlayer, string animationTrigger)
+    //{
+    //    yield return new WaitForSeconds(time);
+    //    playerAnimator[indexOfPlayer].SetTrigger(animationTrigger);
+    //}
 
     //private void CheckForStarPower()
     //{
@@ -723,7 +734,7 @@ public class CombatManager : MonoBehaviour
         yield return new WaitForSeconds(1);
         playerAnimator[indexOfLoser].SetTrigger("getBlastedEnd");
         playerStarPower[indexOfWinner] = 0;
-        starPowerBar[indexOfWinner].gameObject.SetActive(false);
+        //starPowerBar[indexOfWinner].gameObject.SetActive(false);
         starPowerBackgrounds[indexOfWinner].gameObject.SetActive(false);
         //playerHealth[indexOfLoser] -= starPowerMoveDamage;
         if (indexOfLoser == 0)
