@@ -169,21 +169,29 @@ public class CombatManager : MonoBehaviour
         //startButton.gameObject.SetActive(false);
     }
 
-    void Start()
+    private void Awake()
     {
+        //new stuff
         player[0].Health = 100;
         player[1].Health = 100;
         player[0].StarPower = 0;
         player[1].StarPower = 0;
+
+        player[0].IndexAccordingToCombatManager = 0;
+        player[1].IndexAccordingToCombatManager = 1;
+    }
+
+    void Start()
+    {
+        //player[0].Health = 100;
+        //player[1].Health = 100;
+        //player[0].StarPower = 0;
+        //player[1].StarPower = 0;
         countdownText.text = "";
         //winnerText.text = "";
         countdownTextColor = countdownText.color;
         indexOfLastRoundWinner = 3;
 
-        //healthBar[0] = playerHealthBarGameObject[0].GetComponent<HealthBar>();
-        //healthBar[1] = playerHealthBarGameObject[1].GetComponent<HealthBar>();
-        //starPowerBar[0] = playerStarPowerBarGameObject[0].GetComponent<HealthBar>();
-        //starPowerBar[1] = playerStarPowerBarGameObject[1].GetComponent<HealthBar>();
         //comboImageAnimator[0] = comboImage[0].GetComponent<Animator>();
         //comboImageAnimator[1] = comboImage[1].GetComponent<Animator>();
         //comboText[0].text = "";
@@ -193,8 +201,8 @@ public class CombatManager : MonoBehaviour
         //audioComparisonSript = GetComponent<AudioComparisonManager>();
 
         //new stuff
-        player[0].IndexAccordingToCombatManager = 0;
-        player[1].IndexAccordingToCombatManager = 1;
+        //player[0].IndexAccordingToCombatManager = 0;
+        //player[1].IndexAccordingToCombatManager = 1;
     }
 
     void Update()

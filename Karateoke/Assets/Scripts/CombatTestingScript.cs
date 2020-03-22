@@ -6,19 +6,27 @@ using UnityEngine;
 public class CombatTestingScript : MonoBehaviour
 {
     private CombatManager combatManager;
+    private StarPowerQTE spQTE;
+    private bool starPowerIsHappening;
 
     public static event Action EndOfPhrase;
 
     void Start()
     {
         combatManager = GetComponent<CombatManager>();
+        spQTE = GetComponent<StarPowerQTE>();
         combatManager.StartAnimations();
-        StartCoroutine(WaitThenTriggerEndOfPhrase());
+        //StartCoroutine(WaitThenTriggerEndOfPhrase());
     }
 
     void Update()
     {
-        
+        if (Input.GetButtonDown("TestStarPowerQTE") && !starPowerIsHappening)
+        {
+            starPowerIsHappening = true;
+
+            spQTE.StartQTE(0);
+        }
     }
 
     IEnumerator WaitThenTriggerEndOfPhrase()
