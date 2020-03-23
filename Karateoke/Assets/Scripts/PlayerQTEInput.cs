@@ -54,6 +54,16 @@ public class PlayerQTEInput : MonoBehaviour
 
     public void ActivateQTEButton(int indexOfMove)
     {
+        if (activeButtonGraphic != null)
+        {
+            activeButtonGraphic.enabled = false;
+            activeButtonGraphic = null;
+        }
+        if (activeRingGraphic != null)
+        {
+            activeRingGraphic.enabled = false;
+            activeRingGraphic = null;
+        }
         QtePressingFill = graphicStartingFill;
         activeRingGraphic = ringGraphic[indexOfMove];
         activeButtonGraphic = buttonGrapic[indexOfMove];
@@ -118,21 +128,18 @@ public class PlayerQTEInput : MonoBehaviour
 
     private void CheckAndAddPressValue(int indexOfMove)
     {
-        Debug.Log($"Active ring graphic: {activeRingGraphic}. Attempted move: {ringGraphic[indexOfMove]}");
+        //Debug.Log($"Active ring graphic: {activeRingGraphic}. Attempted move: {ringGraphic[indexOfMove]}");
         if (activeRingGraphic == ringGraphic[indexOfMove])
         {
             QtePressingFill += .2f;
-            Debug.Log($"Fill should increase: {QtePressingFill}");
+            //Debug.Log($"Fill should increase: {QtePressingFill}");
         }
     }
 
     private void WinSingleQTE()
     {
         qteManager.PlayerWonSingleQTE(indexAccordingToCombatManager);
-        activeRingGraphic.enabled = false;
-        activeButtonGraphic.enabled = false;
-        activeRingGraphic = null;
-        activeButtonGraphic = null;
+        //Debug.Log($"{activeButtonGraphic.name} enabled?: {activeButtonGraphic.enabled}");
     }
 
     private void OnQTEStart(List<int> buttonPressIndexOrdered, int indexOfPlayerAttemptingSPMove)

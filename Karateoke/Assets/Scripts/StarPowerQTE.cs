@@ -78,27 +78,30 @@ public class StarPowerQTE : MonoBehaviour
                 indexOfOtherPlayer = 1;
             }
 
-            playerQteInput[indexOfOtherPlayer].DeactivateAnyQTEButtons();
+            //playerQteInput[indexOfOtherPlayer].DeactivateAnyQTEButtons();
             indexesOfWinners.Add(indexOfPlayer);
             
-            // Make sure less than 3 rounds have occured
+            // Make sure fewer than 3 rounds have occured
             if (roundIndex <= 2)
             {
                 playerQteInput[0].ActivateQTEButton(buttonPressIndexOrder[roundIndex]);
                 playerQteInput[1].ActivateQTEButton(buttonPressIndexOrder[roundIndex]);
+                playerHasWonThisRound = false;
                 roundIndex++;
             }
             else
             {
                 // We get here if the QTE is over (3 rounds have happened), so we determine the winner
-                
-                
-                
+                playerQteInput[0].DeactivateAnyQTEButtons();
+                playerQteInput[1].DeactivateAnyQTEButtons();
+
+                DetermineOverallWinner();
                 
                 QTEEnd?.Invoke();
             }
         }
     }
+
 
     void Start()
     {
@@ -113,5 +116,10 @@ public class StarPowerQTE : MonoBehaviour
     void Update()
     {
         
+    }
+    private void DetermineOverallWinner()
+    {
+        Debug.Log($"Index of winners: {indexesOfWinners[0]}, {indexesOfWinners[1]}, {indexesOfWinners[2]}.");
+
     }
 }
