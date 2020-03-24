@@ -18,7 +18,13 @@ public class PlayerQTEInput : MonoBehaviour
     private GameObject qteManagerObject;
 
     [SerializeField]
+    private float increaseOnPress = 0.2f, decreaseByTime = 0.02f;
+
+    [SerializeField]
     private float AttackerStartingAdvantage = 0.25f;
+
+    [SerializeField]
+    private float timeBetweenValueDecrease = 0.1f;
 
     // do we need this? I think no since the QTEs should go until either someone wins or
     // the attacker fails (lets the QTE value go to 0). Or maybe if it goes to 0 it doesn't matter?
@@ -51,6 +57,7 @@ public class PlayerQTEInput : MonoBehaviour
     private bool qteIsHappening;
     private int indexAccordingToCombatManager;
     private float graphicStartingFill;
+    private float timePassed;
 
     public void ActivateQTEButton(int indexOfMove)
     {
@@ -89,6 +96,7 @@ public class PlayerQTEInput : MonoBehaviour
         //qtePressingValue[1] = 0;
         //qtePressingValue[2] = 0;
         QtePressingFill = 0;
+        timePassed = 0;
 
         foreach (var image in ringGraphic)
         {
@@ -118,10 +126,18 @@ public class PlayerQTEInput : MonoBehaviour
                 CheckAndAddPressValue(2);
             }
 
+            timePassed += Time.deltaTime;
+
+            if (timePassed > timeBetweenValueDecrease)
+            {
+                timePassed = 0;
+                QtePressingFill -= decreaseByTime;
+            }
+
             if (activeRingGraphic != null)
             {
                 activeRingGraphic.fillAmount = QtePressingFill;
-                Debug.Log($"Fill should be {QtePressingFill}");
+                //Debug.Log($"Fill should be {QtePressingFill}");
             }
         }
     }
@@ -131,7 +147,7 @@ public class PlayerQTEInput : MonoBehaviour
         //Debug.Log($"Active ring graphic: {activeRingGraphic}. Attempted move: {ringGraphic[indexOfMove]}");
         if (activeRingGraphic == ringGraphic[indexOfMove])
         {
-            QtePressingFill += .2f;
+            QtePressingFill += increaseOnPress;
             //Debug.Log($"Fill should increase: {QtePressingFill}");
         }
     }

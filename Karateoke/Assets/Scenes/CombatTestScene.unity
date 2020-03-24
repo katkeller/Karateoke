@@ -472,7 +472,10 @@ MonoBehaviour:
   blockInputString: Player1Block
   sweepInputString: Player1Grapple
   qteManagerObject: {fileID: 940111727}
+  increaseOnPress: 0.1
+  decreaseByTime: 0.02
   AttackerStartingAdvantage: 0.25
+  timeBetweenValueDecrease: 0.1
   secondsPerMove: 3
 --- !u!1 &241009231
 GameObject:
@@ -1038,7 +1041,10 @@ MonoBehaviour:
   blockInputString: Player2Block
   sweepInputString: Player2Grapple
   qteManagerObject: {fileID: 940111727}
+  increaseOnPress: 0.1
+  decreaseByTime: 0.02
   AttackerStartingAdvantage: 0.25
+  timeBetweenValueDecrease: 0.1
   secondsPerMove: 3
 --- !u!1 &825051543
 GameObject:
