@@ -29,6 +29,9 @@ public class PlayerQTEInput : MonoBehaviour
     [SerializeField]
     private string highAnimationTrigger, midAnimationTrigger, lowAnimationTrigger, animationFloatName;
 
+    [SerializeField]
+    private string winQTEAnimationTriggger, loseQTEAnimationTrigger;
+
     // do we need this? I think no since the QTEs should go until either someone wins or
     // the attacker fails (lets the QTE value go to 0). Or maybe if it goes to 0 it doesn't matter?
     [SerializeField]
@@ -64,6 +67,8 @@ public class PlayerQTEInput : MonoBehaviour
     private float graphicStartingFill;
     private float timePassed;
 
+    private string queuedAnimation;
+
     public void ActivateQTEButtonAndAnimation(int indexOfMove)
     {
         if (activeButtonGraphic != null)
@@ -82,6 +87,7 @@ public class PlayerQTEInput : MonoBehaviour
         activeRingGraphic.enabled = true;
         activeButtonGraphic.enabled = true;
         activeRingGraphic.fillAmount = QtePressingFill;
+        queuedAnimation = loseQTEAnimationTrigger;
 
         switch (indexOfMove)
         {
@@ -98,6 +104,11 @@ public class PlayerQTEInput : MonoBehaviour
                 Debug.Log("Player star power animation error: index not recognized.");
                 break;
         }
+    }
+
+    public void ExecuteQueuedAnimation()
+    {
+        animator.SetTrigger(queuedAnimation);
     }
 
     public void DeactivateAnyQTEButtons()
@@ -180,6 +191,7 @@ public class PlayerQTEInput : MonoBehaviour
 
     private void WinSingleQTE()
     {
+        queuedAnimation = winQTEAnimationTriggger;
         qteManager.PlayerWonSingleQTE(indexAccordingToCombatManager);
         //Debug.Log($"{activeButtonGraphic.name} enabled?: {activeButtonGraphic.enabled}");
     }

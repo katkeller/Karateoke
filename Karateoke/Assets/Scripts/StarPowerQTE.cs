@@ -12,6 +12,9 @@ public class StarPowerQTE : MonoBehaviour
     [SerializeField]
     private GameObject[] player = new GameObject[2];
 
+    [SerializeField]
+    private float secondsBetweenRounds = 1.0f;
+
     private PlayerQTEInput[] playerQteInput = new PlayerQTEInput[2];
     private List<int> buttonPressIndexOrder = new List<int>();
     private List<int> indexesOfWinners = new List<int>();
@@ -78,16 +81,19 @@ public class StarPowerQTE : MonoBehaviour
                 indexOfOtherPlayer = 1;
             }
 
-            //playerQteInput[indexOfOtherPlayer].DeactivateAnyQTEButtons();
+            playerQteInput[0].ExecuteQueuedAnimation();
+            playerQteInput[1].ExecuteQueuedAnimation();
+
             indexesOfWinners.Add(indexOfPlayer);
             
             // Make sure fewer than 3 rounds have occured
             if (roundIndex <= 2)
             {
-                playerQteInput[0].ActivateQTEButtonAndAnimation(buttonPressIndexOrder[roundIndex]);
-                playerQteInput[1].ActivateQTEButtonAndAnimation(buttonPressIndexOrder[roundIndex]);
-                playerHasWonThisRound = false;
-                roundIndex++;
+                //playerQteInput[0].ActivateQTEButtonAndAnimation(buttonPressIndexOrder[roundIndex]);
+                //playerQteInput[1].ActivateQTEButtonAndAnimation(buttonPressIndexOrder[roundIndex]);
+                //playerHasWonThisRound = false;
+                //roundIndex++;
+                StartCoroutine(DelayNextRound());
             }
             else
             {
@@ -117,6 +123,17 @@ public class StarPowerQTE : MonoBehaviour
     {
         
     }
+
+    IEnumerator DelayNextRound()
+    {
+        //The next round is delayed in order to allow the result animations to play
+        yield return new WaitForSeconds(secondsBetweenRounds);
+        playerQteInput[0].ActivateQTEButtonAndAnimation(buttonPressIndexOrder[roundIndex]);
+        playerQteInput[1].ActivateQTEButtonAndAnimation(buttonPressIndexOrder[roundIndex]);
+        playerHasWonThisRound = false;
+        roundIndex++;
+    }
+
     private void DetermineOverallWinner()
     {
         Debug.Log($"Index of winners: {indexesOfWinners[0]}, {indexesOfWinners[1]}, {indexesOfWinners[2]}.");
