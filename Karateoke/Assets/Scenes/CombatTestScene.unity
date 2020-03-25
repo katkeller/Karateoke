@@ -476,6 +476,10 @@ MonoBehaviour:
   decreaseByTime: 0.02
   AttackerStartingAdvantage: 0.25
   timeBetweenValueDecrease: 0.1
+  highAnimationTrigger: SPHigh
+  midAnimationTrigger: SPMid
+  lowAnimationTrigger: SPLow
+  animationFloatName: SPValue
   secondsPerMove: 3
 --- !u!1 &241009231
 GameObject:
@@ -1045,6 +1049,10 @@ MonoBehaviour:
   decreaseByTime: 0.02
   AttackerStartingAdvantage: 0.25
   timeBetweenValueDecrease: 0.1
+  highAnimationTrigger: SPHigh
+  midAnimationTrigger: SPMid
+  lowAnimationTrigger: SPLow
+  animationFloatName: SPValue
   secondsPerMove: 3
 --- !u!1 &825051543
 GameObject:

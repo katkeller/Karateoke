@@ -616,7 +616,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
     m_Mirror: 0
-  m_BlendParameter: SPLowValue
+  m_BlendParameter: SPValue
   m_BlendParameterY: Blend
   m_MinThreshold: 0
   m_MaxThreshold: 1
@@ -792,25 +792,7 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Blend
-    m_Type: 1
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 0}
-  - m_Name: SPMidValue
-    m_Type: 1
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 0}
-  - m_Name: SPLowValue
-    m_Type: 1
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 0}
-  - m_Name: SPHighValue
+  - m_Name: SPValue
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -1241,7 +1223,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
     m_Mirror: 0
-  m_BlendParameter: SPHighValue
+  m_BlendParameter: SPValue
   m_BlendParameterY: Blend
   m_MinThreshold: 0
   m_MaxThreshold: 1
@@ -1545,13 +1527,13 @@ AnimatorStateMachine:
     m_Position: {x: -90, y: 30, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3084926089309807299}
-    m_Position: {x: 840, y: 110, z: 0}
+    m_Position: {x: 800, y: 140, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5472257317943661004}
-    m_Position: {x: 950, y: 60, z: 0}
+    m_Position: {x: 910, y: 90, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -576381479530623134}
-    m_Position: {x: 720, y: 60, z: 0}
+    m_Position: {x: 680, y: 90, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: -7871459912223976346}
@@ -1622,7 +1604,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
     m_Mirror: 0
-  m_BlendParameter: SPMidValue
+  m_BlendParameter: SPValue
   m_BlendParameterY: Blend
   m_MinThreshold: 0
   m_MaxThreshold: 1

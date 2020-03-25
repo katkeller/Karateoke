@@ -26,6 +26,9 @@ public class PlayerQTEInput : MonoBehaviour
     [SerializeField]
     private float timeBetweenValueDecrease = 0.1f;
 
+    [SerializeField]
+    private string highAnimationTrigger, midAnimationTrigger, lowAnimationTrigger, animationFloatName;
+
     // do we need this? I think no since the QTEs should go until either someone wins or
     // the attacker fails (lets the QTE value go to 0). Or maybe if it goes to 0 it doesn't matter?
     [SerializeField]
@@ -46,11 +49,13 @@ public class PlayerQTEInput : MonoBehaviour
 
             if (qtePressingFill >= 1)
             {
+                qtePressingFill = 1;
                 WinSingleQTE();
             }
         }
     }
 
+    private Animator animator;
     private Image activeRingGraphic;
     private Image activeButtonGraphic;
     private StarPowerQTE qteManager;
@@ -59,7 +64,7 @@ public class PlayerQTEInput : MonoBehaviour
     private float graphicStartingFill;
     private float timePassed;
 
-    public void ActivateQTEButton(int indexOfMove)
+    public void ActivateQTEButtonAndAnimation(int indexOfMove)
     {
         if (activeButtonGraphic != null)
         {
@@ -77,6 +82,22 @@ public class PlayerQTEInput : MonoBehaviour
         activeRingGraphic.enabled = true;
         activeButtonGraphic.enabled = true;
         activeRingGraphic.fillAmount = QtePressingFill;
+
+        switch (indexOfMove)
+        {
+            case 0:
+                animator.SetTrigger(highAnimationTrigger);
+                break;
+            case 1:
+                animator.SetTrigger(midAnimationTrigger);
+                break;
+            case 2:
+                animator.SetTrigger(lowAnimationTrigger);
+                break;
+            default:
+                Debug.Log("Player star power animation error: index not recognized.");
+                break;
+        }
     }
 
     public void DeactivateAnyQTEButtons()
@@ -86,6 +107,8 @@ public class PlayerQTEInput : MonoBehaviour
         activeButtonGraphic.enabled = false;
         activeRingGraphic = null;
         activeButtonGraphic = null;
+
+        //do we want reaction animations here..?
     }
 
     void Start()
@@ -107,6 +130,8 @@ public class PlayerQTEInput : MonoBehaviour
         {
             image.enabled = false;
         }
+
+        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -138,6 +163,7 @@ public class PlayerQTEInput : MonoBehaviour
             {
                 activeRingGraphic.fillAmount = QtePressingFill;
                 //Debug.Log($"Fill should be {QtePressingFill}");
+                animator.SetFloat(animationFloatName, QtePressingFill);
             }
         }
     }

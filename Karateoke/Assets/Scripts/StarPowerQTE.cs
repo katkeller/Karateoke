@@ -60,8 +60,8 @@ public class StarPowerQTE : MonoBehaviour
         }
 
         QTEStart?.Invoke(buttonPressIndexOrder, indexOfPlayerAttemptingSPMove);
-        playerQteInput[0].ActivateQTEButton(buttonPressIndexOrder[roundIndex]);
-        playerQteInput[1].ActivateQTEButton(buttonPressIndexOrder[roundIndex]);
+        playerQteInput[0].ActivateQTEButtonAndAnimation(buttonPressIndexOrder[roundIndex]);
+        playerQteInput[1].ActivateQTEButtonAndAnimation(buttonPressIndexOrder[roundIndex]);
         roundIndex++;
     }
 
@@ -84,8 +84,8 @@ public class StarPowerQTE : MonoBehaviour
             // Make sure fewer than 3 rounds have occured
             if (roundIndex <= 2)
             {
-                playerQteInput[0].ActivateQTEButton(buttonPressIndexOrder[roundIndex]);
-                playerQteInput[1].ActivateQTEButton(buttonPressIndexOrder[roundIndex]);
+                playerQteInput[0].ActivateQTEButtonAndAnimation(buttonPressIndexOrder[roundIndex]);
+                playerQteInput[1].ActivateQTEButtonAndAnimation(buttonPressIndexOrder[roundIndex]);
                 playerHasWonThisRound = false;
                 roundIndex++;
             }
