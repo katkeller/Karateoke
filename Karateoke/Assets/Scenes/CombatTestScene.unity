@@ -480,6 +480,8 @@ MonoBehaviour:
   midAnimationTrigger: SPMid
   lowAnimationTrigger: SPLow
   animationFloatName: SPValue
+  winQTEAnimationTriggger: WinSPQTE
+  loseQTEAnimationTrigger: LoseSPQTE
   secondsPerMove: 3
 --- !u!1 &241009231
 GameObject:
@@ -1053,6 +1055,8 @@ MonoBehaviour:
   midAnimationTrigger: SPMid
   lowAnimationTrigger: SPLow
   animationFloatName: SPValue
+  winQTEAnimationTriggger: WinSPQTE
+  loseQTEAnimationTrigger: LoseSPQTE
   secondsPerMove: 3
 --- !u!1 &825051543
 GameObject:
@@ -1497,6 +1501,7 @@ MonoBehaviour:
   player:
   - {fileID: 46371512}
   - {fileID: 605887919}
+  secondsBetweenRounds: 1
 --- !u!1 &983761652
 GameObject:
   m_ObjectHideFlags: 0

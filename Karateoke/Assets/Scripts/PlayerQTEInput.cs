@@ -71,16 +71,16 @@ public class PlayerQTEInput : MonoBehaviour
 
     public void ActivateQTEButtonAndAnimation(int indexOfMove)
     {
-        if (activeButtonGraphic != null)
-        {
-            activeButtonGraphic.enabled = false;
-            activeButtonGraphic = null;
-        }
-        if (activeRingGraphic != null)
-        {
-            activeRingGraphic.enabled = false;
-            activeRingGraphic = null;
-        }
+        //if (activeButtonGraphic != null)
+        //{
+        //    activeButtonGraphic.enabled = false;
+        //    activeButtonGraphic = null;
+        //}
+        //if (activeRingGraphic != null)
+        //{
+        //    activeRingGraphic.enabled = false;
+        //    activeRingGraphic = null;
+        //}
         QtePressingFill = graphicStartingFill;
         activeRingGraphic = ringGraphic[indexOfMove];
         activeButtonGraphic = buttonGrapic[indexOfMove];
@@ -106,18 +106,31 @@ public class PlayerQTEInput : MonoBehaviour
         }
     }
 
-    public void ExecuteQueuedAnimation()
+    public void ExecuteQueuedAnimationAndHideGraphics()
     {
+        if (activeButtonGraphic != null)
+        {
+            activeButtonGraphic.enabled = false;
+            activeButtonGraphic = null;
+        }
+        if (activeRingGraphic != null)
+        {
+            activeRingGraphic.enabled = false;
+            activeRingGraphic = null;
+        }
+
         animator.SetTrigger(queuedAnimation);
+        Debug.Log($"{this.name} should be playing {queuedAnimation}");
     }
 
-    public void DeactivateAnyQTEButtons()
+    public void EndOfQTEs()
     {
         // We get here if the other player has won the current QTE
-        activeRingGraphic.enabled = false;
-        activeButtonGraphic.enabled = false;
-        activeRingGraphic = null;
-        activeButtonGraphic = null;
+        //activeRingGraphic.enabled = false;
+        //activeButtonGraphic.enabled = false;
+        //activeRingGraphic = null;
+        //activeButtonGraphic = null;
+
 
         //do we want reaction animations here..?
     }

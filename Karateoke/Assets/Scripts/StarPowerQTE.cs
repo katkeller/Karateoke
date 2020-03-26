@@ -81,8 +81,8 @@ public class StarPowerQTE : MonoBehaviour
                 indexOfOtherPlayer = 1;
             }
 
-            playerQteInput[0].ExecuteQueuedAnimation();
-            playerQteInput[1].ExecuteQueuedAnimation();
+            playerQteInput[0].ExecuteQueuedAnimationAndHideGraphics();
+            playerQteInput[1].ExecuteQueuedAnimationAndHideGraphics();
 
             indexesOfWinners.Add(indexOfPlayer);
             
@@ -98,8 +98,8 @@ public class StarPowerQTE : MonoBehaviour
             else
             {
                 // We get here if the QTE is over (3 rounds have happened), so we determine the winner
-                playerQteInput[0].DeactivateAnyQTEButtons();
-                playerQteInput[1].DeactivateAnyQTEButtons();
+                playerQteInput[0].EndOfQTEs();
+                playerQteInput[1].EndOfQTEs();
 
                 DetermineOverallWinner();
                 
