@@ -146,6 +146,8 @@ public class CombatManager : MonoBehaviour
     private Animator[] playerAnimator = new Animator[2];
     private AudioComparisonManager audioComparisonSript;
 
+    private StarPowerQTE starPowerManager;
+
     private bool canMakeChoice;
     private bool player1HasMadeChoice, player2HasMadeChoice;
     private string player1Choice, player2Choice;
@@ -179,6 +181,8 @@ public class CombatManager : MonoBehaviour
 
         player[0].IndexAccordingToCombatManager = 0;
         player[1].IndexAccordingToCombatManager = 1;
+
+        starPowerManager = GetComponent<StarPowerQTE>();
     }
 
     void Start()
@@ -221,6 +225,8 @@ public class CombatManager : MonoBehaviour
             }
         }
     }
+
+    #region Event Triggers
 
     private void OnEndOfPhrase()
     {
@@ -288,6 +294,13 @@ public class CombatManager : MonoBehaviour
     {
         isPerformingStarPowerMove = true;
 
+        //Need to pause all other action during the star power move and then trigger star power manager
+    }
+
+    private void OnPlayerDealsStarPowerDamage(int indexOfOtherPlayer)
+    {
+        Debug.Log($"Dealing star power damage to player {indexOfOtherPlayer}");
+        player[indexOfOtherPlayer].Health -= starPowerManager.DamageDeltByStarPowerMove;
     }
 
     private void OnEnable()
@@ -297,6 +310,7 @@ public class CombatManager : MonoBehaviour
         Player.AttemptAttack += OnPlayerAttacks;
         Player.AttemptBlock += OnPlayerBlocks;
         Player.AttemptSweep += OnPlayerSweeps;
+        Player.DealStarPowerDamage += OnPlayerDealsStarPowerDamage;
         Player.PlayerDies += OnPlayerDies;
         Player.PlayerHasFullStarPower += OnPlayerHasFullStarPower;
     }
@@ -308,9 +322,12 @@ public class CombatManager : MonoBehaviour
         Player.AttemptAttack -= OnPlayerAttacks;
         Player.AttemptBlock -= OnPlayerBlocks;
         Player.AttemptSweep -= OnPlayerSweeps;
+        Player.DealStarPowerDamage -= OnPlayerDealsStarPowerDamage;
         Player.PlayerDies -= OnPlayerDies;
         Player.PlayerHasFullStarPower -= OnPlayerHasFullStarPower;
     }
+
+    #endregion
 
     IEnumerator AllowPlayersToMakeChoice()
     {

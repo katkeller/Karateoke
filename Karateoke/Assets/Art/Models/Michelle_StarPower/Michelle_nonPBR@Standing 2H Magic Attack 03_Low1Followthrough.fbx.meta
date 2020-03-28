@@ -38,7 +38,7 @@ ModelImporter:
       name: Standing 2H Magic Attack 03_Low1Followthrough
       takeName: mixamo.com
       internalID: -203655887218126122
-      firstFrame: 22
+      firstFrame: 0
       lastFrame: 82
       wrapMode: 0
       orientationOffsetY: 0

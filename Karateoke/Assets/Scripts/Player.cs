@@ -205,6 +205,7 @@ public class Player : MonoBehaviour
     public static event Action<int> AttemptAttack;
     public static event Action<int> AttemptBlock;
     public static event Action<int> AttemptSweep;
+    public static event Action<int> DealStarPowerDamage;
 
     #endregion
 
@@ -253,6 +254,11 @@ public class Player : MonoBehaviour
     public void PlayerSweepsEvent(int indexOfOtherPlayer)
     {
         AttemptSweep?.Invoke(indexOfOtherPlayer);
+    }
+
+    public void PlayerDealsStarPowerDamageEvent(int indexOfOtherPlayer)
+    {
+        DealStarPowerDamage?.Invoke(indexOfOtherPlayer);
     }
 
     #region Damage & Animation Interruptions (Triggered From CombatManager)

@@ -482,6 +482,10 @@ MonoBehaviour:
   animationFloatName: SPValue
   winQTEAnimationTriggger: WinSPQTE
   loseQTEAnimationTrigger: LoseSPQTE
+  winOverallAnimationTrigger: PerformSPMove
+  loseOverallAnimationTrigger: GetHitBySPMove
+  reliefAnimationTrigger: Relief
+  frustratedAnimationTrigger: Dissapointment
   secondsPerMove: 3
 --- !u!1 &241009231
 GameObject:
@@ -1057,6 +1061,10 @@ MonoBehaviour:
   animationFloatName: SPValue
   winQTEAnimationTriggger: WinSPQTE
   loseQTEAnimationTrigger: LoseSPQTE
+  winOverallAnimationTrigger: PerformSPMove
+  loseOverallAnimationTrigger: GetHitBySPMove
+  reliefAnimationTrigger: Relief
+  frustratedAnimationTrigger: Dissapointment
   secondsPerMove: 3
 --- !u!1 &825051543
 GameObject:
@@ -1502,6 +1510,8 @@ MonoBehaviour:
   - {fileID: 46371512}
   - {fileID: 605887919}
   secondsBetweenRounds: 1
+  baseStarPowerDamage: 30
+  decreasedStarPowerDamage: 20
 --- !u!1 &983761652
 GameObject:
   m_ObjectHideFlags: 0

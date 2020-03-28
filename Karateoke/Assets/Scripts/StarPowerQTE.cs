@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,15 @@ public class StarPowerQTE : MonoBehaviour
 
     [SerializeField]
     private float secondsBetweenRounds = 1.0f;
+
+    [SerializeField]
+    private int baseStarPowerDamage = 30, decreasedStarPowerDamage = 20;
+
+    public int DamageDeltByStarPowerMove
+    {
+        get;
+        private set;
+    }
 
     private PlayerQTEInput[] playerQteInput = new PlayerQTEInput[2];
     private List<int> buttonPressIndexOrder = new List<int>();
@@ -98,12 +108,7 @@ public class StarPowerQTE : MonoBehaviour
             else
             {
                 // We get here if the QTE is over (3 rounds have happened), so we determine the winner
-                playerQteInput[0].EndOfQTEs();
-                playerQteInput[1].EndOfQTEs();
-
                 DetermineOverallWinner();
-                
-                QTEEnd?.Invoke();
             }
         }
     }
@@ -138,5 +143,68 @@ public class StarPowerQTE : MonoBehaviour
     {
         Debug.Log($"Index of winners: {indexesOfWinners[0]}, {indexesOfWinners[1]}, {indexesOfWinners[2]}.");
 
+        var winIndexGrouped = indexesOfWinners.GroupBy(i => i);
+
+        //foreach (var group in numberOfAttackerWins)
+        //{
+        //    Debug.Log($"{group.Key}, {group.Count()}");
+        //}
+
+        if (winIndexGrouped.Count() < 1)
+        {
+            // We get here if only one person won all QTEs.
+            if (winIndexGrouped.Any(item => item.Key == indexOfAttacker))
+            {
+                // This means our attacker won completely, so we deal full damage and play star power move animations.
+                AttackerWins(damageReduced: false);
+            }
+            else
+            {
+                // This means the other player defended themself completely.
+                AttackerLoses();
+            }
+        }
+        else
+        {
+            var attackerItem = winIndexGrouped.Select(item => item.Key == indexOfAttacker);
+
+            if (attackerItem.Count() < 2)
+            {
+                // We get here if the attacker only won one out of three, so they lose.
+                AttackerLoses();
+            }
+            else
+            {
+                // And we get here if the attacker won twice, so they win, but damage is reduced.
+                AttackerWins(damageReduced: true);
+            }
+        }
+
+        //playerQteInput[0].ResolveQTEs();
+        //playerQteInput[1].ResolveQTEs();
+        QTEEnd?.Invoke();
+    }
+
+    private void AttackerWins(bool damageReduced)
+    {
+        if (damageReduced)
+        {
+            DamageDeltByStarPowerMove = decreasedStarPowerDamage;
+        }
+        else
+        {
+            DamageDeltByStarPowerMove = baseStarPowerDamage;
+        }
+
+        //playerQteInput[indexOfAttacker].WinOverallAsAttacker();
+        //playerQteInput[indexOfDefender].LoseOverallAsDefender();
+        playerQteInput[0].StarPowerMoveWasSuccessful();
+        playerQteInput[1].StarPowerMoveWasSuccessful();
+    }
+
+    private void AttackerLoses()
+    {
+        playerQteInput[0].StarPowerMoveWasUnsuccessful();
+        playerQteInput[1].StarPowerMoveWasUnsuccessful();
     }
 }

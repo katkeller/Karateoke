@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1d0fb7dddedce5d4ea9941997fb0368c
+guid: 8bf848a7c53447a479e43fdbe88ebc72
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable:
@@ -35,11 +35,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Standing 1H Magic Attack 01_High1Followthrough
+      name: Agony
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 52
+      lastFrame: 101
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

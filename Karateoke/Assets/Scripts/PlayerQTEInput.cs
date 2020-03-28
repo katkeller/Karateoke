@@ -32,6 +32,9 @@ public class PlayerQTEInput : MonoBehaviour
     [SerializeField]
     private string winQTEAnimationTriggger, loseQTEAnimationTrigger;
 
+    [SerializeField]
+    private string winOverallAnimationTrigger, loseOverallAnimationTrigger, reliefAnimationTrigger, frustratedAnimationTrigger;
+
     // do we need this? I think no since the QTEs should go until either someone wins or
     // the attacker fails (lets the QTE value go to 0). Or maybe if it goes to 0 it doesn't matter?
     [SerializeField]
@@ -66,6 +69,7 @@ public class PlayerQTEInput : MonoBehaviour
     private int indexAccordingToCombatManager;
     private float graphicStartingFill;
     private float timePassed;
+    private int indexOfAttacker;
 
     private string queuedAnimation;
 
@@ -123,7 +127,7 @@ public class PlayerQTEInput : MonoBehaviour
         Debug.Log($"{this.name} should be playing {queuedAnimation}");
     }
 
-    public void EndOfQTEs()
+    public void ResolveQTEs()
     {
         // We get here if the other player has won the current QTE
         //activeRingGraphic.enabled = false;
@@ -131,8 +135,36 @@ public class PlayerQTEInput : MonoBehaviour
         //activeRingGraphic = null;
         //activeButtonGraphic = null;
 
+        
+
 
         //do we want reaction animations here..?
+    }
+
+    public void StarPowerMoveWasSuccessful()
+    {
+        if (indexOfAttacker == indexAccordingToCombatManager)
+        {
+            //Perform Star Power move
+            animator.SetTrigger(winOverallAnimationTrigger);
+        }
+        else
+        {
+            //Get hit by Star Power move
+            animator.SetTrigger(loseOverallAnimationTrigger);
+        }
+    }
+
+    public void StarPowerMoveWasUnsuccessful()
+    {
+        if (indexOfAttacker == indexAccordingToCombatManager)
+        {
+            animator.SetTrigger(frustratedAnimationTrigger);
+        }
+        else
+        {
+            animator.SetTrigger(reliefAnimationTrigger);
+        }
     }
 
     void Start()
@@ -212,8 +244,9 @@ public class PlayerQTEInput : MonoBehaviour
     private void OnQTEStart(List<int> buttonPressIndexOrdered, int indexOfPlayerAttemptingSPMove)
     {
         qteIsHappening = true;
+        indexOfAttacker = indexOfPlayerAttemptingSPMove;
 
-        if (indexOfPlayerAttemptingSPMove == indexAccordingToCombatManager)
+        if (indexOfAttacker == indexAccordingToCombatManager)
         {
             graphicStartingFill = AttackerStartingAdvantage;
         }
@@ -221,24 +254,6 @@ public class PlayerQTEInput : MonoBehaviour
         {
             graphicStartingFill = 0;
         }
-
-        //if (indexOfPlayerAttemptingSPMove != indexAccordingToCombatManager)
-        //{
-        //    // Find each move in the list
-        //    var indexOfAttack = buttonPressIndexOrdered.FindIndex(item => item == 0);
-        //    var indexOfBlock = buttonPressIndexOrdered.FindIndex(item => item == 1);
-        //    var indexOfSweep = buttonPressIndexOrdered.FindIndex(item => item == 2);
-
-
-        //    // Should we have them doing the same moves, or the corresponding move? Same will be easier.
-        //    //Start with same I guess?
-
-        //    // Switch order of list to the corresponding reactionary moves if this player is defending
-        //    buttonPressIndexOrdered[indexOfAttack] = 1;
-        //    buttonPressIndexOrdered[indexOfBlock] = 2;
-        //    buttonPressIndexOrdered[indexOfSweep] = 0;
-        //}
-
     }
 
     private void OnQTEEnd()
