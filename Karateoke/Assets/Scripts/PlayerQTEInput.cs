@@ -15,6 +15,12 @@ public class PlayerQTEInput : MonoBehaviour
     private Transform starPowerMovePosition;
 
     [SerializeField]
+    private Vector3 positionToLerpToAtStart, positionToLerpToAtEnd;
+
+    [SerializeField]
+    private float lerpSpeed = 1.0f;
+
+    [SerializeField]
     private string attackInputString, blockInputString, sweepInputString;
 
     [SerializeField]
@@ -77,6 +83,10 @@ public class PlayerQTEInput : MonoBehaviour
     private float graphicStartingFill;
     private float timePassed;
     private int indexOfAttacker;
+
+    private bool shouldLerp;
+    private float startTime;
+    private float journeyLength;
 
     private string queuedAnimation;
 
@@ -150,19 +160,19 @@ public class PlayerQTEInput : MonoBehaviour
         Debug.Log($"{this.name} should be playing {queuedAnimation}");
     }
 
-    public void ResolveQTEs()
-    {
-        // We get here if the other player has won the current QTE
-        //activeRingGraphic.enabled = false;
-        //activeButtonGraphic.enabled = false;
-        //activeRingGraphic = null;
-        //activeButtonGraphic = null;
+    //public void ResolveQTEs()
+    //{
+    //    // We get here if the other player has won the current QTE
+    //    //activeRingGraphic.enabled = false;
+    //    //activeButtonGraphic.enabled = false;
+    //    //activeRingGraphic = null;
+    //    //activeButtonGraphic = null;
 
         
 
 
-        //do we want reaction animations here..?
-    }
+    //    //do we want reaction animations here..?
+    //}
 
     public void StarPowerMoveWasSuccessful()
     {
@@ -170,6 +180,7 @@ public class PlayerQTEInput : MonoBehaviour
         {
             //Perform Star Power move
             animator.SetTrigger(winOverallAnimationTrigger);
+            //LerpToSPStartingPosition();
             Debug.Log($"{this.name} should perfrom star power move.");
         }
         else
@@ -251,6 +262,25 @@ public class PlayerQTEInput : MonoBehaviour
                 animator.SetFloat(animationFloatName, QtePressingFill);
             }
         }
+
+        if (shouldLerp)
+        {
+            float disCovered = (Time.time - startTime) * lerpSpeed;
+            float fractionOfJourney = disCovered / journeyLength;
+            transform.position = Vector3.Lerp(playerOriginalPosition, positionToLerpToAtStart, fractionOfJourney);
+
+            if (transform.position == positionToLerpToAtStart)
+            {
+                shouldLerp = false;
+            }
+        }
+    }
+
+    private void LerpToSPStartingPosition()
+    {
+        startTime = Time.time;
+        journeyLength = Vector3.Distance(playerOriginalPosition, positionToLerpToAtStart);
+        shouldLerp = true;
     }
 
     private void CheckAndAddPressValue(int indexOfMove)
