@@ -147,11 +147,13 @@ public class PlayerQTEInput : MonoBehaviour
         {
             //Perform Star Power move
             animator.SetTrigger(winOverallAnimationTrigger);
+            Debug.Log($"{this.name} should perfrom star power move.");
         }
         else
         {
             //Get hit by Star Power move
             animator.SetTrigger(loseOverallAnimationTrigger);
+            Debug.Log($"{this.name} should get hit by star power move.");
         }
     }
 
@@ -160,10 +162,12 @@ public class PlayerQTEInput : MonoBehaviour
         if (indexOfAttacker == indexAccordingToCombatManager)
         {
             animator.SetTrigger(frustratedAnimationTrigger);
+            Debug.Log($"{this.name} should be dissapointed.");
         }
         else
         {
             animator.SetTrigger(reliefAnimationTrigger);
+            Debug.Log($"{this.name} should be relieved.");
         }
     }
 

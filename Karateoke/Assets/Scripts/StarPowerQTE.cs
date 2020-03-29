@@ -27,10 +27,12 @@ public class StarPowerQTE : MonoBehaviour
 
     private PlayerQTEInput[] playerQteInput = new PlayerQTEInput[2];
     private List<int> buttonPressIndexOrder = new List<int>();
-    private List<int> indexesOfWinners = new List<int>();
+    //private List<int> indexesOfWinners = new List<int>();
     private int indexOfAttacker;
     private int indexOfDefender;
     private int roundIndex;
+    private int attackerWinCount;
+    private int defenderWinCount;
     private bool playerHasWonThisRound;
 
     #region Events
@@ -54,7 +56,9 @@ public class StarPowerQTE : MonoBehaviour
 
         playerHasWonThisRound = false;
         roundIndex = 0;
-        indexesOfWinners.Clear();
+        attackerWinCount = 0;
+        defenderWinCount = 0;
+        //indexesOfWinners.Clear();
         //buttonPressIndexOrder.Clear();
         //buttonPressIndexOrder.Add(0);
         //buttonPressIndexOrder.Add(1);
@@ -84,17 +88,25 @@ public class StarPowerQTE : MonoBehaviour
         {
             playerHasWonThisRound = true;
 
-            int indexOfOtherPlayer = 0;
+            //int indexOfOtherPlayer = 0;
 
-            if (indexOfPlayer == 0)
-            {
-                indexOfOtherPlayer = 1;
-            }
+            //if (indexOfPlayer == 0)
+            //{
+            //    indexOfOtherPlayer = 1;
+            //}
 
             playerQteInput[0].ExecuteQueuedAnimationAndHideGraphics();
             playerQteInput[1].ExecuteQueuedAnimationAndHideGraphics();
 
-            indexesOfWinners.Add(indexOfPlayer);
+            //indexesOfWinners.Add(indexOfPlayer);
+            if (indexOfPlayer == indexOfAttacker)
+            {
+                attackerWinCount++;
+            }
+            //else
+            //{
+            //    defenderWinCount++;
+            //}
             
             // Make sure fewer than 3 rounds have occured
             if (roundIndex <= 2)
@@ -141,47 +153,36 @@ public class StarPowerQTE : MonoBehaviour
 
     private void DetermineOverallWinner()
     {
-        Debug.Log($"Index of winners: {indexesOfWinners[0]}, {indexesOfWinners[1]}, {indexesOfWinners[2]}.");
+        Debug.Log($"Attacker win count: {attackerWinCount}");
+        Debug.Log($"Defender win count: {defenderWinCount}");
 
-        var winIndexGrouped = indexesOfWinners.GroupBy(i => i);
-
-        //foreach (var group in numberOfAttackerWins)
-        //{
-        //    Debug.Log($"{group.Key}, {group.Count()}");
-        //}
-
-        if (winIndexGrouped.Count() < 1)
+        switch (attackerWinCount)
         {
-            // We get here if only one person won all QTEs.
-            if (winIndexGrouped.Any(item => item.Key == indexOfAttacker))
-            {
-                // This means our attacker won completely, so we deal full damage and play star power move animations.
-                AttackerWins(damageReduced: false);
-            }
-            else
-            {
+            case 0:
                 // This means the other player defended themself completely.
+                Debug.Log("Attacker lost all QTEs.");
                 AttackerLoses();
-            }
-        }
-        else
-        {
-            var attackerItem = winIndexGrouped.Select(item => item.Key == indexOfAttacker);
-
-            if (attackerItem.Count() < 2)
-            {
-                // We get here if the attacker only won one out of three, so they lose.
+                break;
+            case 1:
+                // This means the attacker only won one out of three, so they lose.
+                Debug.Log("Attacker won only once. They lose.");
                 AttackerLoses();
-            }
-            else
-            {
-                // And we get here if the attacker won twice, so they win, but damage is reduced.
+                break;
+            case 2:
+                // This means the attacker won twice, so they win, but damage is reduced.
+                Debug.Log("Attacker won twice. They win, damage is reduced.");
                 AttackerWins(damageReduced: true);
-            }
+                break;
+            case 3:
+                // This means the attacker won completely, so we deal full damage and play star power move animations.
+                Debug.Log("Attacker won all QTEs.");
+                AttackerWins(damageReduced: false);
+                break;
+            default:
+                Debug.Log("Star Power QTE Error: attacker win count is invalid");
+                break;
         }
 
-        //playerQteInput[0].ResolveQTEs();
-        //playerQteInput[1].ResolveQTEs();
         QTEEnd?.Invoke();
     }
 
@@ -196,8 +197,6 @@ public class StarPowerQTE : MonoBehaviour
             DamageDeltByStarPowerMove = baseStarPowerDamage;
         }
 
-        //playerQteInput[indexOfAttacker].WinOverallAsAttacker();
-        //playerQteInput[indexOfDefender].LoseOverallAsDefender();
         playerQteInput[0].StarPowerMoveWasSuccessful();
         playerQteInput[1].StarPowerMoveWasSuccessful();
     }

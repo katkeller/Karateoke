@@ -299,7 +299,7 @@ public class CombatManager : MonoBehaviour
 
     private void OnPlayerDealsStarPowerDamage(int indexOfOtherPlayer)
     {
-        Debug.Log($"Dealing star power damage to player {indexOfOtherPlayer}");
+        Debug.Log($"Dealing {starPowerManager.DamageDeltByStarPowerMove} star power damage to player {indexOfOtherPlayer}");
         player[indexOfOtherPlayer].Health -= starPowerManager.DamageDeltByStarPowerMove;
     }
 
