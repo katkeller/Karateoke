@@ -12,6 +12,9 @@ public class PlayerQTEInput : MonoBehaviour
     private Image[] buttonGrapic = new Image[3];
 
     [SerializeField]
+    private Transform starPowerMovePosition;
+
+    [SerializeField]
     private string attackInputString, blockInputString, sweepInputString;
 
     [SerializeField]
@@ -61,7 +64,11 @@ public class PlayerQTEInput : MonoBehaviour
         }
     }
 
+    public Transform AttackStarPowerMovePosition { get => starPowerMovePosition; set => starPowerMovePosition = value; }
+
     private Animator animator;
+    private Vector3 playerOriginalPosition;
+    private Quaternion playerOriginalRotatation;
     private Image activeRingGraphic;
     private Image activeButtonGraphic;
     private StarPowerQTE qteManager;
@@ -72,6 +79,22 @@ public class PlayerQTEInput : MonoBehaviour
     private int indexOfAttacker;
 
     private string queuedAnimation;
+
+    #region Animation Events
+
+    public void SnapPlayerToStarPowerMovePosition()
+    {
+        this.transform.position = starPowerMovePosition.position;
+        this.transform.rotation = starPowerMovePosition.rotation;
+    }
+
+    //public void SnapPlayerToSPLoserPosition()
+    //{
+    //    this.transform.position = loseStarPowerMovePosition.position;
+    //    this.transform.rotation = loseStarPowerMovePosition.rotation;
+    //}
+
+    #endregion
 
     public void ActivateQTEButtonAndAnimation(int indexOfMove)
     {
@@ -192,6 +215,8 @@ public class PlayerQTEInput : MonoBehaviour
         }
 
         animator = GetComponent<Animator>();
+        playerOriginalPosition = this.transform.position;
+        playerOriginalRotatation = this.transform.rotation;
     }
 
     void Update()

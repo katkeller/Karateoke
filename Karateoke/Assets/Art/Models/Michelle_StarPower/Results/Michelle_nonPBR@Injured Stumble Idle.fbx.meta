@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ea9a4729083182f45a138c29288b13c5
+guid: 9de78550dc1398d41a4ea1cf0e77144d
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable:
@@ -35,7 +35,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Long Step Forward
+      name: Injured Stumble Idle
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
