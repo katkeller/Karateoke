@@ -14,11 +14,11 @@ public class PlayerQTEInput : MonoBehaviour
     [SerializeField]
     private Transform starPowerMovePosition;
 
-    [SerializeField]
-    private Vector3 positionToLerpToAtStart, positionToLerpToAtEnd;
+    //[SerializeField]
+    //private Vector3 positionToLerpToAtStart, positionToLerpToAtEnd;
 
-    [SerializeField]
-    private float lerpSpeed = 1.0f;
+    //[SerializeField]
+    //private float lerpSpeed = 1.0f;
 
     [SerializeField]
     private string attackInputString, blockInputString, sweepInputString;
@@ -73,8 +73,8 @@ public class PlayerQTEInput : MonoBehaviour
     public Transform AttackStarPowerMovePosition { get => starPowerMovePosition; set => starPowerMovePosition = value; }
 
     private Animator animator;
-    private Vector3 playerOriginalPosition;
-    private Quaternion playerOriginalRotatation;
+    //private Vector3 playerOriginalPosition;
+    //private Quaternion playerOriginalRotatation;
     private Image activeRingGraphic;
     private Image activeButtonGraphic;
     private StarPowerQTE qteManager;
@@ -84,9 +84,9 @@ public class PlayerQTEInput : MonoBehaviour
     private float timePassed;
     private int indexOfAttacker;
 
-    private bool shouldLerp;
-    private float startTime;
-    private float journeyLength;
+    //private bool shouldLerp;
+    //private float startTime;
+    //private float journeyLength;
 
     private string queuedAnimation;
 
@@ -96,6 +96,7 @@ public class PlayerQTEInput : MonoBehaviour
     {
         this.transform.position = starPowerMovePosition.position;
         this.transform.rotation = starPowerMovePosition.rotation;
+        Debug.Log($"{this.name} should snap to {starPowerMovePosition}");
     }
 
     //public void SnapPlayerToSPLoserPosition()
@@ -226,8 +227,8 @@ public class PlayerQTEInput : MonoBehaviour
         }
 
         animator = GetComponent<Animator>();
-        playerOriginalPosition = this.transform.position;
-        playerOriginalRotatation = this.transform.rotation;
+        //playerOriginalPosition = this.transform.position;
+        //playerOriginalRotatation = this.transform.rotation;
     }
 
     void Update()
@@ -263,25 +264,25 @@ public class PlayerQTEInput : MonoBehaviour
             }
         }
 
-        if (shouldLerp)
-        {
-            float disCovered = (Time.time - startTime) * lerpSpeed;
-            float fractionOfJourney = disCovered / journeyLength;
-            transform.position = Vector3.Lerp(playerOriginalPosition, positionToLerpToAtStart, fractionOfJourney);
+        //if (shouldLerp)
+        //{
+        //    float disCovered = (Time.time - startTime) * lerpSpeed;
+        //    float fractionOfJourney = disCovered / journeyLength;
+        //    transform.position = Vector3.Lerp(playerOriginalPosition, positionToLerpToAtStart, fractionOfJourney);
 
-            if (transform.position == positionToLerpToAtStart)
-            {
-                shouldLerp = false;
-            }
-        }
+        //    if (transform.position == positionToLerpToAtStart)
+        //    {
+        //        shouldLerp = false;
+        //    }
+        //}
     }
 
-    private void LerpToSPStartingPosition()
-    {
-        startTime = Time.time;
-        journeyLength = Vector3.Distance(playerOriginalPosition, positionToLerpToAtStart);
-        shouldLerp = true;
-    }
+    //private void LerpToSPStartingPosition()
+    //{
+    //    startTime = Time.time;
+    //    journeyLength = Vector3.Distance(playerOriginalPosition, positionToLerpToAtStart);
+    //    shouldLerp = true;
+    //}
 
     private void CheckAndAddPressValue(int indexOfMove)
     {

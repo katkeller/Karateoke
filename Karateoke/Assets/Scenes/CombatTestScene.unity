@@ -474,9 +474,6 @@ MonoBehaviour:
   - {fileID: 917726492}
   - {fileID: 507419994}
   starPowerMovePosition: {fileID: 1763388361}
-  positionToLerpToAtStart: {x: -1.5, y: -0.4, z: -5.9}
-  positionToLerpToAtEnd: {x: 0, y: 0, z: 0}
-  lerpSpeed: 1
   attackInputString: Player1Attack
   blockInputString: Player1Block
   sweepInputString: Player1Grapple
@@ -1156,9 +1153,6 @@ MonoBehaviour:
   - {fileID: 2064286974}
   - {fileID: 430732250}
   starPowerMovePosition: {fileID: 1713980536}
-  positionToLerpToAtStart: {x: 0, y: 0, z: 0}
-  positionToLerpToAtEnd: {x: 0, y: 0, z: 0}
-  lerpSpeed: 1
   attackInputString: Player2Attack
   blockInputString: Player2Block
   sweepInputString: Player2Grapple
