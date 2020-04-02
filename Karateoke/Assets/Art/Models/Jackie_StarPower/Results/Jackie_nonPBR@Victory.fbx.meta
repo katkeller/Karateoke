@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f0524d0428d929b46bc14aea4c37e366
+guid: 4da177816710c824ca7cc6a763483210
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable:
@@ -35,11 +35,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Hell Slammer B
+      name: Victory
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 227
+      lastFrame: 30
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -60,7 +60,7 @@ ModelImporter:
       curves: []
       events:
       - time: 1
-        functionName: ResetModelsAfterStarPowerMove
+        functionName: ActivateSPMoveObjectForWin
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

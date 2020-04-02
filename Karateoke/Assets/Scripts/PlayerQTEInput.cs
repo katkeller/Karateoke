@@ -14,11 +14,11 @@ public class PlayerQTEInput : MonoBehaviour
     [SerializeField]
     private Transform starPowerMovePosition;
 
-    //[SerializeField]
-    //private Vector3 positionToLerpToAtStart, positionToLerpToAtEnd;
+    [SerializeField]
+    private SkinnedMeshRenderer mainPlayerRenderer;
 
-    //[SerializeField]
-    //private float lerpSpeed = 1.0f;
+    [SerializeField]
+    private GameObject starPowerModelObject;
 
     [SerializeField]
     private string attackInputString, blockInputString, sweepInputString;
@@ -44,11 +44,6 @@ public class PlayerQTEInput : MonoBehaviour
     [SerializeField]
     private string winOverallAnimationTrigger, loseOverallAnimationTrigger, reliefAnimationTrigger, frustratedAnimationTrigger;
 
-    // do we need this? I think no since the QTEs should go until either someone wins or
-    // the attacker fails (lets the QTE value go to 0). Or maybe if it goes to 0 it doesn't matter?
-    [SerializeField]
-    private float secondsPerMove = 3.0f;
-
     private float qtePressingFill;
     public float QtePressingFill
     {
@@ -72,11 +67,12 @@ public class PlayerQTEInput : MonoBehaviour
 
     public Transform AttackStarPowerMovePosition { get => starPowerMovePosition; set => starPowerMovePosition = value; }
 
-    private Animator animator;
-    //private Vector3 playerOriginalPosition;
-    //private Quaternion playerOriginalRotatation;
+    private Animator mainAnimator;
+    private Animator starPowerModelAnimator;
+
     private Image activeRingGraphic;
     private Image activeButtonGraphic;
+
     private StarPowerQTE qteManager;
     private bool qteIsHappening;
     private int indexAccordingToCombatManager;
@@ -84,41 +80,43 @@ public class PlayerQTEInput : MonoBehaviour
     private float timePassed;
     private int indexOfAttacker;
 
-    //private bool shouldLerp;
-    //private float startTime;
-    //private float journeyLength;
-
     private string queuedAnimation;
 
     #region Animation Events
 
-    public void SnapPlayerToStarPowerMovePosition()
+    //public void SnapPlayerToStarPowerMovePosition()
+    //{
+    //    this.transform.position = starPowerMovePosition.position;
+    //    this.transform.rotation = starPowerMovePosition.rotation;
+    //    Debug.Log($"{this.name} should snap to {starPowerMovePosition}");
+    //}
+
+    public void ActivateSPMoveObjectForWin()
     {
-        this.transform.position = starPowerMovePosition.position;
-        this.transform.rotation = starPowerMovePosition.rotation;
-        Debug.Log($"{this.name} should snap to {starPowerMovePosition}");
+        mainPlayerRenderer.enabled = false;
+        starPowerModelObject.SetActive(true);
+        starPowerModelAnimator.SetTrigger("Win");
     }
 
-    //public void SnapPlayerToSPLoserPosition()
-    //{
-    //    this.transform.position = loseStarPowerMovePosition.position;
-    //    this.transform.rotation = loseStarPowerMovePosition.rotation;
-    //}
+    public void ActivateSPMoveObjectForLoss()
+    {
+        mainPlayerRenderer.enabled = false;
+        starPowerModelObject.SetActive(true);
+        starPowerModelAnimator.SetTrigger("Lose");
+    }
+
+    public void ResetAfterStarPowerMove()
+    {
+        starPowerModelAnimator.SetTrigger("Reset");
+        starPowerModelObject.SetActive(false);
+        mainPlayerRenderer.enabled = true;
+        mainAnimator.SetTrigger("SPMoveOutro");
+    }
 
     #endregion
 
     public void ActivateQTEButtonAndAnimation(int indexOfMove)
     {
-        //if (activeButtonGraphic != null)
-        //{
-        //    activeButtonGraphic.enabled = false;
-        //    activeButtonGraphic = null;
-        //}
-        //if (activeRingGraphic != null)
-        //{
-        //    activeRingGraphic.enabled = false;
-        //    activeRingGraphic = null;
-        //}
         QtePressingFill = graphicStartingFill;
         activeRingGraphic = ringGraphic[indexOfMove];
         activeButtonGraphic = buttonGrapic[indexOfMove];
@@ -130,13 +128,13 @@ public class PlayerQTEInput : MonoBehaviour
         switch (indexOfMove)
         {
             case 0:
-                animator.SetTrigger(highAnimationTrigger);
+                mainAnimator.SetTrigger(highAnimationTrigger);
                 break;
             case 1:
-                animator.SetTrigger(midAnimationTrigger);
+                mainAnimator.SetTrigger(midAnimationTrigger);
                 break;
             case 2:
-                animator.SetTrigger(lowAnimationTrigger);
+                mainAnimator.SetTrigger(lowAnimationTrigger);
                 break;
             default:
                 Debug.Log("Player star power animation error: index not recognized.");
@@ -157,37 +155,21 @@ public class PlayerQTEInput : MonoBehaviour
             activeRingGraphic = null;
         }
 
-        animator.SetTrigger(queuedAnimation);
+        mainAnimator.SetTrigger(queuedAnimation);
         Debug.Log($"{this.name} should be playing {queuedAnimation}");
     }
-
-    //public void ResolveQTEs()
-    //{
-    //    // We get here if the other player has won the current QTE
-    //    //activeRingGraphic.enabled = false;
-    //    //activeButtonGraphic.enabled = false;
-    //    //activeRingGraphic = null;
-    //    //activeButtonGraphic = null;
-
-        
-
-
-    //    //do we want reaction animations here..?
-    //}
 
     public void StarPowerMoveWasSuccessful()
     {
         if (indexOfAttacker == indexAccordingToCombatManager)
         {
             //Perform Star Power move
-            animator.SetTrigger(winOverallAnimationTrigger);
-            //LerpToSPStartingPosition();
-            Debug.Log($"{this.name} should perfrom star power move.");
+            mainAnimator.SetTrigger(winOverallAnimationTrigger);
         }
         else
         {
             //Get hit by Star Power move
-            animator.SetTrigger(loseOverallAnimationTrigger);
+            mainAnimator.SetTrigger(loseOverallAnimationTrigger);
             Debug.Log($"{this.name} should get hit by star power move.");
         }
     }
@@ -196,12 +178,12 @@ public class PlayerQTEInput : MonoBehaviour
     {
         if (indexOfAttacker == indexAccordingToCombatManager)
         {
-            animator.SetTrigger(frustratedAnimationTrigger);
+            mainAnimator.SetTrigger(frustratedAnimationTrigger);
             Debug.Log($"{this.name} should be dissapointed.");
         }
         else
         {
-            animator.SetTrigger(reliefAnimationTrigger);
+            mainAnimator.SetTrigger(reliefAnimationTrigger);
             Debug.Log($"{this.name} should be relieved.");
         }
     }
@@ -226,9 +208,8 @@ public class PlayerQTEInput : MonoBehaviour
             image.enabled = false;
         }
 
-        animator = GetComponent<Animator>();
-        //playerOriginalPosition = this.transform.position;
-        //playerOriginalRotatation = this.transform.rotation;
+        mainAnimator = GetComponent<Animator>();
+        starPowerModelAnimator = starPowerModelObject.GetComponent<Animator>();
     }
 
     void Update()
@@ -260,29 +241,10 @@ public class PlayerQTEInput : MonoBehaviour
             {
                 activeRingGraphic.fillAmount = QtePressingFill;
                 //Debug.Log($"Fill should be {QtePressingFill}");
-                animator.SetFloat(animationFloatName, QtePressingFill);
+                mainAnimator.SetFloat(animationFloatName, QtePressingFill);
             }
         }
-
-        //if (shouldLerp)
-        //{
-        //    float disCovered = (Time.time - startTime) * lerpSpeed;
-        //    float fractionOfJourney = disCovered / journeyLength;
-        //    transform.position = Vector3.Lerp(playerOriginalPosition, positionToLerpToAtStart, fractionOfJourney);
-
-        //    if (transform.position == positionToLerpToAtStart)
-        //    {
-        //        shouldLerp = false;
-        //    }
-        //}
     }
-
-    //private void LerpToSPStartingPosition()
-    //{
-    //    startTime = Time.time;
-    //    journeyLength = Vector3.Distance(playerOriginalPosition, positionToLerpToAtStart);
-    //    shouldLerp = true;
-    //}
 
     private void CheckAndAddPressValue(int indexOfMove)
     {

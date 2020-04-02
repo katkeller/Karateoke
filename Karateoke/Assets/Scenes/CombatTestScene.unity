@@ -206,6 +206,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Michelle_nonPBR
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: ad8bb660b01fd204c82098eecf4fd2d9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 469703479461208891, guid: ad8bb660b01fd204c82098eecf4fd2d9,
         type: 3}
       propertyPath: m_IsActive
@@ -286,6 +291,11 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 9aff5b6a069444d7d87b16b6f7808851, type: 2}
+    - target: {fileID: 8688851618784950974, guid: ad8bb660b01fd204c82098eecf4fd2d9,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad8bb660b01fd204c82098eecf4fd2d9, type: 3}
 --- !u!1 &46371512 stripped
@@ -474,6 +484,8 @@ MonoBehaviour:
   - {fileID: 917726492}
   - {fileID: 507419994}
   starPowerMovePosition: {fileID: 1763388361}
+  mainPlayerRenderer: {fileID: 1879459966}
+  starPowerModelObject: {fileID: 212901956}
   attackInputString: Player1Attack
   blockInputString: Player1Block
   sweepInputString: Player1Grapple
@@ -492,7 +504,25 @@ MonoBehaviour:
   loseOverallAnimationTrigger: GetHitBySPMove
   reliefAnimationTrigger: Relief
   frustratedAnimationTrigger: Dissapointment
-  secondsPerMove: 3
+--- !u!1 &212901956 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: ad8bb660b01fd204c82098eecf4fd2d9,
+    type: 3}
+  m_PrefabInstance: {fileID: 313264095}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &212901957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 212901956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e064a54a96f73d449cc41626bf65394, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainPlayerObject: {fileID: 46371512}
 --- !u!1 &241009231
 GameObject:
   m_ObjectHideFlags: 0
@@ -577,7 +607,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: ad8bb660b01fd204c82098eecf4fd2d9,
         type: 3}
       propertyPath: m_Name
-      value: Michlle_SPMoveTest
+      value: Michelle_SPMoveTest
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: ad8bb660b01fd204c82098eecf4fd2d9,
         type: 3}
@@ -977,6 +1007,26 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 17c6fd133c1f9504e8527499a3ef8d37, type: 2}
+    - target: {fileID: -2811655200523867634, guid: a8a36f33f5fb2554eb5db50af532f885,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.009277878
+      objectReference: {fileID: 0}
+    - target: {fileID: -2811655200523867634, guid: a8a36f33f5fb2554eb5db50af532f885,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.053691175
+      objectReference: {fileID: 0}
+    - target: {fileID: -5382810293138696007, guid: a8a36f33f5fb2554eb5db50af532f885,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.0000411002
+      objectReference: {fileID: 0}
+    - target: {fileID: -5382810293138696007, guid: a8a36f33f5fb2554eb5db50af532f885,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.041824616
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8a36f33f5fb2554eb5db50af532f885, type: 3}
 --- !u!1 &605887919 stripped
@@ -1153,6 +1203,8 @@ MonoBehaviour:
   - {fileID: 2064286974}
   - {fileID: 430732250}
   starPowerMovePosition: {fileID: 1713980536}
+  mainPlayerRenderer: {fileID: 998100045}
+  starPowerModelObject: {fileID: 1778267951}
   attackInputString: Player2Attack
   blockInputString: Player2Block
   sweepInputString: Player2Grapple
@@ -1171,7 +1223,12 @@ MonoBehaviour:
   loseOverallAnimationTrigger: GetHitBySPMove
   reliefAnimationTrigger: Relief
   frustratedAnimationTrigger: Dissapointment
-  secondsPerMove: 3
+--- !u!95 &605887924 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: -6057140222963153312, guid: a8a36f33f5fb2554eb5db50af532f885,
+    type: 3}
+  m_PrefabInstance: {fileID: 605887918}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &825051543
 GameObject:
   m_ObjectHideFlags: 0
@@ -1692,6 +1749,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 983761652}
   m_CullTransparentMesh: 0
+--- !u!137 &998100045 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -960630046944600353, guid: a8a36f33f5fb2554eb5db50af532f885,
+    type: 3}
+  m_PrefabInstance: {fileID: 605887918}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1042230375
 GameObject:
   m_ObjectHideFlags: 0
@@ -2079,6 +2142,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1654299758}
   m_CullTransparentMesh: 0
+--- !u!1 &1705451964
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1705451967}
+  - component: {fileID: 1705451966}
+  m_Layer: 0
+  m_Name: Timeline
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!320 &1705451966
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1705451964}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: c070958203d91e34aaf2285d06a05055, type: 2}
+  m_InitialState: 0
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: 2512240081213612584, guid: c070958203d91e34aaf2285d06a05055, type: 2}
+    value: {fileID: 605887924}
+  m_ExposedReferences:
+    m_References: []
+--- !u!4 &1705451967
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1705451964}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1713980536 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: a8a36f33f5fb2554eb5db50af532f885,
@@ -2164,6 +2277,31 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: ad8bb660b01fd204c82098eecf4fd2d9,
     type: 3}
   m_PrefabInstance: {fileID: 313264095}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1778267951 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: a8a36f33f5fb2554eb5db50af532f885,
+    type: 3}
+  m_PrefabInstance: {fileID: 2035098993}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1778267952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1778267951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e064a54a96f73d449cc41626bf65394, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainPlayerObject: {fileID: 605887919}
+--- !u!137 &1879459966 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8688851618784950974, guid: ad8bb660b01fd204c82098eecf4fd2d9,
+    type: 3}
+  m_PrefabInstance: {fileID: 46371511}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1940336433
 GameObject:
@@ -2266,7 +2404,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &1960613238
 BoxCollider:
   m_ObjectHideFlags: 0
