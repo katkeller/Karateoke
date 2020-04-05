@@ -114,10 +114,9 @@ public class PlayerQTEInput : MonoBehaviour
 
     public void ResetAfterStarPowerMove()
     {
-        starPowerModelAnimator.SetTrigger("Reset");
-        starPowerModelObject.SetActive(false);
         mainPlayerRenderer.enabled = true;
         mainAnimator.SetTrigger("SPMoveOutro");
+        StartCoroutine(WaitThenSetSPModelToInactive());
     }
 
     #endregion
@@ -308,5 +307,12 @@ public class PlayerQTEInput : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
         mainPlayerRenderer.enabled = false;
+    }
+
+    IEnumerator WaitThenSetSPModelToInactive()
+    {
+        yield return new WaitForSeconds(1);
+        starPowerModelAnimator.SetTrigger("Reset");
+        starPowerModelObject.SetActive(false);
     }
 }

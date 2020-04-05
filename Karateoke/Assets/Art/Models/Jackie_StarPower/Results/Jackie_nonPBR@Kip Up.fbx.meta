@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e6be708f6b9ad06408d6314488fc7a4f
+guid: 64cc03d421c2c094f9963be00f46a884
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable:
@@ -35,11 +35,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Victory
+      name: Kip Up
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 60
+      lastFrame: 61
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
