@@ -490,6 +490,7 @@ MonoBehaviour:
   blockInputString: Player1Block
   sweepInputString: Player1Grapple
   qteManagerObject: {fileID: 940111727}
+  playerWinsSPMoveDirector: {fileID: 47544486}
   increaseOnPress: 0.1
   decreaseByTime: 0.02
   AttackerStartingAdvantage: 0.25
@@ -531,7 +532,7 @@ PlayableDirector:
   m_Enabled: 1
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: 60bbf214d65b8fb46bf802c7a2fcfcbe, type: 2}
-  m_InitialState: 1
+  m_InitialState: 0
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
@@ -543,6 +544,7 @@ PlayableDirector:
     - dd4ba0abde65e7a4190fe08ca33d2452: {fileID: 1345214340}
     - f65289d652b698245a7a7ef44daa0e09: {fileID: 2109908988}
     - 368af3b046bfefe41a63c6a969bb44f5: {fileID: 1707754350}
+    - 63aacf2dee002374082dfdacec9bb293: {fileID: 2109908988}
 --- !u!4 &47544487
 Transform:
   m_ObjectHideFlags: 0
@@ -1254,22 +1256,22 @@ PrefabInstance:
     - target: {fileID: -2811655200523867634, guid: a8a36f33f5fb2554eb5db50af532f885,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.009277878
+      value: -0.009277879
       objectReference: {fileID: 0}
     - target: {fileID: -2811655200523867634, guid: a8a36f33f5fb2554eb5db50af532f885,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.053691175
+      value: 0.05369118
       objectReference: {fileID: 0}
     - target: {fileID: -5382810293138696007, guid: a8a36f33f5fb2554eb5db50af532f885,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.0000411002
+      value: -0.000041100204
       objectReference: {fileID: 0}
     - target: {fileID: -5382810293138696007, guid: a8a36f33f5fb2554eb5db50af532f885,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.041824616
+      value: 0.04182462
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8a36f33f5fb2554eb5db50af532f885, type: 3}
@@ -1453,6 +1455,7 @@ MonoBehaviour:
   blockInputString: Player2Block
   sweepInputString: Player2Grapple
   qteManagerObject: {fileID: 940111727}
+  playerWinsSPMoveDirector: {fileID: 0}
   increaseOnPress: 0.1
   decreaseByTime: 0.02
   AttackerStartingAdvantage: 0.25
@@ -2214,7 +2217,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1345214339}
-  m_LocalRotation: {x: -0.04598924, y: -0.20034014, z: -0.009414962, w: 0.97860116}
+  m_LocalRotation: {x: -0.04598924, y: -0.20034014, z: -0.00941496, w: 0.97860116}
   m_LocalPosition: {x: 1.4399998, y: 1.24, z: -9.52}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2535,7 +2538,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1707754348}
-  m_LocalRotation: {x: -0.07647965, y: -0.45615137, z: -0.039386857, w: 0.8857345}
+  m_LocalRotation: {x: -0.07647965, y: -0.4561514, z: -0.039386857, w: 0.88573444}
   m_LocalPosition: {x: -0.19000006, y: 1.61, z: -6.7400002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2562,7 +2565,7 @@ MonoBehaviour:
   m_Priority: 10
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 640647963}
-  m_Follow: {fileID: 640647963}
+  m_Follow: {fileID: 0}
   m_Lens:
     FieldOfView: 60
     OrthographicSize: 5
@@ -2633,9 +2636,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BindingMode: 1
   m_FollowOffset: {x: 0.6360635, y: -0.248878, z: 1.2324519}
-  m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
+  m_XDamping: 0
+  m_YDamping: 0
+  m_ZDamping: 0
   m_AngularDampingMode: 0
   m_PitchDamping: 0
   m_YawDamping: 0

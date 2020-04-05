@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Timeline;
+using UnityEngine.Playables;
 
 public class PlayerQTEInput : MonoBehaviour
 {
@@ -25,6 +27,9 @@ public class PlayerQTEInput : MonoBehaviour
 
     [SerializeField]
     private GameObject qteManagerObject;
+
+    [SerializeField]
+    private PlayableDirector playerWinsSPMoveDirector;
 
     [SerializeField]
     private float increaseOnPress = 0.2f, decreaseByTime = 0.02f;
@@ -164,7 +169,9 @@ public class PlayerQTEInput : MonoBehaviour
         if (indexOfAttacker == indexAccordingToCombatManager)
         {
             //Perform Star Power move
+            
             mainAnimator.SetTrigger(winOverallAnimationTrigger);
+            playerWinsSPMoveDirector.Play();
         }
         else
         {
