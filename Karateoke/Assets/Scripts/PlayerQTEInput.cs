@@ -98,16 +98,18 @@ public class PlayerQTEInput : MonoBehaviour
 
     public void ActivateSPMoveObjectForWin()
     {
-        mainPlayerRenderer.enabled = false;
+        //mainPlayerRenderer.enabled = false;
         starPowerModelObject.SetActive(true);
         starPowerModelAnimator.SetTrigger("Win");
+        StartCoroutine(WaitThenSetMainModelToInactive());
     }
 
     public void ActivateSPMoveObjectForLoss()
     {
-        mainPlayerRenderer.enabled = false;
+        //mainPlayerRenderer.enabled = false;
         starPowerModelObject.SetActive(true);
         starPowerModelAnimator.SetTrigger("Lose");
+        StartCoroutine(WaitThenSetMainModelToInactive());
     }
 
     public void ResetAfterStarPowerMove()
@@ -300,5 +302,11 @@ public class PlayerQTEInput : MonoBehaviour
     {
         StarPowerQTE.QTEStart -= OnQTEStart;
         StarPowerQTE.QTEEnd -= OnQTEEnd;
+    }
+
+    IEnumerator WaitThenSetMainModelToInactive()
+    {
+        yield return new WaitForSeconds(0.5f);
+        mainPlayerRenderer.enabled = false;
     }
 }
