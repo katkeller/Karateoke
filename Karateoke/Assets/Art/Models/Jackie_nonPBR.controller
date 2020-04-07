@@ -1284,7 +1284,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: SP Move Intro_Win
-  m_Speed: 1
+  m_Speed: 0.75
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -8602960912696172258}
@@ -1297,7 +1297,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -203655887218126122, guid: cceb0e9cfccf4d94382d39c80fd1ac4a,
+  m_Motion: {fileID: -203655887218126122, guid: 4847b231ec96cab4e8f67501ae2bdaff,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 
