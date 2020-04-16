@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4847b231ec96cab4e8f67501ae2bdaff
+guid: b2c03393c06cf764c890231738f83d51
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable:
@@ -35,11 +35,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Taunt Gesture
+      name: Threatening_SPIntro
       takeName: mixamo.com
       internalID: -203655887218126122
-      firstFrame: 0
-      lastFrame: 45
+      firstFrame: 17
+      lastFrame: 61
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -59,7 +59,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.7222222
+      - time: 0.82828283
         functionName: ActivateSPMoveObjectForWin
         data: 
         objectReferenceParameter: {instanceID: 0}
