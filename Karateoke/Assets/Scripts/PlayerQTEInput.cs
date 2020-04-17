@@ -14,6 +14,9 @@ public class PlayerQTEInput : MonoBehaviour
     private Image[] buttonGrapic = new Image[3];
 
     [SerializeField]
+    private ParticleSystem[] qteParticleSystem = new ParticleSystem[3];
+
+    [SerializeField]
     private Transform starPowerMovePosition;
 
     [SerializeField]
@@ -77,6 +80,7 @@ public class PlayerQTEInput : MonoBehaviour
 
     private Image activeRingGraphic;
     private Image activeButtonGraphic;
+    private ParticleSystem activeParticleSystem;
 
     private StarPowerQTE qteManager;
     private bool qteIsHappening;
@@ -126,9 +130,16 @@ public class PlayerQTEInput : MonoBehaviour
         QtePressingFill = graphicStartingFill;
         activeRingGraphic = ringGraphic[indexOfMove];
         activeButtonGraphic = buttonGrapic[indexOfMove];
+        activeParticleSystem = qteParticleSystem[indexOfMove];
         activeRingGraphic.enabled = true;
         activeButtonGraphic.enabled = true;
+        activeParticleSystem.Play();
         activeRingGraphic.fillAmount = QtePressingFill;
+        //var shape = activeParticleSystem.shape;
+        //shape.scale = new Vector3(QtePressingFill, QtePressingFill, QtePressingFill);
+        var em = activeParticleSystem.emission;
+        em.rateOverDistance = QtePressingFill * 25;
+
         queuedAnimation = loseQTEAnimationTrigger;
 
         switch (indexOfMove)
@@ -159,6 +170,11 @@ public class PlayerQTEInput : MonoBehaviour
         {
             activeRingGraphic.enabled = false;
             activeRingGraphic = null;
+        }
+        if(activeParticleSystem != null)
+        {
+            activeParticleSystem.Stop();
+            activeParticleSystem = null;
         }
 
         mainAnimator.SetTrigger(queuedAnimation);
@@ -248,19 +264,23 @@ public class PlayerQTEInput : MonoBehaviour
             if (activeRingGraphic != null)
             {
                 activeRingGraphic.fillAmount = QtePressingFill;
-                //Debug.Log($"Fill should be {QtePressingFill}");
+
                 mainAnimator.SetFloat(animationFloatName, QtePressingFill);
+
+                //var shape = activeParticleSystem.shape;
+                //shape.scale = new Vector3(QtePressingFill, QtePressingFill, QtePressingFill);
+
+                var em = activeParticleSystem.emission;
+                em.rateOverDistance = QtePressingFill * 25;
             }
         }
     }
 
     private void CheckAndAddPressValue(int indexOfMove)
     {
-        //Debug.Log($"Active ring graphic: {activeRingGraphic}. Attempted move: {ringGraphic[indexOfMove]}");
         if (activeRingGraphic == ringGraphic[indexOfMove])
         {
             QtePressingFill += increaseOnPress;
-            //Debug.Log($"Fill should increase: {QtePressingFill}");
         }
     }
 
