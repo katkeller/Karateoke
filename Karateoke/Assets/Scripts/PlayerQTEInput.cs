@@ -13,8 +13,10 @@ public class PlayerQTEInput : MonoBehaviour
     [SerializeField]
     private Image[] buttonGrapic = new Image[3];
 
+    //[SerializeField]
+    //private ParticleSystem[] qteParticleSystem = new ParticleSystem[3];
     [SerializeField]
-    private ParticleSystem[] qteParticleSystem = new ParticleSystem[3];
+    private GameObject[] qteShurikenFireballObject = new GameObject[3];
 
     [SerializeField]
     private Transform starPowerMovePosition;
@@ -73,6 +75,14 @@ public class PlayerQTEInput : MonoBehaviour
         }
     }
 
+    private float shurikenScale
+    {
+        get
+        {
+            return QtePressingFill / 10;
+        }
+    }
+
     public Transform AttackStarPowerMovePosition { get => starPowerMovePosition; set => starPowerMovePosition = value; }
 
     private Animator mainAnimator;
@@ -80,7 +90,8 @@ public class PlayerQTEInput : MonoBehaviour
 
     private Image activeRingGraphic;
     private Image activeButtonGraphic;
-    private ParticleSystem activeParticleSystem;
+    //private ParticleSystem activeParticleSystem;
+    private GameObject activeShurikenFireballObject;
 
     private StarPowerQTE qteManager;
     private bool qteIsHappening;
@@ -130,15 +141,14 @@ public class PlayerQTEInput : MonoBehaviour
         QtePressingFill = graphicStartingFill;
         activeRingGraphic = ringGraphic[indexOfMove];
         activeButtonGraphic = buttonGrapic[indexOfMove];
-        activeParticleSystem = qteParticleSystem[indexOfMove];
+        //activeParticleSystem = qteParticleSystem[indexOfMove];
+        activeShurikenFireballObject = qteShurikenFireballObject[indexOfMove];
         activeRingGraphic.enabled = true;
         activeButtonGraphic.enabled = true;
-        activeParticleSystem.Play();
+        activeShurikenFireballObject.SetActive(true);
         activeRingGraphic.fillAmount = QtePressingFill;
-        //var shape = activeParticleSystem.shape;
-        //shape.scale = new Vector3(QtePressingFill, QtePressingFill, QtePressingFill);
-        var em = activeParticleSystem.emission;
-        em.rateOverDistance = QtePressingFill * 25;
+        activeShurikenFireballObject.transform.localScale = new Vector3(shurikenScale, shurikenScale, shurikenScale);
+        Debug.Log($"Shuriken Scale: {shurikenScale}");
 
         queuedAnimation = loseQTEAnimationTrigger;
 
@@ -171,10 +181,15 @@ public class PlayerQTEInput : MonoBehaviour
             activeRingGraphic.enabled = false;
             activeRingGraphic = null;
         }
-        if(activeParticleSystem != null)
+        //if(activeParticleSystem != null)
+        //{
+        //    activeParticleSystem.Stop();
+        //    activeParticleSystem = null;
+        //}
+        if (activeShurikenFireballObject != null)
         {
-            activeParticleSystem.Stop();
-            activeParticleSystem = null;
+            activeShurikenFireballObject.SetActive(false);
+            activeShurikenFireballObject = null;
         }
 
         mainAnimator.SetTrigger(queuedAnimation);
@@ -231,6 +246,10 @@ public class PlayerQTEInput : MonoBehaviour
         {
             image.enabled = false;
         }
+        foreach (var star in qteShurikenFireballObject)
+        {
+            star.SetActive(false);
+        }
 
         mainAnimator = GetComponent<Animator>();
         starPowerModelAnimator = starPowerModelObject.GetComponent<Animator>();
@@ -267,11 +286,7 @@ public class PlayerQTEInput : MonoBehaviour
 
                 mainAnimator.SetFloat(animationFloatName, QtePressingFill);
 
-                //var shape = activeParticleSystem.shape;
-                //shape.scale = new Vector3(QtePressingFill, QtePressingFill, QtePressingFill);
-
-                var em = activeParticleSystem.emission;
-                em.rateOverDistance = QtePressingFill * 25;
+                activeShurikenFireballObject.transform.localScale = new Vector3(shurikenScale, shurikenScale, shurikenScale);
             }
         }
     }
