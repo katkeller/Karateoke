@@ -13,10 +13,14 @@ public class PlayerQTEInput : MonoBehaviour
     [SerializeField]
     private Image[] buttonGrapic = new Image[3];
 
-    //[SerializeField]
-    //private ParticleSystem[] qteParticleSystem = new ParticleSystem[3];
     [SerializeField]
     private GameObject[] qteShurikenFireballObject = new GameObject[3];
+
+    [SerializeField]
+    private GameObject fireballPrefab;
+
+    [SerializeField]
+    private Vector3[] fireballStartingPosition = new Vector3[3];
 
     [SerializeField]
     private Transform starPowerMovePosition;
@@ -92,6 +96,7 @@ public class PlayerQTEInput : MonoBehaviour
     private Image activeButtonGraphic;
     //private ParticleSystem activeParticleSystem;
     private GameObject activeShurikenFireballObject;
+    private Vector3 currentMoveFireballStartingPosition;
 
     private StarPowerQTE qteManager;
     private bool qteIsHappening;
@@ -149,6 +154,7 @@ public class PlayerQTEInput : MonoBehaviour
         activeRingGraphic.fillAmount = QtePressingFill;
         activeShurikenFireballObject.transform.localScale = new Vector3(shurikenScale, shurikenScale, shurikenScale);
         Debug.Log($"Shuriken Scale: {shurikenScale}");
+        currentMoveFireballStartingPosition = fireballStartingPosition[indexOfMove];
 
         queuedAnimation = loseQTEAnimationTrigger;
 
@@ -181,19 +187,24 @@ public class PlayerQTEInput : MonoBehaviour
             activeRingGraphic.enabled = false;
             activeRingGraphic = null;
         }
-        //if(activeParticleSystem != null)
-        //{
-        //    activeParticleSystem.Stop();
-        //    activeParticleSystem = null;
-        //}
         if (activeShurikenFireballObject != null)
         {
             activeShurikenFireballObject.SetActive(false);
             activeShurikenFireballObject = null;
         }
+        //if (currentMoveFireballStartingPosition != null)
+        //{
+        //    currentMoveFireballStartingPosition = null;
+        //}
 
         mainAnimator.SetTrigger(queuedAnimation);
         Debug.Log($"{this.name} should be playing {queuedAnimation}");
+    }
+
+    public void CreateFireball()
+    {
+        GameObject fireball = Instantiate(fireballPrefab) as GameObject;
+        fireball.transform.position = currentMoveFireballStartingPosition;
     }
 
     public void StarPowerMoveWasSuccessful()

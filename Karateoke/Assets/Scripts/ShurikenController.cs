@@ -8,7 +8,6 @@ public class ShurikenController : MonoBehaviour
 
     void Update()
     {
-        //transform.Rotate(Vector3.one * rotationsPerMinute * Time.deltaTime, 0, 0);
         transform.Rotate(0, 0, rotationsPerMinute);
     }
 }

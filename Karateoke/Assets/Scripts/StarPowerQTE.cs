@@ -88,25 +88,14 @@ public class StarPowerQTE : MonoBehaviour
         {
             playerHasWonThisRound = true;
 
-            //int indexOfOtherPlayer = 0;
-
-            //if (indexOfPlayer == 0)
-            //{
-            //    indexOfOtherPlayer = 1;
-            //}
-
             playerQteInput[0].ExecuteQueuedAnimationAndHideGraphics();
             playerQteInput[1].ExecuteQueuedAnimationAndHideGraphics();
+            playerQteInput[indexOfPlayer].CreateFireball();
 
-            //indexesOfWinners.Add(indexOfPlayer);
             if (indexOfPlayer == indexOfAttacker)
             {
                 attackerWinCount++;
             }
-            //else
-            //{
-            //    defenderWinCount++;
-            //}
             
             // Make sure fewer than 3 rounds have occured
             if (roundIndex <= 2)
