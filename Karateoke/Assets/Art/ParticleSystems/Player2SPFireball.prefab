@@ -1,5 +1,17 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &7538729103149075922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1999351099594639519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a38576ffc8979743a846b6d5aaccde3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7538729101501535310
 GameObject:
   m_ObjectHideFlags: 0
@@ -9,6 +21,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7538729101501535311}
+  - component: {fileID: 7618618744376367703}
   m_Layer: 0
   m_Name: Player2SPFireball
   m_TagString: Untagged
@@ -32,6 +45,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7618618744376367703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7538729101501535310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d478e7b355c4e349acae49341e30391, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speedMultiplier: 5
 --- !u!1 &7538729101793486958
 GameObject:
   m_ObjectHideFlags: 0
@@ -4833,7 +4859,7 @@ ParticleSystem:
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -10841,24 +10867,24 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 0.43867922, b: 0.86480695, a: 1}
-        key1: {r: 1, g: 0.33490568, b: 0.9382354, a: 0.64705884}
-        key2: {r: 0.13559432, g: 0.08802065, b: 0.4339623, a: 0}
-        key3: {r: 0.71069247, g: 0.36320752, b: 1, a: 0}
+        key0: {r: 0.23137254, g: 0.31262234, b: 1, a: 1}
+        key1: {r: 0.0990566, g: 0.9118179, b: 1, a: 0.54901963}
+        key2: {r: 0.0990566, g: 0.9118179, b: 1, a: 0}
+        key3: {r: 0.0990566, g: 0.9118179, b: 1, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
         ctime0: 0
         ctime1: 65535
-        ctime2: 47995
+        ctime2: 65535
         ctime3: 65535
         ctime4: 0
         ctime5: 0
         ctime6: 0
         ctime7: 0
-        atime0: 26214
-        atime1: 49922
+        atime0: 22166
+        atime1: 53392
         atime2: 65535
         atime3: 0
         atime4: 0
@@ -10867,7 +10893,7 @@ ParticleSystem:
         atime7: 0
         m_Mode: 0
         m_NumColorKeys: 2
-        m_NumAlphaKeys: 2
+        m_NumAlphaKeys: 3
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -14374,6 +14400,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4cec4da7607d1ed45b1f26bf21796473, type: 3}
+--- !u!1 &1999351099594639519 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 4cec4da7607d1ed45b1f26bf21796473,
+    type: 3}
+  m_PrefabInstance: {fileID: 7538729101464392086}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3306845969436834444 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 4cec4da7607d1ed45b1f26bf21796473,

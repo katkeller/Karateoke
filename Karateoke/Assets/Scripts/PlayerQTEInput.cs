@@ -23,6 +23,9 @@ public class PlayerQTEInput : MonoBehaviour
     private Vector3[] fireballStartingPosition = new Vector3[3];
 
     [SerializeField]
+    private Transform fireballTarget;
+
+    [SerializeField]
     private Transform starPowerMovePosition;
 
     [SerializeField]
@@ -197,14 +200,29 @@ public class PlayerQTEInput : MonoBehaviour
         //    currentMoveFireballStartingPosition = null;
         //}
 
-        mainAnimator.SetTrigger(queuedAnimation);
+        if (queuedAnimation == loseQTEAnimationTrigger)
+        {
+            StartCoroutine(DelayLosingAnimation());
+        }
+        else
+        {
+            mainAnimator.SetTrigger(queuedAnimation);
+        }
         Debug.Log($"{this.name} should be playing {queuedAnimation}");
+    }
+
+    IEnumerator DelayLosingAnimation()
+    {
+        yield return new WaitForSeconds(0.5f);
+        mainAnimator.SetTrigger(queuedAnimation);
     }
 
     public void CreateFireball()
     {
         GameObject fireball = Instantiate(fireballPrefab) as GameObject;
+        var fireballController = fireball.GetComponent<Fireball>();
         fireball.transform.position = currentMoveFireballStartingPosition;
+        fireballController.StartMoving(fireballTarget.position);
     }
 
     public void StarPowerMoveWasSuccessful()
