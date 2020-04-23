@@ -4,19 +4,17 @@ using UnityEngine;
 
 public class Fireball : MonoBehaviour
 {
-    //[Tooltip("If this is not checked, the firball will move right.")]
-    //[SerializeField]
-    //bool shouldMoveLeft = false;
     [SerializeField]
     private float speedMultiplier = 5f;
 
     [SerializeField]
-    private ParticleSystem explosionParticleSystem;
+    private GameObject explosionParticleSystemObject;
 
     [SerializeField]
     private ParticleSystem mainParticleSystem;
 
     private bool shouldMove = false;
+    private bool hasCreatedExplosion = false;
     private Vector3 target;
 
     public void StartMoving(Vector3 targetToMoveTowards)
@@ -28,24 +26,22 @@ public class Fireball : MonoBehaviour
 
     private void Update()
     {
-        //timeElapsed += Time.deltaTime;
         if (shouldMove)
         {
             transform.position = Vector3.MoveTowards(transform.position, target, Time.deltaTime * speedMultiplier);
         }
 
-        if (transform.position == target)
+        if (transform.position == target && !hasCreatedExplosion)
         {
-            //StartCoroutine(CreateExplosionThenDestroyObjects());
-            Destroy(this.gameObject);
+            hasCreatedExplosion = true;
+            StartCoroutine(CreateExplosionThenDestroyObjects());
         }
     }
 
     private IEnumerator CreateExplosionThenDestroyObjects()
     {
-        ParticleSystem explosion = Instantiate(explosionParticleSystem);
+        GameObject explosion = Instantiate(explosionParticleSystemObject) as GameObject;
         explosion.transform.position = this.transform.position;
-        explosion.Play();
 
         mainParticleSystem.Stop();
 

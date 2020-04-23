@@ -58,6 +58,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speedMultiplier: 5
+  explosionParticleSystemObject: {fileID: 1087089815345615768, guid: 46bfdcb5508487e46a4a20600d23e890,
+    type: 3}
+  mainParticleSystem: {fileID: 7538729102712637828}
 --- !u!1 &7538729101793486958
 GameObject:
   m_ObjectHideFlags: 0
