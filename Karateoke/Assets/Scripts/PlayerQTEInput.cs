@@ -19,11 +19,15 @@ public class PlayerQTEInput : MonoBehaviour
     [SerializeField]
     private GameObject fireballPrefab;
 
+    [Tooltip("This Transform.position will control where the fireball object spawns from.")]
     [SerializeField]
-    private Vector3[] fireballStartingPosition = new Vector3[3];
+    private GameObject playerLeftHand;
 
     [SerializeField]
     private Transform fireballTarget;
+
+    [SerializeField]
+    private float getHitByFireballAnimationDelay = 0.5f, spawnFireballDelay = 0.25f;
 
     [SerializeField]
     private Transform starPowerMovePosition;
@@ -97,9 +101,8 @@ public class PlayerQTEInput : MonoBehaviour
 
     private Image activeRingGraphic;
     private Image activeButtonGraphic;
-    //private ParticleSystem activeParticleSystem;
     private GameObject activeShurikenFireballObject;
-    private Vector3 currentMoveFireballStartingPosition;
+    //private Vector3 currentMoveFireballStartingPosition;
 
     private StarPowerQTE qteManager;
     private bool qteIsHappening;
@@ -149,7 +152,6 @@ public class PlayerQTEInput : MonoBehaviour
         QtePressingFill = graphicStartingFill;
         activeRingGraphic = ringGraphic[indexOfMove];
         activeButtonGraphic = buttonGrapic[indexOfMove];
-        //activeParticleSystem = qteParticleSystem[indexOfMove];
         activeShurikenFireballObject = qteShurikenFireballObject[indexOfMove];
         activeRingGraphic.enabled = true;
         activeButtonGraphic.enabled = true;
@@ -157,7 +159,7 @@ public class PlayerQTEInput : MonoBehaviour
         activeRingGraphic.fillAmount = QtePressingFill;
         activeShurikenFireballObject.transform.localScale = new Vector3(shurikenScale, shurikenScale, shurikenScale);
         Debug.Log($"Shuriken Scale: {shurikenScale}");
-        currentMoveFireballStartingPosition = fireballStartingPosition[indexOfMove];
+        //currentMoveFireballStartingPosition = fireballStartingPosition[indexOfMove];
 
         queuedAnimation = loseQTEAnimationTrigger;
 
@@ -195,10 +197,6 @@ public class PlayerQTEInput : MonoBehaviour
             activeShurikenFireballObject.SetActive(false);
             activeShurikenFireballObject = null;
         }
-        //if (currentMoveFireballStartingPosition != null)
-        //{
-        //    currentMoveFireballStartingPosition = null;
-        //}
 
         if (queuedAnimation == loseQTEAnimationTrigger)
         {
@@ -213,15 +211,16 @@ public class PlayerQTEInput : MonoBehaviour
 
     IEnumerator DelayLosingAnimation()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(getHitByFireballAnimationDelay);
         mainAnimator.SetTrigger(queuedAnimation);
     }
 
-    public void CreateFireball()
+    public IEnumerator CreateFireball()
     {
+        yield return new WaitForSeconds(spawnFireballDelay);
         GameObject fireball = Instantiate(fireballPrefab) as GameObject;
         var fireballController = fireball.GetComponent<Fireball>();
-        fireball.transform.position = currentMoveFireballStartingPosition;
+        fireball.transform.position = playerLeftHand.transform.position;
         fireballController.StartMoving(fireballTarget.position);
     }
 
@@ -230,7 +229,6 @@ public class PlayerQTEInput : MonoBehaviour
         if (indexOfAttacker == indexAccordingToCombatManager)
         {
             //Perform Star Power move
-            
             mainAnimator.SetTrigger(winOverallAnimationTrigger);
             playerWinsSPMoveDirector.Play();
         }

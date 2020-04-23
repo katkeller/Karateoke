@@ -90,7 +90,7 @@ public class StarPowerQTE : MonoBehaviour
 
             playerQteInput[0].ExecuteQueuedAnimationAndHideGraphics();
             playerQteInput[1].ExecuteQueuedAnimationAndHideGraphics();
-            playerQteInput[indexOfPlayer].CreateFireball();
+            StartCoroutine(playerQteInput[indexOfPlayer].CreateFireball());
 
             if (indexOfPlayer == indexOfAttacker)
             {
@@ -100,16 +100,12 @@ public class StarPowerQTE : MonoBehaviour
             // Make sure fewer than 3 rounds have occured
             if (roundIndex <= 2)
             {
-                //playerQteInput[0].ActivateQTEButtonAndAnimation(buttonPressIndexOrder[roundIndex]);
-                //playerQteInput[1].ActivateQTEButtonAndAnimation(buttonPressIndexOrder[roundIndex]);
-                //playerHasWonThisRound = false;
-                //roundIndex++;
                 StartCoroutine(DelayNextRound());
             }
             else
             {
                 // We get here if the QTE is over (3 rounds have happened), so we determine the winner
-                DetermineOverallWinner();
+                StartCoroutine(DetermineOverallWinner());
             }
         }
     }
@@ -140,8 +136,11 @@ public class StarPowerQTE : MonoBehaviour
         roundIndex++;
     }
 
-    private void DetermineOverallWinner()
+    private IEnumerator DetermineOverallWinner()
     {
+        // Delay winning/losing so final QTE animations can resolve
+        yield return new WaitForSeconds(secondsBetweenRounds);
+
         Debug.Log($"Attacker win count: {attackerWinCount}");
         Debug.Log($"Defender win count: {defenderWinCount}");
 
