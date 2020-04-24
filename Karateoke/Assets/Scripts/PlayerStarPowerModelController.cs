@@ -20,24 +20,23 @@ public class PlayerStarPowerModelController : MonoBehaviour
     public void CreateHitVFXFromLeftHand()
     {
         // should add SFX here as well
-        ParticleSystem hit = Instantiate(hitVFX);
-        hit.transform.position = playerLeftHand.transform.position;
-        StartCoroutine(WaitThenDestroyVFXObject(hit));
+        hitVFX.transform.position = playerLeftHand.transform.position;
+        hitVFX.Play(withChildren: true);
+        StartCoroutine(WaitThenStopVFX(hitVFX));
     }
 
     public void CreateHitVFXFromRightHand()
     {
-        ParticleSystem hit = Instantiate(hitVFX);
-        hit.transform.position = playerRightHand.transform.position;
-        StartCoroutine(WaitThenDestroyVFXObject(hit));
+        hitVFX.transform.position = playerRightHand.transform.position;
+        hitVFX.Play(withChildren: true);
+        StartCoroutine(WaitThenStopVFX(hitVFX));
     }
 
     public void CreateShockWaveVFX()
     {
-        //this probably won't work, we'll have to figure out how to put it on the ground under them
-        ParticleSystem shock = Instantiate(groundShockVFX);
         groundShockVFX.transform.position = playerTorso.transform.position;
-        StartCoroutine(WaitThenDestroyVFXObject(shock));
+        groundShockVFX.Play(withChildren: true);
+        StartCoroutine(WaitThenStopVFX(groundShockVFX));
     }
 
     #endregion
@@ -45,19 +44,17 @@ public class PlayerStarPowerModelController : MonoBehaviour
     private void Start()
     {
         mainPlayerQTEManager = mainPlayerObject.GetComponent<PlayerQTEInput>();
+        groundShockVFX.Stop(withChildren: true);
+        hitVFX.Stop(withChildren: true);
     }
     public void ResetModelsAfterStarPowerMove()
     {
         mainPlayerQTEManager.ResetAfterStarPowerMove();
     }
 
-    private IEnumerator WaitThenDestroyVFXObject(ParticleSystem systemToDestroy)
+    private IEnumerator WaitThenStopVFX(ParticleSystem systemToStop)
     {
-        //Instead of destroying, we could have an object in the scene that we move around to the point of imapct
-        //and just play/pause it? Because destroying doesn't work.
-        yield return new WaitForSeconds(1f);
-        systemToDestroy.Stop();
-        GameObject systemObject = systemToDestroy.GetComponent<GameObject>();
-        Destroy(systemObject);
+        yield return new WaitForSeconds(0.5f);
+        systemToStop.Stop(withChildren: true);
     }
 }

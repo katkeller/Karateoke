@@ -25,7 +25,7 @@ public class CombatTestingScript : MonoBehaviour
         {
             starPowerIsHappening = true;
 
-            spQTE.StartQTE(0);
+            spQTE.StartQTE(1);
         }
     }
 
