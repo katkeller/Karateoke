@@ -10,6 +10,9 @@ public class PlayerSFXManager : MonoBehaviour
     [SerializeField]
     private AudioClip successfullyBlockClip, getHitClip;
 
+    [SerializeField]
+    private ParticleSystem kickTracer;
+
     private AudioSource audioSource;
 
     void Start()
@@ -30,5 +33,17 @@ public class PlayerSFXManager : MonoBehaviour
     public void AudioEvent_GetHit()
     {
         audioSource.PlayOneShot(getHitClip);
+    }
+
+    public void ActivateKickVFX()
+    {
+        kickTracer.Play(withChildren: true);
+        StartCoroutine(WaitThenStopVFX(0.15f, kickTracer));
+    }
+
+    private IEnumerator WaitThenStopVFX(float secondsToWait, ParticleSystem systemToStop)
+    {
+        yield return new WaitForSeconds(secondsToWait);
+        systemToStop.Stop(withChildren: true);
     }
 }
