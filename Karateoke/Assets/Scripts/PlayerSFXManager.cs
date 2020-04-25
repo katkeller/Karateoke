@@ -37,6 +37,7 @@ public class PlayerSFXManager : MonoBehaviour
 
     public void ActivateKickVFX()
     {
+        //Add woosh SFX here as well
         kickTracer.Play(withChildren: true);
         StartCoroutine(WaitThenStopVFX(0.15f, kickTracer));
     }

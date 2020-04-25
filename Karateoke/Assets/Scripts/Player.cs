@@ -44,6 +44,9 @@ public class Player : MonoBehaviour
     private string getBlockedAnimationTrigger;
 
     [SerializeField]
+    private ParticleSystem getHitParticleSystem, blockParticleSystem;
+
+    [SerializeField]
     private AudioClip choiceMadeClip, getHitClip, fallClip;
 
     public enum MoveSet
@@ -276,6 +279,7 @@ public class Player : MonoBehaviour
                 if (indexOfWinner != IndexAccordingToCombatManager)
                 {
                     animator.SetTrigger(getHitAnimationTrigger);
+                    StartCoroutine(PlayVFX(getHitParticleSystem));
                     // Apply damage to this player
                     damage = (int)(possibleDamage + bonus);
                     Health -= damage;
@@ -287,6 +291,7 @@ public class Player : MonoBehaviour
                 break;
             case MoveSet.Sweep:
                 animator.SetTrigger(getHitAnimationTrigger);
+                StartCoroutine(PlayVFX(getHitParticleSystem));
                 damage = (int)possibleDamage;
                 if (indexOfWinner != IndexAccordingToCombatManager)
                 {
@@ -297,6 +302,7 @@ public class Player : MonoBehaviour
                 break;
             case MoveSet.Undecided:
                 animator.SetTrigger(getHitAnimationTrigger);
+                StartCoroutine(PlayVFX(getHitParticleSystem));
                 damage = (int)possibleDamage;
                 if (indexOfWinner != IndexAccordingToCombatManager)
                 {
@@ -310,6 +316,13 @@ public class Player : MonoBehaviour
                 break;
         }
 
+    }
+
+    private IEnumerator PlayVFX(ParticleSystem systemToPlay)
+    {
+        systemToPlay.Play();
+        yield return new WaitForSeconds(0.5f);
+        systemToPlay.Stop();
     }
 
     public void GetBlocked()
