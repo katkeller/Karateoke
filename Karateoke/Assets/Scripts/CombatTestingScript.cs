@@ -16,7 +16,7 @@ public class CombatTestingScript : MonoBehaviour
         combatManager = GetComponent<CombatManager>();
         spQTE = GetComponent<StarPowerQTE>();
         combatManager.StartAnimations();
-        StartCoroutine(WaitThenTriggerEndOfPhrase());
+        //StartCoroutine(WaitThenTriggerEndOfPhrase());
     }
 
     void Update()
@@ -25,7 +25,7 @@ public class CombatTestingScript : MonoBehaviour
         {
             starPowerIsHappening = true;
 
-            spQTE.StartQTE(1);
+            spQTE.StartQTE(0);
         }
     }
 
