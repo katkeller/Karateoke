@@ -59,8 +59,8 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.027835848
-        functionName: AudioEvent_SuccessfullyBlock
+      - time: 0.02936736
+        functionName: ActivateBlockVFXAndSFX
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

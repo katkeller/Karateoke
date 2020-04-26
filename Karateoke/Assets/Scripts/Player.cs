@@ -279,6 +279,7 @@ public class Player : MonoBehaviour
                 if (indexOfWinner != IndexAccordingToCombatManager)
                 {
                     animator.SetTrigger(getHitAnimationTrigger);
+                    //we can move this to SFX VFX script right?
                     StartCoroutine(PlayVFX(getHitParticleSystem));
                     // Apply damage to this player
                     damage = (int)(possibleDamage + bonus);

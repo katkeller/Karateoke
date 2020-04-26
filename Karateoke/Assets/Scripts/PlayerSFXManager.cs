@@ -11,18 +11,13 @@ public class PlayerSFXManager : MonoBehaviour
     private AudioClip successfullyBlockClip, getHitClip;
 
     [SerializeField]
-    private ParticleSystem kickTracer;
+    private ParticleSystem kickTracer, blockParticles;
 
     private AudioSource audioSource;
 
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-    }
-
-    public void AudioEvent_SuccessfullyBlock()
-    {
-        audioSource.PlayOneShot(successfullyBlockClip);
     }
 
     public void AudioEvent_Attack()
@@ -40,6 +35,13 @@ public class PlayerSFXManager : MonoBehaviour
         //Add woosh SFX here as well
         kickTracer.Play(withChildren: true);
         StartCoroutine(WaitThenStopVFX(0.15f, kickTracer));
+    }
+
+    public void ActivateBlockVFXAndSFX()
+    {
+        audioSource.PlayOneShot(successfullyBlockClip);
+        blockParticles.Play();
+        StartCoroutine(WaitThenStopVFX(0.5f, blockParticles));
     }
 
     private IEnumerator WaitThenStopVFX(float secondsToWait, ParticleSystem systemToStop)
