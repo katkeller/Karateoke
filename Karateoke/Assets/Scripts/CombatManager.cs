@@ -173,12 +173,6 @@ public class CombatManager : MonoBehaviour
 
     private void Awake()
     {
-        //new stuff
-        player[0].Health = 100;
-        player[1].Health = 100;
-        player[0].StarPower = 0;
-        player[1].StarPower = 0;
-
         player[0].IndexAccordingToCombatManager = 0;
         player[1].IndexAccordingToCombatManager = 1;
 
@@ -187,6 +181,12 @@ public class CombatManager : MonoBehaviour
 
     void Start()
     {
+        //new stuff
+        player[0].Health = 100;
+        player[1].Health = 100;
+        player[0].StarPower = 0;
+        player[1].StarPower = 0;
+
         //player[0].Health = 100;
         //player[1].Health = 100;
         //player[0].StarPower = 0;

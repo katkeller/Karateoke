@@ -23,6 +23,9 @@ public class Player : MonoBehaviour
     private HealthBar starPowerBar;
 
     [SerializeField]
+    private GameObject starPowerRingGraphicObject;
+
+    [SerializeField]
     private Text actionText;
 
     [SerializeField]
@@ -125,14 +128,6 @@ public class Player : MonoBehaviour
         set
         {
             starPower += value;
-            if (value < 0)
-            {
-                //starPowerBar.ScaleHealthBar(starPower, false);
-            }
-            else
-            {
-                //starPowerBar.ScaleHealthBar(starPower, true);
-            }
 
             if (starPower < 0)
             {
@@ -144,6 +139,8 @@ public class Player : MonoBehaviour
                 SetUpStarPowerMove();
                 //remember to set star power back to a 0
             }
+
+            starPowerRingGraphic.ScaleFill(starPower);
         }
     }
 
@@ -198,6 +195,7 @@ public class Player : MonoBehaviour
     private AudioSource audioSource;
     private Animator animator;
     private SpriteRenderer portraitRenderer;
+    private StarPowerBar starPowerRingGraphic;
 
     #endregion
 
@@ -373,6 +371,7 @@ public class Player : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
         //portraitRenderer = portraitObject.GetComponent<SpriteRenderer>();
+        starPowerRingGraphic = starPowerRingGraphicObject.GetComponent<StarPowerBar>();
     }
 
     void Start()
