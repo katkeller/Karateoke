@@ -8,6 +8,9 @@ public class StarPowerBar : MonoBehaviour
     [SerializeField]
     private Image ringGraphic;
 
+    [SerializeField]
+    private ParticleSystem glow;
+
     [Tooltip("If the graphic is full to or past this amount (scale of 0.0 to 1.0), then the graphic will begin to glow.")]
     [SerializeField]
     private float glowingLowerLimit = 0.8f;
@@ -26,10 +29,14 @@ public class StarPowerBar : MonoBehaviour
             if (ringFill > glowingLowerLimit && !isGlowing)
             {
                 //this is where we activate glowing and sound
+                glow.Play();
+                isGlowing = true;
             }
             else if (ringFill < glowingLowerLimit && isGlowing)
             {
                 //this is where we deactivate it
+                glow.Stop();
+                isGlowing = false;
             }
         }
     }
@@ -38,7 +45,7 @@ public class StarPowerBar : MonoBehaviour
 
     public void ScaleFill(float value)
     {
-        RingFill += (value / dividingValue);
+        RingFill = (value / dividingValue);
         ringGraphic.fillAmount = RingFill;
         Debug.Log($"{name} should be scaled to {RingFill}");
     }

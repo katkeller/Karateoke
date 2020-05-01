@@ -342,6 +342,7 @@ public class Player : MonoBehaviour
         if (indexOfWinner == IndexAccordingToCombatManager)
         {
             starPowerIncrease += (bonus / 4);
+            Debug.Log($"Star power increase: {starPowerIncrease}");
         }
 
         StarPower += starPowerIncrease;
