@@ -130,6 +130,10 @@ public class CombatManager : MonoBehaviour
     private float phraseTimeElapsed;
     private int bonus;
 
+    private int starPowerMovePastHitCount = 0;
+    private float minorSPDamage;
+    private float majorSPDamage;
+
     //use these to create star power bonuses
     private int timesWonInRowAfterFirst;
     private int indexOfLastRoundWinner;
@@ -203,10 +207,6 @@ public class CombatManager : MonoBehaviour
 
         audioSource = GetComponent<AudioSource>();
         //audioComparisonSript = GetComponent<AudioComparisonManager>();
-
-        //new stuff
-        //player[0].IndexAccordingToCombatManager = 0;
-        //player[1].IndexAccordingToCombatManager = 1;
     }
 
     void Update()
@@ -293,14 +293,64 @@ public class CombatManager : MonoBehaviour
     private void OnPlayerHasFullStarPower(int indexOfPlayer)
     {
         isPerformingStarPowerMove = true;
-
+        starPowerManager.StartQTE(indexOfPlayer);
+        player[0].StarPowerMoveIsHappening = true;
+        player[1].StarPowerMoveIsHappening = true;
         //Need to pause all other action during the star power move and then trigger star power manager
+    }
+
+    private void OnStarPowerMoveEnds(int indexOfAttackedPlayer, int indexOfOtherPlayer)
+    {
+        player[indexOfOtherPlayer].StarPower = 0;
+        player[0].StarPowerMoveIsHappening = false;
+        player[1].StarPowerMoveIsHappening = false;
+
+        if (player[indexOfAttackedPlayer].Health <= 0)
+        {
+            //Kill PLayer
+
+
+            Debug.Log("Player died from star power move.");
+        }
+        else
+        {
+            StartCoroutine(WaitThenReactivateCombat());
+        }
+    }
+
+    private IEnumerator WaitThenReactivateCombat()
+    {
+        yield return new WaitForSeconds(3);
+        isPerformingStarPowerMove = false;
     }
 
     private void OnPlayerDealsStarPowerDamage(int indexOfOtherPlayer)
     {
-        Debug.Log($"Dealing {starPowerManager.DamageDeltByStarPowerMove} star power damage to player {indexOfOtherPlayer}");
-        player[indexOfOtherPlayer].Health -= starPowerManager.DamageDeltByStarPowerMove;
+        if (starPowerMovePastHitCount == 0)
+        {
+            //Minor SP damage is dealt twice, and major SP damage is delt once.
+            minorSPDamage = starPowerManager.DamageDeltByStarPowerMove / 4;
+            majorSPDamage = starPowerManager.DamageDeltByStarPowerMove / 2;
+
+            player[indexOfOtherPlayer].Health -= (int)minorSPDamage;
+            starPowerMovePastHitCount++;
+            Debug.Log($"First hit dealing {minorSPDamage} to {player[indexOfOtherPlayer]}");
+        }
+        else if (starPowerMovePastHitCount == 1)
+        {
+            player[indexOfOtherPlayer].Health -= (int)minorSPDamage;
+            starPowerMovePastHitCount++;
+            Debug.Log($"Second hit dealing {minorSPDamage} to {player[indexOfOtherPlayer]}");
+        }
+        else if (starPowerMovePastHitCount == 2)
+        {
+            player[indexOfOtherPlayer].Health -= (int)majorSPDamage;
+            Debug.Log($"Third hit dealing {majorSPDamage} to {player[indexOfOtherPlayer]}");
+
+            minorSPDamage = 0;
+            majorSPDamage = 0;
+            starPowerMovePastHitCount = 0;
+        }
     }
 
     private void OnEnable()
@@ -313,6 +363,7 @@ public class CombatManager : MonoBehaviour
         Player.DealStarPowerDamage += OnPlayerDealsStarPowerDamage;
         Player.PlayerDies += OnPlayerDies;
         Player.PlayerHasFullStarPower += OnPlayerHasFullStarPower;
+        Player.StarPowerMoveEnds += OnStarPowerMoveEnds;
     }
 
     private void OnDisable()
@@ -325,6 +376,7 @@ public class CombatManager : MonoBehaviour
         Player.DealStarPowerDamage -= OnPlayerDealsStarPowerDamage;
         Player.PlayerDies -= OnPlayerDies;
         Player.PlayerHasFullStarPower -= OnPlayerHasFullStarPower;
+        Player.StarPowerMoveEnds -= OnStarPowerMoveEnds;
     }
 
     #endregion

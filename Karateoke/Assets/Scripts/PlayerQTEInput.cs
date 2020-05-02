@@ -102,7 +102,6 @@ public class PlayerQTEInput : MonoBehaviour
     private Image activeRingGraphic;
     private Image activeButtonGraphic;
     private GameObject activeShurikenFireballObject;
-    //private Vector3 currentMoveFireballStartingPosition;
 
     private StarPowerQTE qteManager;
     private bool qteIsHappening;

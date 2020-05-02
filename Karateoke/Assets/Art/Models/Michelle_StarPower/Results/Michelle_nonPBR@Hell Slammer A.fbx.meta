@@ -80,6 +80,27 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      - time: 0.20056227
+        functionName: DealSPDamage
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.49036452
+        functionName: DealSPDamage
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.8064516
+        functionName: DealSPDamage
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

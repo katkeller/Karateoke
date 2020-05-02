@@ -24,6 +24,7 @@ public class PlayerStarPowerModelController : MonoBehaviour
     private CinemachineBrain cinemachineBrain;
 
     private PlayerQTEInput mainPlayerQTEManager;
+    private Player mainPlayer;
 
     #region Animation Events
 
@@ -55,11 +56,17 @@ public class PlayerStarPowerModelController : MonoBehaviour
         StartCoroutine(ApplyCameraShake(perlin, extraSeconds: 0.25f));
     }
 
+    public void DealSPDamage(int indexOfOtherPlayer)
+    {
+        mainPlayer.PlayerDealsStarPowerDamageEvent(indexOfOtherPlayer);
+    }
+
     #endregion
 
     private void Start()
     {
         mainPlayerQTEManager = mainPlayerObject.GetComponent<PlayerQTEInput>();
+        mainPlayer = mainPlayerObject.GetComponent<Player>();
         cinemachineBrain = cinemachineBrainObject.GetComponent<CinemachineBrain>();
         groundShockVFX.Stop(withChildren: true);
         hitVFX.Stop(withChildren: true);

@@ -89,6 +89,12 @@ public class Player : MonoBehaviour
         set;
     }
 
+    public bool StarPowerMoveIsHappening
+    {
+        get;
+        set;
+    }
+
     private bool hasMadeChoiceThisPhrase;
 
     private int health;
@@ -105,11 +111,12 @@ public class Player : MonoBehaviour
         }
         set
         {
-            health += value;
+            health = value;
             //healthBar.ScaleHealthBar(health, false);
 
-            if (health <= 0)
+            if (health <= 0 && !StarPowerMoveIsHappening)
             {
+                //We check for the star power move so that the player dying doesn't interrupt the cut scene.
                 Die();
             }
         }
@@ -127,7 +134,7 @@ public class Player : MonoBehaviour
         }
         set
         {
-            starPower += value;
+            starPower = value;
 
             if (starPower < 0)
             {
@@ -136,7 +143,7 @@ public class Player : MonoBehaviour
 
             if (starPower >= 100)
             {
-                SetUpStarPowerMove();
+                StartCoroutine(SetUpStarPowerMove());
                 //remember to set star power back to a 0
             }
 
@@ -207,6 +214,7 @@ public class Player : MonoBehaviour
     public static event Action<int> AttemptBlock;
     public static event Action<int> AttemptSweep;
     public static event Action<int> DealStarPowerDamage;
+    public static event Action<int, int> StarPowerMoveEnds;
 
     #endregion
 
@@ -260,6 +268,12 @@ public class Player : MonoBehaviour
     public void PlayerDealsStarPowerDamageEvent(int indexOfOtherPlayer)
     {
         DealStarPowerDamage?.Invoke(indexOfOtherPlayer);
+    }
+
+    public void StarPowerMoveEndsEvent(int indexOfOtherPlayer)
+    {
+        // This event should only be triggered from the losing player's animation: either the kip up or the relief.
+        StarPowerMoveEnds?.Invoke(IndexAccordingToCombatManager, indexOfOtherPlayer);
     }
 
     #region Damage & Animation Interruptions (Triggered From CombatManager)
@@ -417,9 +431,11 @@ public class Player : MonoBehaviour
         //animator.SetTrigger(gettingReadyAnimationTrigger);
     }
 
-    private void SetUpStarPowerMove()
+    private IEnumerator SetUpStarPowerMove()
     {
         Debug.Log($"{this.name} is executing a star power move.");
+        // Need to wait before invoking so that the combat animations have time to finish.
+        yield return new WaitForSeconds(1.25f);
         PlayerHasFullStarPower?.Invoke(IndexAccordingToCombatManager);
     }
 

@@ -28,7 +28,7 @@ public class StarPowerBar : MonoBehaviour
 
             if (ringFill > glowingLowerLimit && !isGlowing)
             {
-                //this is where we activate glowing and sound
+                //need to add sound
                 glow.Play();
                 isGlowing = true;
             }
