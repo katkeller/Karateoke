@@ -17,10 +17,10 @@ public class Player : MonoBehaviour
     #region Fields/Properties
 
     [SerializeField]
-    private HealthBar healthBar;
+    private GameObject healthBarObject;
 
-    [SerializeField]
-    private HealthBar starPowerBar;
+    //[SerializeField]
+    //private HealthBar starPowerBar;
 
     [SerializeField]
     private GameObject starPowerRingGraphicObject;
@@ -112,13 +112,18 @@ public class Player : MonoBehaviour
         set
         {
             health = value;
-            //healthBar.ScaleHealthBar(health, false);
 
-            if (health <= 0 && !StarPowerMoveIsHappening)
+            if (health <= 0)
             {
-                //We check for the star power move so that the player dying doesn't interrupt the cut scene.
-                Die();
+                health = 0;
+                if (!StarPowerMoveIsHappening)
+                {
+                    //We check for the star power move so that the player dying doesn't interrupt the cut scene.
+                    Die();
+                }
             }
+
+            healthBar.SetHealthBarToValue(health);
         }
     }
 
@@ -203,6 +208,7 @@ public class Player : MonoBehaviour
     private Animator animator;
     private SpriteRenderer portraitRenderer;
     private StarPowerBar starPowerRingGraphic;
+    private HealthBar healthBar;
 
     #endregion
 
@@ -387,6 +393,7 @@ public class Player : MonoBehaviour
         animator = GetComponent<Animator>();
         //portraitRenderer = portraitObject.GetComponent<SpriteRenderer>();
         starPowerRingGraphic = starPowerRingGraphicObject.GetComponent<StarPowerBar>();
+        healthBar = healthBarObject.GetComponent<HealthBar>();
     }
 
     void Start()

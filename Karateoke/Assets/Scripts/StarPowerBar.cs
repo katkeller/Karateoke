@@ -18,6 +18,9 @@ public class StarPowerBar : MonoBehaviour
     [SerializeField]
     private float dividingValue = 100;
 
+    [SerializeField]
+    private float fillSpeed = 3.0f;
+
     private float ringFill;
     public float RingFill
     {
@@ -42,11 +45,13 @@ public class StarPowerBar : MonoBehaviour
     }
 
     private bool isGlowing;
+    private bool shouldScale;
 
     public void ScaleFill(float value)
     {
         RingFill = (value / dividingValue);
-        ringGraphic.fillAmount = RingFill;
+        //ringGraphic.fillAmount = RingFill;
+        shouldScale = true;
         Debug.Log($"{name} should be scaled to {RingFill}");
     }
 
@@ -57,6 +62,21 @@ public class StarPowerBar : MonoBehaviour
 
     void Update()
     {
-        
+        if (shouldScale)
+        {
+            Scale();
+        }
+    }
+
+    private void Scale()
+    {
+        if (RingFill != ringGraphic.fillAmount)
+        {
+            ringGraphic.fillAmount = Mathf.Lerp(ringGraphic.fillAmount, RingFill, Time.deltaTime * fillSpeed);
+        }
+        else
+        {
+            shouldScale = false;
+        }
     }
 }
