@@ -27,6 +27,9 @@ public class PlayerQTEInput : MonoBehaviour
     private Transform fireballTarget;
 
     [SerializeField]
+    private Camera guiCamera, starPowerUiCamera;
+
+    [SerializeField]
     private float getHitByFireballAnimationDelay = 0.5f, spawnFireballDelay = 0.25f;
 
     [SerializeField]
@@ -230,6 +233,8 @@ public class PlayerQTEInput : MonoBehaviour
             //Perform Star Power move
             mainAnimator.SetTrigger(winOverallAnimationTrigger);
             playerWinsSPMoveDirector.Play();
+            guiCamera.enabled = false;
+            starPowerUiCamera.enabled = false;
         }
         else
         {

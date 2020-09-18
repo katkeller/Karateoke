@@ -9,7 +9,10 @@ public class CombatManager : MonoBehaviour
 {
     #region Properties/Fields
     [SerializeField]
-    private bool IsDebugging;
+    private GameObject mainCameraManagerGameObject;
+
+    [SerializeField]
+    private bool isDebugging;
 
     [SerializeField]
     private Player[] player = new Player[2];
@@ -83,7 +86,7 @@ public class CombatManager : MonoBehaviour
 
     [Tooltip("The number of seconds between combat choices being made and the circle cam starting back up.")]
     [SerializeField]
-    private float secondsBeforeResettingCircleCam = 3.0f;
+    private float secondsBeforeResettingCircleCam = 3.0f, secondsBeforeStartingCircleCamFirstTime = 3.5f;
 
     //private int[] playerHealth = new int[2];
     //private int playerHealth1;
@@ -153,6 +156,7 @@ public class CombatManager : MonoBehaviour
     //private HealthBar[] starPowerBar = new HealthBar[2];
     private Animator[] playerAnimator = new Animator[2];
     private AudioComparisonManager audioComparisonSript;
+    private MainSceneCameraManager mainCameraManager;
 
     private StarPowerQTE starPowerManager;
 
@@ -165,10 +169,12 @@ public class CombatManager : MonoBehaviour
     private bool playerIsDead;
     private bool starPowerHasBeenPerformed;
 
+    private bool circleCamHasStarted;
+
     #endregion
 
     public static event Action DecideWinner;
-    public static event Action StartCircleCam;
+    //public static event Action StartCircleCam;
 
     public void StartAnimations()
     {
@@ -176,6 +182,7 @@ public class CombatManager : MonoBehaviour
         //playerAnimator[1].SetTrigger("start");
         player[0].StartGame();
         player[1].StartGame();
+        StartCoroutine(WaitThenResetCamera());
         //startButton.enabled = false;
         //startButton.gameObject.SetActive(false);
     }
@@ -186,6 +193,7 @@ public class CombatManager : MonoBehaviour
         player[1].IndexAccordingToCombatManager = 1;
 
         starPowerManager = GetComponent<StarPowerQTE>();
+        mainCameraManager = mainCameraManagerGameObject.GetComponent<MainSceneCameraManager>();
     }
 
     void Start()
@@ -218,7 +226,7 @@ public class CombatManager : MonoBehaviour
     {
         phraseTimeElapsed += Time.deltaTime;
 
-        if (IsDebugging)
+        if (isDebugging)
         {
             if (Input.GetButtonDown("DebugDownHalfPlayer1Health"))
             {
@@ -468,8 +476,18 @@ public class CombatManager : MonoBehaviour
 
     private IEnumerator WaitThenResetCamera()
     {
-        yield return new WaitForSeconds(secondsBeforeResettingCircleCam);
-        StartCircleCam?.Invoke();
+        float seconds = circleCamHasStarted ? 
+            secondsBeforeResettingCircleCam : secondsBeforeStartingCircleCamFirstTime;
+
+        if (!circleCamHasStarted)
+            circleCamHasStarted = true;
+
+        yield return new WaitForSeconds(seconds);
+
+        if (!isPerformingStarPowerMove)
+        {
+            mainCameraManager.StartCircleCam();
+        }
     }
 
     //Old Stuff

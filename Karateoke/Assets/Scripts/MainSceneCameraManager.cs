@@ -22,9 +22,6 @@ public class MainSceneCameraManager : MonoBehaviour
     private int phraseCount;
     private float timeSinceLastPhraseEnd;
     private float dollyDuration;
-    //private float dollySpeed;
-    //private float lerpTimeElapsed;
-    //private bool shouldDolly;
     private bool phraseIsResolving;
 
     #endregion
@@ -33,7 +30,6 @@ public class MainSceneCameraManager : MonoBehaviour
     {
         circleDolly = circleCamera.GetCinemachineComponent<CinemachineTrackedDolly>();
         phraseCount = 0;
-        //dollySpeed = 0;
     }
 
     private void Update()
@@ -42,12 +38,6 @@ public class MainSceneCameraManager : MonoBehaviour
         {
             timeSinceLastPhraseEnd += Time.deltaTime;
         }
-
-        //if (shouldDolly && circleDolly.m_PathPosition < 4)
-        //{
-        //    dollySpeed += Time.deltaTime / dollyDuration;
-        //    circleDolly.m_PathPosition = Mathf.Lerp(circleDolly.m_PathPosition, 4, dollySpeed);
-        //}
     }
 
     private void OnEndOfPhrase()
@@ -59,14 +49,12 @@ public class MainSceneCameraManager : MonoBehaviour
         circleCamera.Priority = 0;
     }
 
-    private void OnStartCircleCam()
+    public void StartCircleCam()
     {
         phraseIsResolving = false;
 
         dollyDuration = phraseLengths[phraseCount] - timeSinceLastPhraseEnd;
         Debug.Log($"Dolly Duration: {dollyDuration}");
-        //shouldDolly = true;
-        //lerpTimeElapsed = 0;
         StartCoroutine(LerpDollyPosition());
         circleCamera.Priority = 100;
         mainStaticCamera.Priority = 0;
@@ -92,12 +80,12 @@ public class MainSceneCameraManager : MonoBehaviour
     private void OnEnable()
     {
         CombatTestingScript.EndOfPhrase += OnEndOfPhrase;
-        CombatManager.StartCircleCam += OnStartCircleCam;
+        //CombatManager.StartCircleCam += StartCircleCam;
     }
 
     private void OnDisable()
     {
         CombatTestingScript.EndOfPhrase -= OnEndOfPhrase;
-        CombatManager.StartCircleCam -= OnStartCircleCam;
+        //CombatManager.StartCircleCam -= StartCircleCam;
     }
 }
