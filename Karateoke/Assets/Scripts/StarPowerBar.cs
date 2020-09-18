@@ -50,7 +50,6 @@ public class StarPowerBar : MonoBehaviour
     public void ScaleFill(float value)
     {
         RingFill = (value / dividingValue);
-        //ringGraphic.fillAmount = RingFill;
         shouldScale = true;
         Debug.Log($"{name} should be scaled to {RingFill}");
     }

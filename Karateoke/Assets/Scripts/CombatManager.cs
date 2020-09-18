@@ -81,6 +81,10 @@ public class CombatManager : MonoBehaviour
     [SerializeField]
     private float bonusDividingFactor = 10.0f, bonusParryDividingValue = 2.0f;
 
+    [Tooltip("The number of seconds between combat choices being made and the circle cam starting back up.")]
+    [SerializeField]
+    private float secondsBeforeResettingCircleCam = 3.0f;
+
     //private int[] playerHealth = new int[2];
     //private int playerHealth1;
     
@@ -164,6 +168,7 @@ public class CombatManager : MonoBehaviour
     #endregion
 
     public static event Action DecideWinner;
+    public static event Action StartCircleCam;
 
     public void StartAnimations()
     {
@@ -457,6 +462,14 @@ public class CombatManager : MonoBehaviour
 
         player[0].ExecuteQueuedCombatMove();
         player[1].ExecuteQueuedCombatMove();
+
+        StartCoroutine(WaitThenResetCamera());
+    }
+
+    private IEnumerator WaitThenResetCamera()
+    {
+        yield return new WaitForSeconds(secondsBeforeResettingCircleCam);
+        StartCircleCam?.Invoke();
     }
 
     //Old Stuff
