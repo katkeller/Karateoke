@@ -32,6 +32,9 @@ public class CombatManager : MonoBehaviour
     [SerializeField]
     private AudioClip[] countdownClip = new AudioClip[4];
 
+    [SerializeField]
+    private GameObject victorySprite;
+
     //[SerializeField]
     //private Sprite attackIcon, blockIcon, grappleIcon;
 
@@ -178,13 +181,9 @@ public class CombatManager : MonoBehaviour
 
     public void StartAnimations()
     {
-        //playerAnimator[0].SetTrigger("start");
-        //playerAnimator[1].SetTrigger("start");
         player[0].StartGame();
         player[1].StartGame();
         StartCoroutine(WaitThenResetCamera());
-        //startButton.enabled = false;
-        //startButton.gameObject.SetActive(false);
     }
 
     private void Awake()
@@ -204,10 +203,6 @@ public class CombatManager : MonoBehaviour
         player[0].StarPower = 0;
         player[1].StarPower = 0;
 
-        //player[0].Health = 100;
-        //player[1].Health = 100;
-        //player[0].StarPower = 0;
-        //player[1].StarPower = 0;
         countdownText.text = "";
         //winnerText.text = "";
         countdownTextColor = countdownText.color;
@@ -250,7 +245,7 @@ public class CombatManager : MonoBehaviour
         }
         else
         {
-            //this is so the phrase values stay consistent even when a star power move is performed
+            //this is so the phrase values stay consistent even when a star power move is being performed
             DecideWinner?.Invoke();
         }
     }
@@ -300,7 +295,20 @@ public class CombatManager : MonoBehaviour
     private void OnPlayerDies(int indexOfPlayer)
     {
         playerIsDead = true;
+        var indexOfWinner = 1;
+        if (indexOfPlayer == 1)
+        {
+            indexOfWinner = 2;
+        }
+        player[indexOfWinner].Win();
+        StartCoroutine(ShowVictoryText());
+    }
 
+    IEnumerator ShowVictoryText()
+    {
+        victorySprite.SetActive(true);
+        yield return new WaitForSeconds(5);
+        victorySprite.SetActive(false);
     }
 
     private void OnPlayerHasFullStarPower(int indexOfPlayer)
@@ -321,7 +329,7 @@ public class CombatManager : MonoBehaviour
         if (player[indexOfAttackedPlayer].Health <= 0)
         {
             //Kill PLayer
-
+            player[indexOfAttackedPlayer].Die();
 
             Debug.Log("Player died from star power move.");
         }
@@ -368,8 +376,8 @@ public class CombatManager : MonoBehaviour
 
     private void OnEnable()
     {
-        CombatTestingScript.EndOfPhrase += OnEndOfPhrase;
-        //PhraseEndTrigger.EndOfPhrase += OnEndOfPhrase;
+        //CombatTestingScript.EndOfPhrase += OnEndOfPhrase;
+        PhraseEndTrigger.EndOfPhrase += OnEndOfPhrase;
         Player.AttemptAttack += OnPlayerAttacks;
         Player.AttemptBlock += OnPlayerBlocks;
         Player.AttemptSweep += OnPlayerSweeps;
@@ -381,8 +389,8 @@ public class CombatManager : MonoBehaviour
 
     private void OnDisable()
     {
-        CombatTestingScript.EndOfPhrase -= OnEndOfPhrase;
-        //PhraseEndTrigger.EndOfPhrase -= OnEndOfPhrase;
+        //CombatTestingScript.EndOfPhrase -= OnEndOfPhrase;
+        PhraseEndTrigger.EndOfPhrase -= OnEndOfPhrase;
         Player.AttemptAttack -= OnPlayerAttacks;
         Player.AttemptBlock -= OnPlayerBlocks;
         Player.AttemptSweep -= OnPlayerSweeps;
@@ -792,89 +800,4 @@ public class CombatManager : MonoBehaviour
         comboText[indexOfWinner].text = "";
     }
 
-    //IEnumerator DelayAnimation(float time, int indexOfPlayer, string animationTrigger)
-    //{
-    //    yield return new WaitForSeconds(time);
-    //    playerAnimator[indexOfPlayer].SetTrigger(animationTrigger);
-    //}
-
-    //private void CheckForStarPower()
-    //{
-    //    if (!playerIsDead && !isPerformingStarPowerMove && !starPowerHasBeenPerformed)
-    //    {
-    //        if (playerStarPower[0] >= 100)
-    //        {
-    //            StartCoroutine(StarPowerMove(0, 1));
-    //        }
-    //        if (playerStarPower[1] >= 100)
-    //        {
-    //            StartCoroutine(StarPowerMove(1, 0));
-    //        }
-    //    }
-    //}
-
-    //private void CheckForDeath()
-    //{
-    //    if (!playerIsDead && !isPerformingStarPowerMove)
-    //    {
-    //        if (playerHealth[0] <= 0)
-    //        {
-    //            StartCoroutine(KillPlayer(0, 1));
-    //            Debug.Log($"Player 1 dead health: {playerHealth[0]}");
-    //        }
-    //        if (playerHealth[1] <= 0)
-    //        {
-    //            Debug.Log($"Player 2 dead health: {playerHealth[1]}");
-    //            StartCoroutine(KillPlayer(1, 0));
-    //        }
-    //    }
-    //}
-
-    IEnumerator StarPowerMove(int indexOfWinner, int indexOfLoser)
-    {
-        isPerformingStarPowerMove = true;
-        playerAnimator[indexOfWinner].SetTrigger("starPower");
-        yield return new WaitForSeconds(4.0f);
-        starPowerSparks[indexOfWinner].Play();
-        playerAnimator[indexOfLoser].SetTrigger("getBlasted");
-        yield return new WaitForSeconds(starPowerMoveLengthInSeconds);
-        playerAnimator[indexOfWinner].SetTrigger("starPowerEnd");
-        yield return new WaitForSeconds(1);
-        playerAnimator[indexOfLoser].SetTrigger("getBlastedEnd");
-        playerStarPower[indexOfWinner] = 0;
-        //starPowerBar[indexOfWinner].gameObject.SetActive(false);
-        starPowerBackgrounds[indexOfWinner].gameObject.SetActive(false);
-        //playerHealth[indexOfLoser] -= starPowerMoveDamage;
-        if (indexOfLoser == 0)
-        {
-            player[0].Health -= starPowerMoveDamage;
-        }
-        else
-        {
-            player[1].Health -= starPowerMoveDamage;
-        }
-        isPerformingStarPowerMove = false;
-        starPowerHasBeenPerformed = true;
-        //CheckForDeath();
-    }
-
-    //IEnumerator KillPlayer(int indexOfLoser, int indexOfWinner)
-    //{
-    //    playerIsDead = true;
-    //    playerAnimator[indexOfLoser].SetTrigger("die");
-    //    StartCoroutine(DelayAnimation(victoryAnimationDelay, indexOfWinner, "victory"));
-    //    winnerText.text = "VICTORY!";
-
-    //    yield return new WaitForSeconds(5);
-    //    winnerText.text = "";
-    //    if (indexOfWinner == 0)
-    //    {
-    //        //playerModel[0].transform.Rotate(0, 180, 0);
-    //    }
-    //    else
-    //    {
-    //        //playerModel[1].transform.Rotate(0, -180, 0);
-    //    }
-    //    playerAnimator[indexOfWinner].SetTrigger("sing");
-    //}
 }

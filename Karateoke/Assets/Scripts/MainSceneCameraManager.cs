@@ -75,17 +75,15 @@ public class MainSceneCameraManager : MonoBehaviour
         circleDolly.m_PathPosition = 4;
     }
 
-    //TODO: Add logic that switches back to correct camera after star power move.
-
     private void OnEnable()
     {
-        CombatTestingScript.EndOfPhrase += OnEndOfPhrase;
-        //CombatManager.StartCircleCam += StartCircleCam;
+        //CombatTestingScript.EndOfPhrase += OnEndOfPhrase;
+        PhraseEndTrigger.EndOfPhrase += OnEndOfPhrase;
     }
 
     private void OnDisable()
     {
-        CombatTestingScript.EndOfPhrase -= OnEndOfPhrase;
-        //CombatManager.StartCircleCam -= StartCircleCam;
+        //CombatTestingScript.EndOfPhrase -= OnEndOfPhrase;
+        PhraseEndTrigger.EndOfPhrase -= OnEndOfPhrase;
     }
 }

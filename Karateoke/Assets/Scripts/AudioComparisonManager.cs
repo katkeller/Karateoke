@@ -39,8 +39,8 @@ public class AudioComparisonManager : MonoBehaviour
             audioSampleCollector[i] = audioSampleObject[i].GetComponent<AudioSampleCollector>();
         }
 
-        player1WinImage.enabled = false;
-        player2WinImage.enabled = false;
+        //player1WinImage.enabled = false;
+        //player2WinImage.enabled = false;
     }
 
     void Update()
@@ -60,14 +60,14 @@ public class AudioComparisonManager : MonoBehaviour
             ScoreDisparity = playerScore[1] - playerScore[0];
             // The winning disparity is how much the losing player's score differed from the better player's score.
             // A higher score is worse, since that means they were far off from the target by a larger amount.
-            StartCoroutine(DisplayWinnerImage(player1WinImage));
+            //StartCoroutine(DisplayWinnerImage(player1WinImage));
         }
         else if (playerScore[0] > playerScore[1])
         {
             IndexOfWinner = 1;
             IndexOfLoser = 0;
             ScoreDisparity = playerScore[0] - playerScore[1];
-            StartCoroutine(DisplayWinnerImage(player2WinImage));
+            //StartCoroutine(DisplayWinnerImage(player2WinImage));
         }
 
         playerScore[0] = 0.0f;

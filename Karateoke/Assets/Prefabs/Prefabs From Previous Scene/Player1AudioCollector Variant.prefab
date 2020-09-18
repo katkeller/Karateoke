@@ -1,0 +1,122 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &6520298929503007143
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1808585856852629715, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: m_Name
+      value: Player1AudioCollector
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808585856852629726, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808585856852629726, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808585856852629726, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808585856852629726, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808585856852629726, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808585856852629726, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808585856852629726, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808585856852629726, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808585856852629726, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808585856852629726, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808585856852629726, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808585856852629713, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: pitchIndicator
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808585856852629713, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: rangeText
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808585856852629713, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: clipToPlayIfNoMicrophone
+      value: 
+      objectReference: {fileID: 8300000, guid: 2be0f11bc0214474ba3da67bc076f773, type: 3}
+    - target: {fileID: 1808585856852629713, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: usePitchIndicator
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808585856852629713, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: sourceMixerGroup
+      value: 
+      objectReference: {fileID: 6692779133227307770, guid: d49aa3af8e0d5419f903d34204fbdca2,
+        type: 2}
+    - target: {fileID: 1808585856852629713, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: alphaMultiplier
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808585856852629713, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: pitchIndicatorHeightMultiplier
+      value: 0.025
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808585856852629713, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: useMicrophone
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808585856852629713, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: indexOfMicToUse
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808585856852629712, guid: cf1564edd09b34cf89da3b78b01f5044,
+        type: 3}
+      propertyPath: m_Volume
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cf1564edd09b34cf89da3b78b01f5044, type: 3}

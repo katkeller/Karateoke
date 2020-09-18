@@ -47,7 +47,7 @@ public class Player : MonoBehaviour
     private string gettingReadyAnimationTrigger, fallAnimationTrigger, getHitAnimationTrigger, getHitFromBlockAnimationTrigger;
 
     [SerializeField]
-    private string getBlockedAnimationTrigger;
+    private string getBlockedAnimationTrigger, deathAnimationTrigger, winAnimationTrigger;
 
     [SerializeField]
     private ParticleSystem getHitParticleSystem, blockParticleSystem;
@@ -384,6 +384,19 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void Die()
+    {
+        Debug.Log($"{this.name} is dead.");
+        IsDead = true;
+        animator.SetTrigger(deathAnimationTrigger);
+        PlayerDies?.Invoke(IndexAccordingToCombatManager);
+    }
+
+    public void Win()
+    {
+        animator.SetTrigger(winAnimationTrigger);
+    }
+
     private void Awake()
     {
         if(string.IsNullOrEmpty(attackButtonString) || string.IsNullOrEmpty(dodgeButtonString) ||
@@ -449,13 +462,6 @@ public class Player : MonoBehaviour
         // Need to wait before invoking so that the combat animations have time to finish.
         yield return new WaitForSeconds(1.25f);
         PlayerHasFullStarPower?.Invoke(IndexAccordingToCombatManager);
-    }
-
-    private void Die()
-    {
-        Debug.Log($"{this.name} is dead.");
-        IsDead = true;
-        PlayerDies?.Invoke(IndexAccordingToCombatManager);
     }
 
     IEnumerator ShowActionText()
