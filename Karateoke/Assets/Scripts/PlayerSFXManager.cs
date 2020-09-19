@@ -21,7 +21,7 @@ public class PlayerSFXManager : MonoBehaviour
     private AudioClip[] getHitClips = new AudioClip[6];
 
     [SerializeField]
-    private ParticleSystem kickTracer, blockParticles;
+    private ParticleSystem kickTracer, blockParticles, sweepTracer, fallParticles;
 
     private AudioSource audioSource;
     private CinemachineBasicMultiChannelPerlin mainCameraNoise;
@@ -45,11 +45,26 @@ public class PlayerSFXManager : MonoBehaviour
         StartCoroutine(ApplyCameraShake());
     }
 
+    public void AudioEvent_Sweep()
+    {
+        audioSource.PlayOneShot(sweepClip);
+    }
+
+    public void ActivateSweepVFX()
+    {
+        sweepTracer.Play();
+        StartCoroutine(WaitThenStopVFX(1f, sweepTracer));
+    }
+
     public void ActivateKickVFX()
     {
-        //Add woosh SFX here as well
         kickTracer.Play(withChildren: true);
         StartCoroutine(WaitThenStopVFX(0.15f, kickTracer));
+    }
+
+    public void ActivateFallVFX()
+    {
+        fallParticles.Play();
     }
 
     public void ActivateBlockVFXAndSFX()
