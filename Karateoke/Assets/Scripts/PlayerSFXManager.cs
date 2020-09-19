@@ -12,7 +12,7 @@ public class PlayerSFXManager : MonoBehaviour
     private float cameraShakeDuration = 0.2f, cameraShakeAmplitude = 1.0f, cameraShakeFrequency = 2.0f;
 
     [SerializeField]
-    private AudioClip attackClip, sweepClip, blockClip;
+    private AudioClip attackClip, sweepClip, fallClip;
 
     [SerializeField]
     private AudioClip successfullyBlockClip;
@@ -65,6 +65,7 @@ public class PlayerSFXManager : MonoBehaviour
     public void ActivateFallVFX()
     {
         fallParticles.Play();
+        audioSource.PlayOneShot(fallClip);
     }
 
     public void ActivateBlockVFXAndSFX()
