@@ -298,7 +298,7 @@ public class CombatManager : MonoBehaviour
         var indexOfWinner = 1;
         if (indexOfPlayer == 1)
         {
-            indexOfWinner = 2;
+            indexOfWinner = 0;
         }
         player[indexOfWinner].Win();
         StartCoroutine(ShowVictoryText());

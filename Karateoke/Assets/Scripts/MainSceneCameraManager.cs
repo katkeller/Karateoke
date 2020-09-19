@@ -75,6 +75,8 @@ public class MainSceneCameraManager : MonoBehaviour
         circleDolly.m_PathPosition = 4;
     }
 
+
+    //TODO: Add logic to circle the camera for the rest of the song when someone wins.
     private void OnEnable()
     {
         //CombatTestingScript.EndOfPhrase += OnEndOfPhrase;

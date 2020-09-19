@@ -121,11 +121,6 @@ public class StarPowerQTE : MonoBehaviour
         playerQteInput[1] = player[1].GetComponent<PlayerQTEInput>();
     }
 
-    void Update()
-    {
-        
-    }
-
     IEnumerator DelayNextRound()
     {
         //The next round is delayed in order to allow the result animations to play

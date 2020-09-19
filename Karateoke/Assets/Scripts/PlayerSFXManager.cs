@@ -15,7 +15,10 @@ public class PlayerSFXManager : MonoBehaviour
     private AudioClip attackClip, sweepClip, blockClip;
 
     [SerializeField]
-    private AudioClip successfullyBlockClip, getHitClip;
+    private AudioClip successfullyBlockClip;
+
+    [SerializeField]
+    private AudioClip[] getHitClips = new AudioClip[6];
 
     [SerializeField]
     private ParticleSystem kickTracer, blockParticles;
@@ -36,6 +39,8 @@ public class PlayerSFXManager : MonoBehaviour
 
     public void AudioEvent_GetHit()
     {
+        var index = UnityEngine.Random.Range(0, 5);
+        var getHitClip = getHitClips[index];
         audioSource.PlayOneShot(getHitClip);
         StartCoroutine(ApplyCameraShake());
     }
