@@ -38,6 +38,9 @@ public class Player : MonoBehaviour
     private Camera guiCamera, starPowerUiCamera;
 
     [SerializeField]
+    private GameObject starPowerUi;
+
+    [SerializeField]
     private string attackButtonString, dodgeButtonString, sweepButtonString;
 
     [SerializeField]
@@ -283,7 +286,7 @@ public class Player : MonoBehaviour
     {
         // This event should only be triggered from the losing player's animation: either the kip up or the relief.
         guiCamera.enabled = true;
-        starPowerUiCamera.enabled = true;
+        starPowerUi.SetActive(true);
         StarPowerMoveEnds?.Invoke(IndexAccordingToCombatManager, indexOfOtherPlayer);
     }
 

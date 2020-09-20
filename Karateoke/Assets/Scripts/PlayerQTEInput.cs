@@ -30,6 +30,9 @@ public class PlayerQTEInput : MonoBehaviour
     private Camera guiCamera, starPowerUiCamera;
 
     [SerializeField]
+    private GameObject starPowerUi;
+
+    [SerializeField]
     private float getHitByFireballAnimationDelay = 0.5f, spawnFireballDelay = 0.25f;
 
     [SerializeField]
@@ -156,7 +159,8 @@ public class PlayerQTEInput : MonoBehaviour
         activeButtonGraphic = buttonGrapic[indexOfMove];
         activeShurikenFireballObject = qteShurikenFireballObject[indexOfMove];
         activeRingGraphic.enabled = true;
-        activeButtonGraphic.enabled = true;
+        //activeButtonGraphic.enabled = true;
+        activeButtonGraphic.gameObject.SetActive(true);
         activeShurikenFireballObject.SetActive(true);
         activeRingGraphic.fillAmount = QtePressingFill;
         activeShurikenFireballObject.transform.localScale = new Vector3(shurikenScale, shurikenScale, shurikenScale);
@@ -186,7 +190,8 @@ public class PlayerQTEInput : MonoBehaviour
     {
         if (activeButtonGraphic != null)
         {
-            activeButtonGraphic.enabled = false;
+            //activeButtonGraphic.enabled = false;
+            activeButtonGraphic.gameObject.SetActive(false);
             activeButtonGraphic = null;
         }
         if (activeRingGraphic != null)
@@ -234,7 +239,7 @@ public class PlayerQTEInput : MonoBehaviour
             mainAnimator.SetTrigger(winOverallAnimationTrigger);
             playerWinsSPMoveDirector.Play();
             guiCamera.enabled = false;
-            starPowerUiCamera.enabled = false;
+            starPowerUi.SetActive(false);
         }
         else
         {
@@ -275,7 +280,8 @@ public class PlayerQTEInput : MonoBehaviour
 
         foreach (var image in buttonGrapic)
         {
-            image.enabled = false;
+            //image.enabled = false;
+            image.gameObject.SetActive(false);
         }
         foreach (var star in qteShurikenFireballObject)
         {
