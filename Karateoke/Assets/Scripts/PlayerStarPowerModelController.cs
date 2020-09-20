@@ -21,7 +21,14 @@ public class PlayerStarPowerModelController : MonoBehaviour
     [SerializeField]
     private float cameraShakeDuration = 0.2f, cameraShakeAmplitude = 2.0f, cameraShakeFrequency = 2.0f;
 
+    [SerializeField]
+    private AudioClip[] getHitClips = new AudioClip[4];
+
+    [SerializeField]
+    private AudioClip bigHitClip;
+
     private CinemachineBrain cinemachineBrain;
+    private AudioSource audioSource;
 
     private PlayerQTEInput mainPlayerQTEManager;
     private Player mainPlayer;
@@ -56,6 +63,18 @@ public class PlayerStarPowerModelController : MonoBehaviour
         StartCoroutine(ApplyCameraShake(perlin, extraSeconds: 0.25f));
     }
 
+    public void PlayGetHitSFX()
+    {
+        var index = UnityEngine.Random.Range(0, 4);
+        var getHitClip = getHitClips[index];
+        audioSource.PlayOneShot(getHitClip);
+    }
+
+    public void PlayBigHitSFX()
+    {
+        audioSource.PlayOneShot(bigHitClip);
+    }
+
     public void DealSPDamage(int indexOfOtherPlayer)
     {
         mainPlayer.PlayerDealsStarPowerDamageEvent(indexOfOtherPlayer);
@@ -68,6 +87,7 @@ public class PlayerStarPowerModelController : MonoBehaviour
         mainPlayerQTEManager = mainPlayerObject.GetComponent<PlayerQTEInput>();
         mainPlayer = mainPlayerObject.GetComponent<Player>();
         cinemachineBrain = cinemachineBrainObject.GetComponent<CinemachineBrain>();
+        audioSource = GetComponent<AudioSource>();
         groundShockVFX.Stop(withChildren: true);
         hitVFX.Stop(withChildren: true);
     }
