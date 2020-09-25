@@ -36,6 +36,9 @@ public class AudioSampleCollector : MonoBehaviour
     [SerializeField]
     private bool isSource;
 
+    [SerializeField]
+    private bool isVisualizer;
+
     [Tooltip("This value is used to multiply the highest value to get the pitch indicator's alpha so that it's visible when the player is singing.")]
     [SerializeField]
     private float alphaMultiplier = 100.0f;
@@ -44,25 +47,32 @@ public class AudioSampleCollector : MonoBehaviour
     private float pitchIndicatorHeightMultiplier = 0.04f;
 
     [SerializeField]
-    private float timeToMove = 0.1f;
+    private float pitchIndicatorSpeed = 0.1f;
+
+    public float[] NormalizedBufferedBands = new float[8];
 
     private AudioSource audioSource;
 
-    public static float[] audioBand = new float[8];
-    public static float[] audioBandBuffer = new float[8];
     private float pitchIndicatorHeight;
-
+    //should these be static?:
     public int indexOfHighestValue;
     public float highestValue;
 
     private float[] samples = new float[2048];
+    private float[] samplesForVisualizer = new float[512];
+
+    private static float[] audioFrequencyBand = new float[8];
+    private static float[] audioFrequencyBandBuffer = new float[8];
+    private float[] bufferDecrease = new float[8];
+    private float[] bandHighestValue = new float[8];
+
 
     void Awake()
     {
         audioSource = GetComponent<AudioSource>();
 
 
-        if (useMicrophone && !isSource)
+        if (useMicrophone && !isSource && !isVisualizer)
         {
             for (int i = 0; i < Microphone.devices.Length; i++)
             {
@@ -86,11 +96,11 @@ public class AudioSampleCollector : MonoBehaviour
                 //TODO: Add user facing error popup
             }
         }
-        else if (!isSource)
+        else if (!isSource && !isVisualizer)
         {
             audioSource.outputAudioMixerGroup = masterMixerGroup;
         }
-        else
+        else if (isSource && !isVisualizer)
         {
             audioSource.outputAudioMixerGroup = sourceMixerGroup;
         }
@@ -113,24 +123,98 @@ public class AudioSampleCollector : MonoBehaviour
     void Update()
     {
         GetSpectrumAudioSource();
-        GetRelevantFrequency();
-
-        if (!isSource)
+        
+        if (!isVisualizer)
         {
-            ChangePitchIndicator();
-            SetPitchIndicatorAlpha();
+            // The relevent frequency is only important to the vocal tracks, since the value it gets is the loudest frequency,
+            // which isn't needed for the decorative audio visualizer.
+            GetRelevantFrequency();
+
+            if (!isSource)
+            {
+                ChangePitchIndicator();
+                SetPitchIndicatorAlpha();
+            }
+        }
+        else
+        {
+            CreateFrequencyBands();
+            CreateBandBuffers();
+            CreateNormalizedBandValues();
         }
     }
 
     private void GetSpectrumAudioSource()
     {
-        audioSource.GetSpectrumData(samples, 0, FFTWindow.BlackmanHarris);
+        if (!isVisualizer)
+        {
+            audioSource.GetSpectrumData(samples, 0, FFTWindow.BlackmanHarris);
+        }
+        else
+        {
+            audioSource.GetSpectrumData(samplesForVisualizer, 0, FFTWindow.BlackmanHarris);
+        }
     }
 
     private void GetRelevantFrequency()
     {
         highestValue = samples.Max();
         indexOfHighestValue = samples.ToList().IndexOf(highestValue);
+    }
+
+    private void CreateFrequencyBands()
+    {
+        int bandCount = 0;
+
+        for (int i = 0; i < 8; i++)
+        {
+            float average = 0;
+            int sampleCount = (int)Mathf.Pow(2, i) * 2;
+            
+            if (bandCount == 7)
+            {
+                sampleCount += 2;
+            }
+
+            for (int e = 0; e < sampleCount; e++)
+            {
+                average += samplesForVisualizer[bandCount] * (bandCount + 1);
+                bandCount++;
+            }
+
+            average /= bandCount;
+            audioFrequencyBand[i] = average * 10;
+        }
+    }
+
+    private void CreateBandBuffers()
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            if (audioFrequencyBand[j] > audioFrequencyBandBuffer[j])
+            {
+                audioFrequencyBandBuffer[j] = audioFrequencyBand[j];
+                bufferDecrease[j] = 0.005f;
+            }
+            else
+            {
+                audioFrequencyBandBuffer[j] -= bufferDecrease[j];
+                bufferDecrease[j] *= 1.2f;
+            }
+        }
+    }
+
+    private void CreateNormalizedBandValues()
+    {
+        for (int k = 0; k < 8; k++)
+        {
+            if (audioFrequencyBand[k] > bandHighestValue[k])
+            {
+                bandHighestValue[k] = audioFrequencyBand[k];
+            }
+
+            NormalizedBufferedBands[k] = (audioFrequencyBandBuffer[k] / bandHighestValue[k]);
+        }
     }
 
     private void ChangePitchIndicator()
@@ -149,7 +233,7 @@ public class AudioSampleCollector : MonoBehaviour
                 pitchIndicatorHeight = ((indexOfHighestValue - 6) * pitchIndicatorHeightMultiplier) - 4.6f;
                 Vector3 endingVector3 = new Vector3(startingPosition.position.x, pitchIndicatorHeight, startingPosition.position.z);
 
-                pitchIndicator.transform.localPosition = Vector3.Lerp(startingPosition.position, endingVector3, timeToMove);
+                pitchIndicator.transform.localPosition = Vector3.Lerp(startingPosition.position, endingVector3, pitchIndicatorSpeed);
             }
         }
 
