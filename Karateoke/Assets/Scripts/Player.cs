@@ -35,7 +35,7 @@ public class Player : MonoBehaviour
     private Sprite activatedPortrait, unactivatedPortrait;
 
     [SerializeField]
-    private Camera guiCamera, starPowerUiCamera;
+    private Camera guiCamera;
 
     [SerializeField]
     private GameObject starPowerUi;
@@ -53,10 +53,10 @@ public class Player : MonoBehaviour
     private string getBlockedAnimationTrigger, deathAnimationTrigger, winAnimationTrigger;
 
     [SerializeField]
-    private ParticleSystem getHitParticleSystem, blockParticleSystem;
+    private ParticleSystem getHitParticleSystem;
 
     [SerializeField]
-    private AudioClip choiceMadeClip, getHitClip, fallClip;
+    private AudioClip choiceMadeClip;
 
     public enum MoveSet
     {
@@ -212,7 +212,7 @@ public class Player : MonoBehaviour
 
     private AudioSource audioSource;
     private Animator animator;
-    private SpriteRenderer portraitRenderer;
+    private Image portraitImage;
     private StarPowerBar starPowerRingGraphic;
     private HealthBar healthBar;
 
@@ -412,7 +412,7 @@ public class Player : MonoBehaviour
 
         audioSource = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
-        //portraitRenderer = portraitObject.GetComponent<SpriteRenderer>();
+        portraitImage = portraitObject.GetComponent<Image>();
         starPowerRingGraphic = starPowerRingGraphicObject.GetComponent<StarPowerBar>();
         healthBar = healthBarObject.GetComponent<HealthBar>();
     }
@@ -443,7 +443,7 @@ public class Player : MonoBehaviour
         if (CanMakeChoice && !hasMadeChoiceThisPhrase && !IsDead)
         {
             MoveToExecute = move;
-            //portraitRenderer.sprite = activatedPortrait;
+            portraitImage.sprite = activatedPortrait;
             //audioSource.PlayOneShot(choiceMadeClip);
             Debug.Log($"{this.name} has chosen {move}");
         }
@@ -453,7 +453,7 @@ public class Player : MonoBehaviour
     {
         hasMadeChoiceThisPhrase = false;
         animationTrigger = null;
-        //portraitRenderer.sprite = unactivatedPortrait;
+        portraitImage.sprite = unactivatedPortrait;
         queuedActionText = " ";
 
         //animator.SetTrigger(gettingReadyAnimationTrigger);

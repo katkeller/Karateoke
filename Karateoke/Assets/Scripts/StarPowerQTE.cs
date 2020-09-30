@@ -19,12 +19,19 @@ public class StarPowerQTE : MonoBehaviour
     [SerializeField]
     private int baseStarPowerDamage = 30, decreasedStarPowerDamage = 20;
 
+    [SerializeField]
+    private GameObject starPowerTextObject;
+
+    [SerializeField]
+    private AudioClip starPowerTextSFX;
+
     public int DamageDeltByStarPowerMove
     {
         get;
         private set;
     }
 
+    private AudioSource audioSource;
     private PlayerQTEInput[] playerQteInput = new PlayerQTEInput[2];
     private List<int> buttonPressIndexOrder = new List<int>();
     //private List<int> indexesOfWinners = new List<int>();
@@ -54,6 +61,8 @@ public class StarPowerQTE : MonoBehaviour
             indexOfDefender = 0;
         }
 
+        StartCoroutine(ShowThenHideSPText());
+
         playerHasWonThisRound = false;
         roundIndex = 0;
         attackerWinCount = 0;
@@ -80,6 +89,14 @@ public class StarPowerQTE : MonoBehaviour
         playerQteInput[0].ActivateQTEButtonAndAnimation(buttonPressIndexOrder[roundIndex]);
         playerQteInput[1].ActivateQTEButtonAndAnimation(buttonPressIndexOrder[roundIndex]);
         roundIndex++;
+    }
+
+    private IEnumerator ShowThenHideSPText()
+    {
+        starPowerTextObject.SetActive(true);
+        audioSource.PlayOneShot(starPowerTextSFX);
+        yield return new WaitForSeconds(3);
+        starPowerTextObject.SetActive(false);
     }
 
     public void PlayerWonSingleQTE(int indexOfPlayer)
@@ -113,6 +130,8 @@ public class StarPowerQTE : MonoBehaviour
 
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+
         buttonPressIndexOrder.Add(0);
         buttonPressIndexOrder.Add(1);
         buttonPressIndexOrder.Add(2);
