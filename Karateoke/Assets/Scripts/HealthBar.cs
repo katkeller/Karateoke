@@ -11,15 +11,31 @@ public class HealthBar : MonoBehaviour
     [SerializeField]
     private float lerpSpeed = 2;
 
+    [SerializeField]
+    private Color warningColor;
+
     private float targetFillAmount;
     private bool shouldScale;
 
+    private float currentValue;
+    private Color originalColor;
+    private Color currentColor;
+    private Color targetColor;
 
     public void SetHealthBarToValue(float newHealthValue)
     {
+        currentValue = newHealthValue;
         targetFillAmount = newHealthValue / 100;
         shouldScale = true;
         Debug.Log($"{name} should be scaling to {newHealthValue}, {targetFillAmount}.");
+    }
+
+    private void Start()
+    {
+        originalColor = mainBar.color;
+        currentColor = originalColor;
+        targetColor = warningColor;
+        currentValue = 100;
     }
 
     private void Update()
@@ -27,6 +43,10 @@ public class HealthBar : MonoBehaviour
         if (shouldScale)
         {
             Scale();
+        }
+        if (currentValue < 25)
+        {
+            Flash();
         }
     }
 
@@ -40,5 +60,10 @@ public class HealthBar : MonoBehaviour
         {
             shouldScale = false;
         }
+    }
+
+    private void Flash()
+    {
+        mainBar.color = Color.Lerp(currentColor, targetColor, Mathf.PingPong(Time.time, 1));
     }
 }
