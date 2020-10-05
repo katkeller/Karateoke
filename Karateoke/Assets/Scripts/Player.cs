@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
@@ -39,6 +40,9 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private GameObject starPowerUi;
+
+    [SerializeField]
+    private PlayableDirector victoryCutSceneObject;
 
     [SerializeField]
     private string attackButtonString, dodgeButtonString, sweepButtonString;
@@ -125,7 +129,8 @@ public class Player : MonoBehaviour
                 if (!StarPowerMoveIsHappening)
                 {
                     //We check for the star power move so that the player dying doesn't interrupt the cut scene.
-                    Die();
+                    StartCoroutine(WaitForCombatThenDie());
+                    //Die();
                 }
             }
 
@@ -387,6 +392,15 @@ public class Player : MonoBehaviour
         }
     }
 
+    private IEnumerator WaitForCombatThenDie()
+    {
+        // When the player dies from a regular combat move, we want to give that move a chance to finish before
+        // we start the death cutscene. When death comes from an SP move, there's no need since the death won't
+        // be activated by the combat manager until after the SP cutscene is finished.
+        yield return new WaitForSeconds(1.5f);
+        Die();
+    }
+
     public void Die()
     {
         Debug.Log($"{this.name} is dead.");
@@ -397,6 +411,7 @@ public class Player : MonoBehaviour
 
     public void Win()
     {
+        victoryCutSceneObject.Play();
         animator.SetTrigger(winAnimationTrigger);
     }
 

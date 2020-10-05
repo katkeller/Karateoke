@@ -15,7 +15,7 @@ public class GameStartManager : MonoBehaviour
 
     private LyricScrolling lyricScrolling;
     private BackgroundMusic backgroundMusic;
-    private DiscoFloorController discoFloor;
+    //private DiscoFloorController discoFloor;
     private AudioSampleCollector player1SampleCollector, player2SampleCollector, sourceSampleCollector;
     private CombatManager combatManager;
 
@@ -23,7 +23,7 @@ public class GameStartManager : MonoBehaviour
     {
         lyricScrolling = scrollingLyricsGameObject.GetComponent<LyricScrolling>();
         backgroundMusic = backgroundMusicGameObject.GetComponent<BackgroundMusic>();
-        discoFloor = discoFloorObject.GetComponent<DiscoFloorController>();
+        //discoFloor = discoFloorObject.GetComponent<DiscoFloorController>();
         player1SampleCollector = player1AudioSampleCollectorGameObject.GetComponent<AudioSampleCollector>();
         player2SampleCollector = player2AudioSampleCollectorGameObject.GetComponent<AudioSampleCollector>();
         sourceSampleCollector = sourceAudioGameObject.GetComponent<AudioSampleCollector>();
@@ -45,7 +45,7 @@ public class GameStartManager : MonoBehaviour
         startButton.gameObject.SetActive(false);
         lyricScrolling.StartScrolling();
         backgroundMusic.StartBackgroundMusic();
-        discoFloor.StartFloor();
+        //discoFloor.StartFloor();
         player1SampleCollector.StartMusic();
         player2SampleCollector.StartMusic();
         sourceSampleCollector.StartMusic();

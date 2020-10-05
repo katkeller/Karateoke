@@ -301,7 +301,7 @@ public class CombatManager : MonoBehaviour
             indexOfWinner = 0;
         }
         player[indexOfWinner].Win();
-        StartCoroutine(ShowVictoryText());
+        //StartCoroutine(ShowVictoryText());
     }
 
     IEnumerator ShowVictoryText()
