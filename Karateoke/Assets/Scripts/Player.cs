@@ -20,20 +20,17 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject healthBarObject;
 
-    //[SerializeField]
-    //private HealthBar starPowerBar;
-
     [SerializeField]
     private GameObject starPowerRingGraphicObject;
-
-    [SerializeField]
-    private Text actionText;
 
     [SerializeField]
     private GameObject portraitObject;
 
     [SerializeField]
     private Sprite activatedPortrait, unactivatedPortrait;
+
+    [SerializeField]
+    private GameObject attackTextObject, blockTextObject, sweepTextObject;
 
     [SerializeField]
     private Camera guiCamera;
@@ -130,7 +127,6 @@ public class Player : MonoBehaviour
                 {
                     //We check for the star power move so that the player dying doesn't interrupt the cut scene.
                     StartCoroutine(WaitForCombatThenDie());
-                    //Die();
                 }
             }
 
@@ -160,7 +156,6 @@ public class Player : MonoBehaviour
             if (starPower >= 100)
             {
                 StartCoroutine(SetUpStarPowerMove());
-                //remember to set star power back to a 0
             }
 
             starPowerRingGraphic.ScaleFill(starPower);
@@ -177,6 +172,7 @@ public class Player : MonoBehaviour
                 // If the player has not made a choice by the time this value is being accessed by the combat manager,
                 // then that means they've run out of time and their Move is set to "Undecided".
                 moveToExecute = MoveSet.Undecided;
+                queuedActionTextObject = null;
             }
 
             return moveToExecute;
@@ -189,15 +185,15 @@ public class Player : MonoBehaviour
             {
                 case MoveSet.Attack:
                     animationTrigger = attackAnimationTrigger;
-                    queuedActionText = "ATTACK";
+                    queuedActionTextObject = attackTextObject;
                     break;
                 case MoveSet.Dodge:
                     animationTrigger = dodgeAnimationTrigger;
-                    queuedActionText = "DODGE";
+                    queuedActionTextObject = blockTextObject;
                     break;
                 case MoveSet.Sweep:
                     animationTrigger = sweepAnimationTrigger;
-                    queuedActionText = "SWEEP";
+                    queuedActionTextObject = sweepTextObject;
                     break;
                 case MoveSet.Undecided:
                     break;
@@ -211,7 +207,7 @@ public class Player : MonoBehaviour
     }
 
     private string animationTrigger;
-    private string queuedActionText;
+    private GameObject queuedActionTextObject;
 
     private bool gameHasStarted;
 
@@ -262,7 +258,7 @@ public class Player : MonoBehaviour
 
         animator.SetTrigger(animationTrigger);
         //also do action text
-        //StartCoroutine(ShowActionText());
+        StartCoroutine(ShowActionText());
         
     }
 
@@ -423,18 +419,11 @@ public class Player : MonoBehaviour
             Debug.LogError($"{this.name} does not have input strings assigned to it.");
         }
 
-        //actionText.text = " ";
-
         audioSource = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
         portraitImage = portraitObject.GetComponent<Image>();
         starPowerRingGraphic = starPowerRingGraphicObject.GetComponent<StarPowerBar>();
         healthBar = healthBarObject.GetComponent<HealthBar>();
-    }
-
-    void Start()
-    {
-        
     }
 
     void Update()
@@ -459,7 +448,7 @@ public class Player : MonoBehaviour
         {
             MoveToExecute = move;
             portraitImage.sprite = activatedPortrait;
-            //audioSource.PlayOneShot(choiceMadeClip);
+            audioSource.PlayOneShot(choiceMadeClip);
             Debug.Log($"{this.name} has chosen {move}");
         }
     }
@@ -469,9 +458,7 @@ public class Player : MonoBehaviour
         hasMadeChoiceThisPhrase = false;
         animationTrigger = null;
         portraitImage.sprite = unactivatedPortrait;
-        queuedActionText = " ";
-
-        //animator.SetTrigger(gettingReadyAnimationTrigger);
+        queuedActionTextObject = null;
     }
 
     private IEnumerator SetUpStarPowerMove()
@@ -484,8 +471,11 @@ public class Player : MonoBehaviour
 
     IEnumerator ShowActionText()
     {
-        actionText.text = queuedActionText;
-        yield return new WaitForSeconds(3);
-        actionText.text = " ";
+        if (queuedActionTextObject != null)
+        {
+            queuedActionTextObject.SetActive(true);
+            yield return new WaitForSeconds(1.5f);
+            queuedActionTextObject.SetActive(false);
+        }
     }
 }
