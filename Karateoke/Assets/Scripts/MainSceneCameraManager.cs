@@ -4,6 +4,11 @@ using System;
 using UnityEngine;
 using Cinemachine;
 
+/// <summary>
+/// This script controls the main camera's dolly track movement as well as the camera switching between the dolly (circle) camera 
+/// and the static camera that provides a steady view during combat. It's main fucntion is to make the circle camera's speed 
+/// match up with the current phrase's length so that it will arrive back at the start (front of the scene) right as the phrase ends.
+/// </summary>
 public class MainSceneCameraManager : MonoBehaviour
 {
     #region Fields and Properties
@@ -17,12 +22,15 @@ public class MainSceneCameraManager : MonoBehaviour
     [SerializeField]
     private float[] phraseLengths = new float[10];
 
+    public bool CameraShouldCircleContinuously { get; set; }
+
     private CinemachineTrackedDolly circleDolly;
 
     private int phraseCount;
     private float timeSinceLastPhraseEnd;
     private float dollyDuration;
     private bool phraseIsResolving;
+    private bool playerIsDead;
 
     #endregion
 
@@ -42,22 +50,28 @@ public class MainSceneCameraManager : MonoBehaviour
 
     private void OnEndOfPhrase()
     {
-        phraseCount++;
-        timeSinceLastPhraseEnd = 0;
-        phraseIsResolving = true;
-        mainStaticCamera.Priority = 100;
-        circleCamera.Priority = 0;
+        if (!playerIsDead)
+        {
+            phraseCount++;
+            timeSinceLastPhraseEnd = 0;
+            phraseIsResolving = true;
+            mainStaticCamera.Priority = 100;
+            circleCamera.Priority = 0;
+        }
     }
 
     public void StartCircleCam()
     {
-        phraseIsResolving = false;
-
-        dollyDuration = phraseLengths[phraseCount] - timeSinceLastPhraseEnd;
-        Debug.Log($"Dolly Duration: {dollyDuration}");
-        StartCoroutine(LerpDollyPosition());
-        circleCamera.Priority = 100;
-        mainStaticCamera.Priority = 0;
+        // This is called by the combat manager when a phrase starts after combat has finished.
+        if (!playerIsDead)
+        {
+            phraseIsResolving = false;
+            dollyDuration = phraseLengths[phraseCount] - timeSinceLastPhraseEnd;
+            Debug.Log($"Dolly Duration: {dollyDuration}");
+            StartCoroutine(LerpDollyPosition());
+            circleCamera.Priority = 100;
+            mainStaticCamera.Priority = 0;
+        }
     }
 
     private IEnumerator LerpDollyPosition()
@@ -73,19 +87,33 @@ public class MainSceneCameraManager : MonoBehaviour
         }
 
         circleDolly.m_PathPosition = 4;
+
+        if (CameraShouldCircleContinuously)
+        {
+            StartCoroutine(LerpDollyPosition());
+        }
     }
 
+    public void SetUpCameraForAfterPlayerWin()
+    {
+        // This is called from the player victory cutscene Timeline playables at the end of the cutscenes.
+        Debug.Log($"{name} recieved a signal.");
+        playerIsDead = true;
+        CameraShouldCircleContinuously = true;
+        phraseIsResolving = false;
+        dollyDuration = 10;
+        StartCoroutine(LerpDollyPosition());
+        circleCamera.Priority = 100;
+        mainStaticCamera.Priority = 0;
+    }
 
-    //TODO: Add logic to circle the camera for the rest of the song when someone wins.
     private void OnEnable()
     {
-        //CombatTestingScript.EndOfPhrase += OnEndOfPhrase;
         PhraseEndTrigger.EndOfPhrase += OnEndOfPhrase;
     }
 
     private void OnDisable()
     {
-        //CombatTestingScript.EndOfPhrase -= OnEndOfPhrase;
         PhraseEndTrigger.EndOfPhrase -= OnEndOfPhrase;
     }
 }

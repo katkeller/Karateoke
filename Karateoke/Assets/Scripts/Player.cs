@@ -474,7 +474,7 @@ public class Player : MonoBehaviour
         if (queuedActionTextObject != null)
         {
             queuedActionTextObject.SetActive(true);
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(2.15f);
             queuedActionTextObject.SetActive(false);
         }
     }
