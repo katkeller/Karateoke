@@ -27,7 +27,7 @@ public class CombatManager : MonoBehaviour
     private AudioClip[] countdownClip = new AudioClip[4];
 
     [SerializeField]
-    private GameObject[] comboImage = new GameObject[2];
+    private GameObject[] winnerIndicationUI = new GameObject[2];
 
     [SerializeField]
     private ParticleSystem[] comboUISparks = new ParticleSystem[2];
@@ -70,7 +70,6 @@ public class CombatManager : MonoBehaviour
     private Color32 countdownTextColor;
     private AudioSource audioSource;
     //private AudioSource player1AudioSource, player2AudioSource;
-    //private Animator[] playerAnimator = new Animator[2];
     private AudioComparisonManager audioComparisonSript;
     private MainSceneCameraManager mainCameraManager;
 
@@ -113,8 +112,6 @@ public class CombatManager : MonoBehaviour
         countdownTextColor = countdownText.color;
         indexOfLastRoundWinner = 3;
 
-        //comboImageAnimator[0] = comboImage[0].GetComponent<Animator>();
-        //comboImageAnimator[1] = comboImage[1].GetComponent<Animator>();
         //comboText[0].text = "";
         //comboText[1].text = "";
 
@@ -347,6 +344,7 @@ public class CombatManager : MonoBehaviour
         Debug.Log($"Index of winner: {indexOfWinner}");
 
         //StartCoroutine(DecideComboAndDisplayImage(indexOfWinner, indexOfLoser));
+        StartCoroutine(ShowPhraseWinnerUI());
 
         // The - 1 is there so we can control for one player only doing a bit better than the other,
         // but I may take it out later after playtesting.
@@ -362,6 +360,14 @@ public class CombatManager : MonoBehaviour
         player[1].ExecuteQueuedCombatMove();
 
         StartCoroutine(WaitThenResetCamera());
+    }
+
+    private IEnumerator ShowPhraseWinnerUI()
+    {
+        yield return new WaitForSeconds(0.5f);
+        winnerIndicationUI[indexOfWinner].SetActive(true);
+        yield return new WaitForSeconds(2.2f);
+        winnerIndicationUI[indexOfWinner].SetActive(false);
     }
 
     private IEnumerator WaitThenResetCamera()
