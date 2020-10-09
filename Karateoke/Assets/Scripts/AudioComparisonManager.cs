@@ -12,24 +12,12 @@ public class AudioComparisonManager : MonoBehaviour
     [SerializeField]
     private GameObject[] audioSampleObject = new GameObject[3];
 
-    [SerializeField]
-    private Image player1WinImage, player2WinImage;
-
-    [SerializeField]
-    private float secondsWinnerImageOnScreen = 1.5f;
-
-    public int IndexOfWinner;
-    public int IndexOfLoser;
-    public float ScoreDisparity;
-
     private AudioSampleCollector[] audioSampleCollector = new AudioSampleCollector[3];
     private int[] index = new int[3];
     private float[] highestValue = new float[3];
 
     private float[] differenceBetweenPlayerAndSource = new float[2];
     private float[] playerScore = new float[2];
-
-    private bool recordingValues;
 
 
     private void Awake()
@@ -38,9 +26,6 @@ public class AudioComparisonManager : MonoBehaviour
         {
             audioSampleCollector[i] = audioSampleObject[i].GetComponent<AudioSampleCollector>();
         }
-
-        //player1WinImage.enabled = false;
-        //player2WinImage.enabled = false;
     }
 
     void Update()
@@ -51,44 +36,27 @@ public class AudioComparisonManager : MonoBehaviour
         }
     }
 
-    private void OnDecideWinner()
+    public PhraseScore GetPhraseScore()
     {
+        PhraseScore toReturn = new PhraseScore();
+
         if (playerScore[0] < playerScore[1])
         {
-            IndexOfWinner = 0;
-            IndexOfLoser = 1;
-            ScoreDisparity = playerScore[1] - playerScore[0];
-            // The winning disparity is how much the losing player's score differed from the better player's score.
-            // A higher score is worse, since that means they were far off from the target by a larger amount.
-            //StartCoroutine(DisplayWinnerImage(player1WinImage));
+            toReturn.IndexOfWinner = 0;
+            toReturn.IndexOfLoser = 1;
+            toReturn.ScoreDisparity = playerScore[1] - playerScore[0];
         }
-        else if (playerScore[0] > playerScore[1])
+        else
         {
-            IndexOfWinner = 1;
-            IndexOfLoser = 0;
-            ScoreDisparity = playerScore[0] - playerScore[1];
-            //StartCoroutine(DisplayWinnerImage(player2WinImage));
+            toReturn.IndexOfWinner = 1;
+            toReturn.IndexOfLoser = 0;
+            toReturn.ScoreDisparity = playerScore[0] - playerScore[1];
         }
 
-        playerScore[0] = 0.0f;
-        playerScore[1] = 0.0f;
-    }
+        playerScore[0] = 0;
+        playerScore[1] = 1;
 
-    private void OnEnable()
-    {
-        CombatManager.DecideWinner += OnDecideWinner;
-    }
-
-    private void OnDisable()
-    {
-        CombatManager.DecideWinner -= OnDecideWinner;
-    }
-
-    IEnumerator DisplayWinnerImage(Image image)
-    {
-        image.enabled = true;
-        yield return new WaitForSeconds(secondsWinnerImageOnScreen);
-        image.enabled = false;
+        return toReturn;
     }
 
     private void RecordSampleValues(int e)

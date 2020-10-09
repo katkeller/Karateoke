@@ -259,7 +259,6 @@ public class Player : MonoBehaviour
         animator.SetTrigger(animationTrigger);
         //also do action text
         StartCoroutine(ShowActionText());
-        
     }
 
     public void PlayerAttacksEvent(int indexOfOtherPlayer)

@@ -12,10 +12,13 @@ public class CombatManager : MonoBehaviour
     private GameObject mainCameraManagerGameObject;
 
     [SerializeField]
+    private GameObject audioComparisonManagerGameObject;
+
+    [SerializeField]
     private Player[] player = new Player[2];
 
     [SerializeField]
-    private TextMeshProUGUI countdownText, winnerText;
+    private TextMeshProUGUI countdownText;
 
     [SerializeField]
     private float secondsForChoice = 1.5f;
@@ -69,11 +72,11 @@ public class CombatManager : MonoBehaviour
 
     private Color32 countdownTextColor;
     private AudioSource audioSource;
-    //private AudioSource player1AudioSource, player2AudioSource;
-    private AudioComparisonManager audioComparisonSript;
+    private AudioComparisonManager audioComparisonManager;
     private MainSceneCameraManager mainCameraManager;
-
     private StarPowerQTE starPowerManager;
+
+    private PhraseScore currentPhraseScore = new PhraseScore();
 
     private bool isPerformingStarPowerMove;
     private bool playerIsDead;
@@ -82,8 +85,6 @@ public class CombatManager : MonoBehaviour
     private bool circleCamHasStarted;
 
     #endregion
-
-    public static event Action DecideWinner;
 
     public void StartAnimations()
     {
@@ -97,6 +98,8 @@ public class CombatManager : MonoBehaviour
         player[0].IndexAccordingToCombatManager = 0;
         player[1].IndexAccordingToCombatManager = 1;
 
+        audioSource = GetComponent<AudioSource>();
+        audioComparisonManager = audioComparisonManagerGameObject.GetComponent<AudioComparisonManager>();
         starPowerManager = GetComponent<StarPowerQTE>();
         mainCameraManager = mainCameraManagerGameObject.GetComponent<MainSceneCameraManager>();
     }
@@ -114,9 +117,6 @@ public class CombatManager : MonoBehaviour
 
         //comboText[0].text = "";
         //comboText[1].text = "";
-
-        audioSource = GetComponent<AudioSource>();
-        //audioComparisonSript = GetComponent<AudioComparisonManager>();
     }
 
     void Update()
@@ -135,8 +135,9 @@ public class CombatManager : MonoBehaviour
         }
         else
         {
-            // This is so the phrase values stay consistent even when a star power move is being performed
-            DecideWinner?.Invoke();
+            // We get the phrase score even when we won't be using it so that the phrase values stay consistent in the
+            // audio comparison script (and we don't end up with two phrase's worth of values for the next active phrase).
+            currentPhraseScore = audioComparisonManager.GetPhraseScore();
         }
     }
 
@@ -209,7 +210,7 @@ public class CombatManager : MonoBehaviour
 
         if (player[indexOfAttackedPlayer].Health <= 0)
         {
-            //Kill Player
+            // If the player dies during an SP move, we want to wait for the end of the SP cutscene before playing the death animation.
             player[indexOfAttackedPlayer].Die();
 
             Debug.Log("Player died from star power move.");
@@ -309,50 +310,37 @@ public class CombatManager : MonoBehaviour
             player[0].CanMakeChoice = false;
             player[1].CanMakeChoice = false;
 
-            //DecideWinner?.Invoke();
-
-            // The disparity average is based on how different the two players' scores were,
-            // and how long the phrase in question was. The higher the score, the worse the
-            // loser did compared to the winner during the phrase. This value is applied to bonuses.
-
-            //scoreDisparityAveraged = audioComparisonSript.ScoreDisparity / phraseTimeElapsed;
-
-            //disparityText.text = scoreDisparityAveraged.ToString();
-            //testTimerText.text = phraseTimeElapsed.ToString();
-            phraseTimeElapsed = 0.0f;
+            currentPhraseScore = audioComparisonManager.GetPhraseScore();
 
             ExecuteCombat();
         }
     }
 
-    private void ExecuteCombat()
+    public void ExecuteCombat()
     {
-        //indexOfWinner = audioComparisonSript.IndexOfWinner;
-        //indexOfLoser = audioComparisonSript.IndexOfLoser;
-        var rand = new System.Random();
-        indexOfWinner = rand.Next(0, 2);
-        scoreDisparityAveraged = rand.Next(5, 40);
-
-        if (indexOfWinner == 0)
-        {
-            indexOfLoser = 1;
-        }
-        else
-        {
-            indexOfLoser = 0;
-        }
-        Debug.Log($"Index of winner: {indexOfWinner}");
-
-        //StartCoroutine(DecideComboAndDisplayImage(indexOfWinner, indexOfLoser));
+        indexOfWinner = currentPhraseScore.IndexOfWinner;
+        indexOfLoser = currentPhraseScore.IndexOfLoser;
+        Debug.Log($"Index of phrase winner: {indexOfWinner}");
         StartCoroutine(ShowPhraseWinnerUI());
 
-        // The - 1 is there so we can control for one player only doing a bit better than the other,
-        // but I may take it out later after playtesting.
-        bonus = (int)(scoreDisparityAveraged / bonusDividingFactor) - 1;
+        // The disparity average is based on how different the two players' scores were,
+        // and how long the phrase in question was. The higher the score, the worse the
+        // loser did compared to the winner during the phrase. This value is applied to bonuses.
+        scoreDisparityAveraged = currentPhraseScore.ScoreDisparity / phraseTimeElapsed;
+        Debug.Log($"Score Disparity Averaged before capping: {scoreDisparityAveraged}");
+        phraseTimeElapsed = 0.0f;
+
+        if (scoreDisparityAveraged > 200)
+        {
+            // We cap it at 200 so the winner can never deal more than 5 extra points of damage.
+            scoreDisparityAveraged = 200;
+        }
+
+        bonus = (int)(scoreDisparityAveraged / 40);
         if (bonus < 1)
         {
             // This is to make sure that a fraction bonus below 1 doesn't cause the attack damage to go below the base number.
-            bonus = 1;
+            bonus = 0;
         }
         Debug.Log($"Bonus: {bonus}");
 
