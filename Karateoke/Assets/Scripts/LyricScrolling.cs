@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System.Linq;
-
+/// <summary>
+/// This script controls the scrolling lyrics placement which denotes each lyrics timing and pitch.
+/// </summary>
 public class LyricScrolling : MonoBehaviour
 {
     [SerializeField]
@@ -13,9 +15,8 @@ public class LyricScrolling : MonoBehaviour
     [SerializeField]
     private string fullLyrics;
 
-    [SerializeField]
-    private float[] wordTimes = new float[298];
-
+    // This is a string rather than an array so that I can easily copy and paste the values in from the tool
+    // I created that allows me to get a string value with each lyric's time in it.
     [TextArea(5, 10)]
     [SerializeField]
     private string wordTimesString;
@@ -33,10 +34,6 @@ public class LyricScrolling : MonoBehaviour
     [SerializeField]
     private float spacingMultiplier = 4.0f, spacingSubtraction = 60.0f, speedMultiplier = 4.0f;
 
-    //this value is 0.0333 because we have 90 samples to put into a 3 unit range, so 3 / 90 = 0.0333
-    //We multiply each word's highest index value (that we got from the LyricPlacementScene) by 0.0333
-    //(after subtracting 56, since the indexes we care about start at 7). Then we subtract 4.6 to get
-    //the y-axis placement, since we're placing the lyrics between -1.6 and -4.6 (for the time being).
     [SerializeField]
     private float heightMultiplier = 0.04f, yAxisSubtraction = 4.6f;
 
@@ -50,12 +47,6 @@ public class LyricScrolling : MonoBehaviour
     private TextMeshPro text;
     private Vector3 scrollingTarget;
     private bool shouldScroll;
-    //private AudioSource audioSource;
-
-    private void Awake()
-    {
-        //audioSource = GetComponent<AudioSource>();
-    }
 
     void Start()
     {
@@ -89,16 +80,17 @@ public class LyricScrolling : MonoBehaviour
                 {
                     a.tag = "PhraseEnd";
                     text.color = phraseEndColor;
-                    //does this work?
                 }
             }
-
-            //have to add tag setting for words that are end of phrase triggers
         }
 
         scrollingTarget = new Vector3(-(transform.position.x * spacingMultiplier) - 1500, transform.position.y, transform.position.z);
+    }
 
-        //audioSource.Play();
+    public void StartScrolling()
+    {
+        // This is called by the game start manager.
+        shouldScroll = true;
     }
 
     void Update()
@@ -106,14 +98,7 @@ public class LyricScrolling : MonoBehaviour
         if (shouldScroll)
         {
             timeElapsed += Time.deltaTime;
-            //timerText.text = timeElapsed.ToString("F2");
-
             transform.position = Vector3.MoveTowards(transform.position, scrollingTarget, Time.deltaTime * speedMultiplier);
         }
-    }
-
-    public void StartScrolling()
-    {
-        shouldScroll = true;
     }
 }

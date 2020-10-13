@@ -4,12 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-
+/// <summary>
+/// This script manages who wins each QTE round, the timing of each round, and what each QTE button
+/// will be. It communicates with each player's QTE input script to get each player's inputs.
+/// The attacking player only has to win 2 out of three of the QTEs to perform the SP move. However, 
+/// if the defending player wins once, the amount of damage applied to them is reduced. But they are
+/// at a disadvantage since the attacking player gets a head start on the QTE by way of starting with
+/// a slighly higher value.
+/// </summary>
 public class StarPowerQTE : MonoBehaviour
 {
-    // The player has to win 2 out of three, however if the defending player wins at all,
-    // the amount of damage applied to them goes down. They are at a big disadvantage though.
-
     [SerializeField]
     private GameObject[] player = new GameObject[2];
 
@@ -34,13 +38,12 @@ public class StarPowerQTE : MonoBehaviour
     private AudioSource audioSource;
     private PlayerQTEInput[] playerQteInput = new PlayerQTEInput[2];
     private List<int> buttonPressIndexOrder = new List<int>();
-    //private List<int> indexesOfWinners = new List<int>();
     private int indexOfAttacker;
     private int indexOfDefender;
     private int roundIndex;
     private int attackerWinCount;
     private int defenderWinCount;
-    private bool playerHasWonThisRound;
+    private bool currentQTEHasBeenResolved;
 
     #region Events
 
@@ -49,8 +52,21 @@ public class StarPowerQTE : MonoBehaviour
 
     #endregion
 
+    void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+
+        buttonPressIndexOrder.Add(0);
+        buttonPressIndexOrder.Add(1);
+        buttonPressIndexOrder.Add(2);
+
+        playerQteInput[0] = player[0].GetComponent<PlayerQTEInput>();
+        playerQteInput[1] = player[1].GetComponent<PlayerQTEInput>();
+    }
+
     public void StartQTE(int indexOfPlayerAttemptingSPMove)
     {
+        // This is activated by the combat manager at the right moment once a player has full star power.
         indexOfAttacker = indexOfPlayerAttemptingSPMove;
         if (indexOfAttacker == 0)
         {
@@ -63,15 +79,10 @@ public class StarPowerQTE : MonoBehaviour
 
         StartCoroutine(ShowThenHideSPText());
 
-        playerHasWonThisRound = false;
+        currentQTEHasBeenResolved = false;
         roundIndex = 0;
         attackerWinCount = 0;
         defenderWinCount = 0;
-        //indexesOfWinners.Clear();
-        //buttonPressIndexOrder.Clear();
-        //buttonPressIndexOrder.Add(0);
-        //buttonPressIndexOrder.Add(1);
-        //buttonPressIndexOrder.Add(2);
 
         // Shuffling the order of the QTE
         int count = buttonPressIndexOrder.Count;
@@ -101,9 +112,9 @@ public class StarPowerQTE : MonoBehaviour
 
     public void PlayerWonSingleQTE(int indexOfPlayer)
     {
-        if (!playerHasWonThisRound)
+        if (!currentQTEHasBeenResolved)
         {
-            playerHasWonThisRound = true;
+            currentQTEHasBeenResolved = true;
 
             playerQteInput[0].ExecuteQueuedAnimationAndHideGraphics();
             playerQteInput[1].ExecuteQueuedAnimationAndHideGraphics();
@@ -114,7 +125,7 @@ public class StarPowerQTE : MonoBehaviour
                 attackerWinCount++;
             }
             
-            // Make sure fewer than 3 rounds have occured
+            // Make sure fewer than 3 rounds have occured.
             if (roundIndex <= 2)
             {
                 StartCoroutine(DelayNextRound());
@@ -127,26 +138,13 @@ public class StarPowerQTE : MonoBehaviour
         }
     }
 
-
-    void Start()
-    {
-        audioSource = GetComponent<AudioSource>();
-
-        buttonPressIndexOrder.Add(0);
-        buttonPressIndexOrder.Add(1);
-        buttonPressIndexOrder.Add(2);
-
-        playerQteInput[0] = player[0].GetComponent<PlayerQTEInput>();
-        playerQteInput[1] = player[1].GetComponent<PlayerQTEInput>();
-    }
-
     IEnumerator DelayNextRound()
     {
-        //The next round is delayed in order to allow the result animations to play
+        // The next round is delayed in order to allow the result animations to play
         yield return new WaitForSeconds(secondsBetweenRounds);
         playerQteInput[0].ActivateQTEButtonAndAnimation(buttonPressIndexOrder[roundIndex]);
         playerQteInput[1].ActivateQTEButtonAndAnimation(buttonPressIndexOrder[roundIndex]);
-        playerHasWonThisRound = false;
+        currentQTEHasBeenResolved = false;
         roundIndex++;
     }
 
@@ -162,22 +160,18 @@ public class StarPowerQTE : MonoBehaviour
         {
             case 0:
                 // This means the other player defended themself completely.
-                Debug.Log("Attacker lost all QTEs.");
                 AttackerLoses();
                 break;
             case 1:
                 // This means the attacker only won one out of three, so they lose.
-                Debug.Log("Attacker won only once. They lose.");
                 AttackerLoses();
                 break;
             case 2:
                 // This means the attacker won twice, so they win, but damage is reduced.
-                Debug.Log("Attacker won twice. They win, damage is reduced.");
                 AttackerWins(damageReduced: true);
                 break;
             case 3:
                 // This means the attacker won completely, so we deal full damage and play star power move animations.
-                Debug.Log("Attacker won all QTEs.");
                 AttackerWins(damageReduced: false);
                 break;
             default:

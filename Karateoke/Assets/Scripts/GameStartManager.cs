@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+/// <summary>
+/// This script is attacked to the start button and starts the gameplay (song, lyric scrolling, etc.)
+/// </summary>
 public class GameStartManager : MonoBehaviour
 {
     [SerializeField]
@@ -32,6 +34,7 @@ public class GameStartManager : MonoBehaviour
 
     void Update()
     {
+        // Once I 3D print a controller/mic stand combo, I'll replace this with a dedicated START button.
         if (Input.GetButtonDown("Player1Attack") && !hasStarted)
         {
             StartGame();

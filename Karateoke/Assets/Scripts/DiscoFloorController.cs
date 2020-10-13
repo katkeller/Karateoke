@@ -2,7 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// This was supposed to create a fun disco-floor effect, but I found it to be way too visually distracting, 
+/// so it isn't being used. I might revisit it at some point to see if I can get any use out of it.
+/// </summary>
 public class DiscoFloorController : MonoBehaviour
 {
     [SerializeField]

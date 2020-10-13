@@ -4,7 +4,11 @@ using UnityEngine;
 using TMPro;
 using System;
 using UnityEngine.UI;
-
+/// <summary>
+/// This script is the "main brain" of the game's combat. It recieves info from the two player scripts, the phrase end trigger,
+/// the star power QTE manager, and the audio comparison manager. It also handles activting the various elements of those scripts 
+/// (such as the star power moves) at the right time.
+/// </summary>
 public class CombatManager : MonoBehaviour
 {
     #region Properties/Fields
@@ -32,24 +36,10 @@ public class CombatManager : MonoBehaviour
     [SerializeField]
     private GameObject[] winnerIndicationUI = new GameObject[2];
 
-    [SerializeField]
-    private ParticleSystem[] comboUISparks = new ParticleSystem[2];
-
-    [SerializeField]
-    private TextMeshProUGUI[] comboText = new TextMeshProUGUI[2];
-
-    [SerializeField]
-    private float comboImageAnimationDelay = 1.5f;
-
+    // In the future, I might want to have the blocking player deal a small amont of parry damage on a successfully block
+    // if they won the phrase singing-wise. But for now, the parry values aren't being used.
     [SerializeField]
     private int baseAttackDamage = 5, baseParryDamage = 1, baseStarPowerIncrease = 10;
-
-    [SerializeField]
-    private float baseStarPowerDecrease = 5f, baseStarPowerComboIncrease = 2f;
-
-    [Tooltip("The number that the disparity average will be divided by to get the value added to damage.")]
-    [SerializeField]
-    private float bonusDividingFactor = 10.0f, bonusParryDividingValue = 2.0f;
 
     [Tooltip("The number of seconds between combat choices being made and the circle cam starting back up.")]
     [SerializeField]
@@ -58,17 +48,12 @@ public class CombatManager : MonoBehaviour
     private int indexOfWinner;
     private int indexOfLoser;
     private float scoreDisparityAveraged;
-    private float damageDealt;
     private float phraseTimeElapsed;
     private int bonus;
 
     private int starPowerMovePastHitCount = 0;
     private float minorSPDamage;
     private float majorSPDamage;
-
-    private int timesWonInRowAfterFirst;
-    private int indexOfLastRoundWinner;
-    private Animator[] comboImageAnimator = new Animator[2];
 
     private Color32 countdownTextColor;
     private AudioSource audioSource;
@@ -80,7 +65,6 @@ public class CombatManager : MonoBehaviour
 
     private bool isPerformingStarPowerMove;
     private bool playerIsDead;
-    private bool starPowerHasBeenPerformed;
 
     private bool circleCamHasStarted;
 
@@ -88,6 +72,7 @@ public class CombatManager : MonoBehaviour
 
     public void StartAnimations()
     {
+        // This is called from the game start manager when the gameplay begins.
         player[0].StartGame();
         player[1].StartGame();
         StartCoroutine(WaitThenResetCamera());
@@ -113,10 +98,6 @@ public class CombatManager : MonoBehaviour
 
         countdownText.text = "";
         countdownTextColor = countdownText.color;
-        indexOfLastRoundWinner = 3;
-
-        //comboText[0].text = "";
-        //comboText[1].text = "";
     }
 
     void Update()
@@ -128,14 +109,16 @@ public class CombatManager : MonoBehaviour
 
     private void OnEndOfPhrase()
     {
+        // This is triggered by the phrase end trigger script when a lyric that is marked as the end of a phrase passses through the trigger.
         if (!isPerformingStarPowerMove && !playerIsDead)
         {
+            // If the star power move is happening, normal combat is paused so that we can resolve the QTE and the cutscene.
             StartCoroutine(AllowPlayersToMakeChoice());
-            Debug.Log("Phrase end has been triggered!");
+            Debug.Log("Phrase end has been triggered.");
         }
         else
         {
-            // We get the phrase score even when we won't be using it so that the phrase values stay consistent in the
+            // We want to get the phrase score even when we won't be using it so that the phrase values stay consistent in the
             // audio comparison script (and we don't end up with two phrase's worth of values for the next active phrase).
             currentPhraseScore = audioComparisonManager.GetPhraseScore();
         }
@@ -143,22 +126,30 @@ public class CombatManager : MonoBehaviour
 
     public void OnPlayerAttacks(int indexOfOtherPlayer)
     {
+        // These events are triggered from either player's script when they attempt a combat move.
+        // Once the window for choosing a combat move ends, each player's chosen animations will play. Those
+        // animations have event triggers in them that then communicate to these events so that the combat manager
+        // can pass along the info needed for each move. In the case of attacking, it tells the other player's 
+        // script that they are being attacked, what the possible damage is, and who won the phrase singing-wise.
+        // That player's script then knows if the attack was successful (and if they should be damaged) or not 
+        // based on if they're blocking or if they've performed the best singing-wise.
         player[indexOfOtherPlayer].GetAttcked(baseAttackDamage, bonus, indexOfWinner);
     }
 
     public void OnPlayerBlocks(int indexOfOtherPlayer)
     {
-        Debug.Log("Block event on combat manager triggered.");
-        // This works a little differently than the other two animation triggers,
-        // in that this event is on the block reaction animation. So we know if this
-        // event is triggered, the block was successful and we can interrupt the animation.
+        // This event is triggered from the blocking player's block reaction animation. So we know if this
+        // event was triggered, their block was successful, so we should tell the attacking player that their 
+        // attack failed.
         player[indexOfOtherPlayer].GetBlocked();
     }
 
     public void OnPlayerSweeps(int indexOfOtherPlayer)
     {
-        var indexOfSweeper = 0;
+        // This event is triggered from the players' sweep animation. So here, we determine if the other player is currently attacking,
+        // or if the other player is also sweeping and they won the phrase. If so, then the sweep fails.
 
+        int indexOfSweeper = 0;
         if (indexOfOtherPlayer == 0)
         {
             indexOfSweeper = 1;
@@ -166,12 +157,8 @@ public class CombatManager : MonoBehaviour
 
         bool successfullySweep = true;
 
-        if (player[indexOfOtherPlayer].MoveToExecute == Player.MoveSet.Sweep &&
-            indexOfWinner == indexOfOtherPlayer)
-        {
-            successfullySweep = false;
-        }
-        if (player[indexOfOtherPlayer].MoveToExecute == Player.MoveSet.Attack)
+        if ((player[indexOfOtherPlayer].MoveToExecute == Player.MoveSet.Sweep && indexOfWinner == indexOfOtherPlayer) ||
+            player[indexOfOtherPlayer].MoveToExecute == Player.MoveSet.Attack)
         {
             successfullySweep = false;
         }
@@ -204,6 +191,9 @@ public class CombatManager : MonoBehaviour
 
     private void OnStarPowerMoveEnds(int indexOfAttackedPlayer, int indexOfOtherPlayer)
     {
+        // When the SP move cutscene ends, we want to reset combat back to the default state and also check to see
+        // if the SP move killed the player who was attacked.
+
         player[indexOfOtherPlayer].StarPower = 0;
         player[0].StarPowerMoveIsHappening = false;
         player[1].StarPowerMoveIsHappening = false;
@@ -223,36 +213,40 @@ public class CombatManager : MonoBehaviour
 
     private IEnumerator WaitThenReactivateCombat()
     {
+        // We want to wait for a few seconds so that the animations can finish.
         yield return new WaitForSeconds(3);
         isPerformingStarPowerMove = false;
     }
 
     private void OnPlayerDealsStarPowerDamage(int indexOfOtherPlayer)
     {
-        if (starPowerMovePastHitCount == 0)
+        // This is triggered each time the attacker deals damage to the loser, which happens three times in the cutscene.
+        switch (starPowerMovePastHitCount)
         {
-            //Minor SP damage is dealt twice, and major SP damage is delt once.
-            minorSPDamage = starPowerManager.DamageDeltByStarPowerMove / 4;
-            majorSPDamage = starPowerManager.DamageDeltByStarPowerMove / 2;
+            case 0:
+                // We split the SP move into chunks so we can deal it to the losing player when they are hit by each 
+                // punch in the cutscene. That way, the health bar animates alongside them getting hit.
+                // Minor SP damage is dealt twice, and major SP damage is delt once.
+                minorSPDamage = starPowerManager.DamageDeltByStarPowerMove / 4;
+                majorSPDamage = starPowerManager.DamageDeltByStarPowerMove / 2;
 
-            player[indexOfOtherPlayer].Health -= (int)minorSPDamage;
-            starPowerMovePastHitCount++;
-            Debug.Log($"First hit dealing {minorSPDamage} to {player[indexOfOtherPlayer]}");
-        }
-        else if (starPowerMovePastHitCount == 1)
-        {
-            player[indexOfOtherPlayer].Health -= (int)minorSPDamage;
-            starPowerMovePastHitCount++;
-            Debug.Log($"Second hit dealing {minorSPDamage} to {player[indexOfOtherPlayer]}");
-        }
-        else if (starPowerMovePastHitCount == 2)
-        {
-            player[indexOfOtherPlayer].Health -= (int)majorSPDamage;
-            Debug.Log($"Third hit dealing {majorSPDamage} to {player[indexOfOtherPlayer]}");
-
-            minorSPDamage = 0;
-            majorSPDamage = 0;
-            starPowerMovePastHitCount = 0;
+                player[indexOfOtherPlayer].Health -= (int)minorSPDamage;
+                starPowerMovePastHitCount++;
+                Debug.Log($"First hit dealing {minorSPDamage} to {player[indexOfOtherPlayer]}");
+                break;
+            case 1:
+                player[indexOfOtherPlayer].Health -= (int)minorSPDamage;
+                starPowerMovePastHitCount++;
+                Debug.Log($"Second hit dealing {minorSPDamage} to {player[indexOfOtherPlayer]}");
+                break;
+            case 2:
+                player[indexOfOtherPlayer].Health -= (int)majorSPDamage;
+                Debug.Log($"Third hit dealing {majorSPDamage} to {player[indexOfOtherPlayer]}");
+                // Since this is the last hit, we can reset the values.
+                minorSPDamage = 0;
+                majorSPDamage = 0;
+                starPowerMovePastHitCount = 0;
+                break;
         }
     }
 
@@ -286,6 +280,7 @@ public class CombatManager : MonoBehaviour
 
     IEnumerator AllowPlayersToMakeChoice()
     {
+        // This is triggered at the end of each phrase, and only if no one is dead and no SP moves are occuring.
         if (!playerIsDead && !isPerformingStarPowerMove)
         {
             player[0].ExecuteMakingChoiceAnimations();
@@ -325,21 +320,20 @@ public class CombatManager : MonoBehaviour
 
         // The disparity average is based on how different the two players' scores were,
         // and how long the phrase in question was. The higher the score, the worse the
-        // loser did compared to the winner during the phrase. This value is applied to bonuses.
+        // loser did compared to the winner. This value is applied to bonuses.
         scoreDisparityAveraged = currentPhraseScore.ScoreDisparity / phraseTimeElapsed;
         Debug.Log($"Score Disparity Averaged before capping: {scoreDisparityAveraged}");
         phraseTimeElapsed = 0.0f;
 
         if (scoreDisparityAveraged > 200)
         {
-            // We cap it at 200 so the winner can never deal more than 5 extra points of damage.
+            // We cap it at 200 (and then divide it by 40 to get the bonus) so the winner can never deal more than 5 extra points of damage.
             scoreDisparityAveraged = 200;
         }
 
         bonus = (int)(scoreDisparityAveraged / 40);
         if (bonus < 1)
         {
-            // This is to make sure that a fraction bonus below 1 doesn't cause the attack damage to go below the base number.
             bonus = 0;
         }
         Debug.Log($"Bonus: {bonus}");
@@ -360,6 +354,8 @@ public class CombatManager : MonoBehaviour
 
     private IEnumerator WaitThenResetCamera()
     {
+        // We want to give the combat a chance to resolve before starting the camera on its circle track again.
+
         float seconds = circleCamHasStarted ? 
             secondsBeforeResettingCircleCam : secondsBeforeStartingCircleCamFirstTime;
 
@@ -373,43 +369,4 @@ public class CombatManager : MonoBehaviour
             mainCameraManager.StartCircleCam();
         }
     }
-
-    IEnumerator DecideComboAndDisplayImage(int indexOfWinner, int indexOfLoser)
-    {
-        if (indexOfWinner == indexOfLastRoundWinner)
-        {
-            timesWonInRowAfterFirst++;
-            if (timesWonInRowAfterFirst == 1)
-            {
-                //playerAnimator[indexOfWinner].SetBool("isOnFirstBonus", true);
-                //playerAnimator[indexOfWinner].SetBool("isOnSecondBonus", false);
-            }
-            else if (timesWonInRowAfterFirst >= 2)
-            {
-                //playerAnimator[indexOfWinner].SetBool("isOnSecondBonus", true);
-                //playerAnimator[indexOfWinner].SetBool("isOnFirstBonus", false);
-            }
-
-            int starPower = (int)baseStarPowerComboIncrease + (timesWonInRowAfterFirst * 2);
-            //playerStarPower[indexOfWinner] += starPower;
-            //starPowerBar[indexOfWinner].ScaleHealthBar(starPower, true);
-            player[indexOfWinner].StarPower += starPower;
-        }
-        else
-        {
-            timesWonInRowAfterFirst = 0;
-            //playerAnimator[indexOfLoser].SetBool("isOnFirstBonus", false);
-            //playerAnimator[indexOfWinner].SetBool("isOnSecondBonus", false);
-        }
-
-        indexOfLastRoundWinner = indexOfWinner;
-
-        comboImageAnimator[indexOfWinner].SetTrigger("comboIn");
-        comboText[indexOfWinner].text = "star\npower";
-        comboUISparks[indexOfWinner].Play();
-        yield return new WaitForSeconds(comboImageAnimationDelay);
-        comboImageAnimator[indexOfWinner].SetTrigger("comboOut");
-        comboText[indexOfWinner].text = "";
-    }
-
 }

@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// This script places the bars that are in the background in the duplicate SP scene area.
+/// </summary>
 public class StarPowerBackgroundBars : MonoBehaviour
 {
     [SerializeField]

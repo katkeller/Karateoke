@@ -5,7 +5,10 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 using UnityEngine.UI;
-
+/// <summary>
+/// This script takes in the values from the audio sample collectors and uses them to determine which player is
+/// the winner of each phrase, as well as how much better they did than the loser.
+/// </summary>
 public class AudioComparisonManager : MonoBehaviour
 {
     [Tooltip("Element zero should be the vocal source, one should be Player 1, and two should be Player 2.")]

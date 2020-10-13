@@ -4,7 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Timeline;
 using UnityEngine.Playables;
-
+/// <summary>
+/// An instance of this script is attached to each player. They communicate with the QTE manager to execute
+/// the QTEs and then play the SP cutscene if the attacking player wins the QTEs.
+/// </summary>
 public class PlayerQTEInput : MonoBehaviour
 {
     [SerializeField]
@@ -27,7 +30,7 @@ public class PlayerQTEInput : MonoBehaviour
     private Transform fireballTarget;
 
     [SerializeField]
-    private Camera guiCamera, starPowerUiCamera;
+    private Camera guiCamera;
 
     [SerializeField]
     private GameObject starPowerUi;
@@ -120,16 +123,8 @@ public class PlayerQTEInput : MonoBehaviour
 
     #region Animation Events
 
-    //public void SnapPlayerToStarPowerMovePosition()
-    //{
-    //    this.transform.position = starPowerMovePosition.position;
-    //    this.transform.rotation = starPowerMovePosition.rotation;
-    //    Debug.Log($"{this.name} should snap to {starPowerMovePosition}");
-    //}
-
     public void ActivateSPMoveObjectForWin()
     {
-        //mainPlayerRenderer.enabled = false;
         starPowerModelObject.SetActive(true);
         starPowerModelAnimator.SetTrigger("Win");
         StartCoroutine(WaitThenSetMainModelToInactive());
@@ -137,7 +132,6 @@ public class PlayerQTEInput : MonoBehaviour
 
     public void ActivateSPMoveObjectForLoss()
     {
-        //mainPlayerRenderer.enabled = false;
         starPowerModelObject.SetActive(true);
         starPowerModelAnimator.SetTrigger("Lose");
         StartCoroutine(WaitThenSetMainModelToInactive());
@@ -159,13 +153,10 @@ public class PlayerQTEInput : MonoBehaviour
         activeButtonGraphic = buttonGrapic[indexOfMove];
         activeShurikenFireballObject = qteShurikenFireballObject[indexOfMove];
         activeRingGraphic.enabled = true;
-        //activeButtonGraphic.enabled = true;
         activeButtonGraphic.gameObject.SetActive(true);
         activeShurikenFireballObject.SetActive(true);
         activeRingGraphic.fillAmount = QtePressingFill;
         activeShurikenFireballObject.transform.localScale = new Vector3(shurikenScale, shurikenScale, shurikenScale);
-        Debug.Log($"Shuriken Scale: {shurikenScale}");
-        //currentMoveFireballStartingPosition = fireballStartingPosition[indexOfMove];
 
         queuedAnimation = loseQTEAnimationTrigger;
 
@@ -190,7 +181,6 @@ public class PlayerQTEInput : MonoBehaviour
     {
         if (activeButtonGraphic != null)
         {
-            //activeButtonGraphic.enabled = false;
             activeButtonGraphic.gameObject.SetActive(false);
             activeButtonGraphic = null;
         }
@@ -267,9 +257,6 @@ public class PlayerQTEInput : MonoBehaviour
     {
         qteManager = qteManagerObject.GetComponent<StarPowerQTE>();
         indexAccordingToCombatManager = GetComponent<Player>().IndexAccordingToCombatManager;
-        //qtePressingValue[0] = 0;
-        //qtePressingValue[1] = 0;
-        //qtePressingValue[2] = 0;
         QtePressingFill = 0;
         timePassed = 0;
 
@@ -340,7 +327,6 @@ public class PlayerQTEInput : MonoBehaviour
     {
         queuedAnimation = winQTEAnimationTriggger;
         qteManager.PlayerWonSingleQTE(indexAccordingToCombatManager);
-        //Debug.Log($"{activeButtonGraphic.name} enabled?: {activeButtonGraphic.enabled}");
     }
 
     private void OnQTEStart(List<int> buttonPressIndexOrdered, int indexOfPlayerAttemptingSPMove)

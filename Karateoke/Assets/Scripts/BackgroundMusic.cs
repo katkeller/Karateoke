@@ -1,7 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// This script controls both the actual background music (which is the karaoke of the song), and the audio
+/// visualizer sound bars that create the arena.
+/// </summary>
 public class BackgroundMusic : MonoBehaviour
 {
     [SerializeField]
@@ -65,8 +68,17 @@ public class BackgroundMusic : MonoBehaviour
 
     private void SetBarColors()
     {
+        // The sound bars are set up to take in 8 sound values from the audio sample collector which will 
+        // change the bars' height. Instead of having just 8 bars, I wanted to repeat them in a circle so they
+        // would create a pattern. But I wanted this pattern to be refelected rather than just repeating (a.k.a., 
+        // the first group of 8 going from sound values 0-7, then the next going from 7-0, then the next 0-7 again, etc.).
+        // I also wanted each bar that was assocaiated with a specific sound value to be the same color (so all bars 
+        // that were showing the height value for the audio sample #3 would be green, all the ones showing #4 would be blue,
+        // and so on). So to achieve this, I made it so that the order switches every 8 bars.
         for (int k = 0; k < 8; k++)
         {
+            // k represents each audio sample value that each bar in the group will representing, which is also the index of
+            // the color they will be assigned.
             var barIndex = k;
             bool flipOrder = true;
             var flippedIndexDistance = (14 - (k * 2)) + 1;
@@ -74,8 +86,11 @@ public class BackgroundMusic : MonoBehaviour
 
             for (int l = 0; l < 8; l++)
             {
+                // l represents each actual bar in a given audio sample group. To get the reflected pattern effect, instead
+                // of just adding 8 to the current bar's index to get the next bar's index (which would end up creating a
+                // normal 0-7, 0-7, 0-7 pattern), we switch back and forth between using the (index*2)+1 and the flipped index distance. 
+                // This flipped distance is the distance between two bars when the first is in 7-0 order and the next is in 0-7 order.
                 bars[barIndex].GetComponent<MeshRenderer>().material = barMaterials[k];
-
 
                 if (flipOrder)
                 {
@@ -115,6 +130,7 @@ public class BackgroundMusic : MonoBehaviour
 
     private void SetBarHeight(int index)
     {
+        // This function uses pretty much the same logic as the logic that assigns each bar its color.
         var barIndex = index;
         bool flipOrder = true;
         float yScale = (audioSampleCollector.NormalizedBufferedBands[index] * (maxBarScale - minBarScale)) + minBarScale;
@@ -167,7 +183,6 @@ public class BackgroundMusic : MonoBehaviour
         while (timeElapsed < duration)
         {
             float yScale = Mathf.Lerp(startingScale, endingScale, timeElapsed / duration);
-            Debug.Log($"Y Scale: {yScale}");
             foreach (var bar in bars)
             {
                 bar.transform.localScale = new Vector3(1, yScale, 1);

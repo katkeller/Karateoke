@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// This script controls sound effects and visual effects for the players' various combat moves.
+/// </summary>
 public class PlayerSFXManager : MonoBehaviour
 {
     [SerializeField]
@@ -90,6 +92,5 @@ public class PlayerSFXManager : MonoBehaviour
 
         mainCameraNoise.m_AmplitudeGain = 0;
         mainCameraNoise.m_FrequencyGain = 0;
-
     }
 }

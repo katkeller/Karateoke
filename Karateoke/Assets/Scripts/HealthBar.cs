@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+/// <summary>
+/// Each player has a health bar object that gets sent info from their Player script, then lerps to the correct size.
+/// </summary>
 public class HealthBar : MonoBehaviour
 {
     [SerializeField]
@@ -44,8 +46,9 @@ public class HealthBar : MonoBehaviour
         {
             Scale();
         }
-        if (currentValue < 25)
+        if (currentValue < 35)
         {
+            // If the player's health is below 35%, then we want the bar to flash red.
             Flash();
         }
     }

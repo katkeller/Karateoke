@@ -6,7 +6,10 @@ using System.Linq;
 using UnityEngine.UI;
 using TMPro;
 using System;
-
+/// <summary>
+/// This script is used for the source vocals, the players' mic input, and the background music (for visualizer purposes).
+/// It gets the most prominent (loundest) frequency that is current playing in each respective audio source.
+/// </summary>
 public class AudioSampleCollector : MonoBehaviour
 {
 
@@ -98,7 +101,7 @@ public class AudioSampleCollector : MonoBehaviour
                 useMicrophone = false;
                 Debug.Log("There is no microphone connected. Please connect a microphone to proceed.");
 
-                //TODO: Add user facing error popup
+                //TODO: Add user facing error
             }
         }
         else if (currentlyTestingWithVocalTracks)

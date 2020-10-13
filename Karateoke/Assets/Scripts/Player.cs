@@ -5,16 +5,13 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.UI;
-
+/// <summary>
+/// This class holds each individual player's health and star power values, while also managing their animations and input.
+/// It communicates with the combat manager in order to determine if the chosen combat move will be successful or not, as well
+/// as how much damage should be inflicted.
+/// </summary>
 public class Player : MonoBehaviour
 {
-    /// <summary>
-    /// This class holds each individual player's health and star power values, and manages their animations and input.
-    /// This is not where damage is dealt/determined, nor is it where animation interruptions are determined. This script acts
-    /// as if it has no knowledge of what the other player's choice may be, i.e. it will play the "dodge" animation even if
-    /// it is going to be interrupted by a sweep from the other player. Reaction animations are mostly decided elsewhere.
-    /// </summary>
-
     #region Fields/Properties
 
     [SerializeField]
@@ -294,20 +291,18 @@ public class Player : MonoBehaviour
 
     public void GetAttcked(float possibleDamage, int bonus, int indexOfWinner)
     {
-        //this only gets called once choices have been locked in (after phrase end)
+        // This only gets called once choices have been locked in (after phrase end)
 
         int damage = 0;
 
         switch (MoveToExecute)
         {
-            // do we interrupt animations in here?
             case MoveSet.Attack:
                 if (indexOfWinner != IndexAccordingToCombatManager)
                 {
-                    animator.SetTrigger(getHitAnimationTrigger);
-                    //we can move this to SFX VFX script right?
-                    StartCoroutine(PlayVFX(getHitParticleSystem));
                     // Apply damage to this player
+                    animator.SetTrigger(getHitAnimationTrigger);
+                    StartCoroutine(PlayVFX(getHitParticleSystem));
                     damage = (int)(possibleDamage + bonus);
                     Health -= damage;
                 }
@@ -462,7 +457,6 @@ public class Player : MonoBehaviour
 
     private IEnumerator SetUpStarPowerMove()
     {
-        Debug.Log($"{this.name} is executing a star power move.");
         // Need to wait before invoking so that the combat animations have time to finish.
         yield return new WaitForSeconds(1.25f);
         PlayerHasFullStarPower?.Invoke(IndexAccordingToCombatManager);
