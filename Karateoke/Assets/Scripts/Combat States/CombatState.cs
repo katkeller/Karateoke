@@ -15,7 +15,6 @@ public abstract class CombatState : MonoBehaviour, IPlayerCombatState
 
     public Player Player { get; set; }
     public abstract CombatMove AssociatedCombatMove { get; }
-
     protected GameObject actionTextObject { get; set; }
     protected abstract int combatAnimationTrigger { get; }
 
@@ -36,10 +35,7 @@ public abstract class CombatState : MonoBehaviour, IPlayerCombatState
 
     public abstract void GetBlocked();
 
-    public void GetSwept()
-    {
-        Player.PlayerAnimator.SetTrigger(fallAnimationTrigger);
-    }
+    public abstract void GetSwept(int indexOfWinner);
 
     public void PlayVFX(ParticleSystem particles)
     {

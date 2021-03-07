@@ -22,4 +22,9 @@ public class BlockState : CombatState
     {
         
     }
+
+    public override void GetSwept(int indexOfWinner)
+    {
+        Player.PlayerAnimator.SetTrigger(fallAnimationTrigger);
+    }
 }

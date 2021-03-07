@@ -29,4 +29,9 @@ public class UndecidedState : CombatState
     {
         
     }
+
+    public override void GetSwept(int indexOfWinner)
+    {
+        Player.PlayerAnimator.SetTrigger(fallAnimationTrigger);
+    }
 }

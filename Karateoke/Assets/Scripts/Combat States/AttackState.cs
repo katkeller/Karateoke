@@ -28,4 +28,9 @@ public class AttackState : CombatState
     {
         Player.PlayerAnimator.SetTrigger(getBlockedAnimationTrigger);
     }
+
+    public override void GetSwept(int indexOfWinner)
+    {
+        
+    }
 }

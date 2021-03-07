@@ -147,28 +147,12 @@ public class CombatManager : MonoBehaviour
 
     public void OnPlayerSweeps(int indexOfOtherPlayer)
     {
-        // This event is triggered from the players' sweep animation. So here, we determine if the other player is currently attacking,
-        // or if the other player is also sweeping and they won the phrase. If so, then the sweep fails.
+        player[indexOfOtherPlayer].GetSwept(indexOfWinner);
+    }
 
-        int indexOfSweeper = 0;
-        if (indexOfOtherPlayer == 0)
-        {
-            indexOfSweeper = 1;
-        }
-
-        bool successfullySweep = true;
-
-        if ((player[indexOfOtherPlayer].MoveToExecute == CombatMove.Sweep && indexOfWinner == indexOfOtherPlayer) ||
-            player[indexOfOtherPlayer].MoveToExecute == CombatMove.Attack)
-        {
-            successfullySweep = false;
-        }
-
-        if (successfullySweep)
-        {
-            player[indexOfSweeper].SuccessfullySweep(baseStarPowerIncrease, bonus, indexOfWinner);
-            player[indexOfOtherPlayer].GetSwept();
-        }
+    public void OnPlayerFalls(int indexOfOtherPlayer)
+    {
+        player[indexOfOtherPlayer].SuccessfullySweep(baseStarPowerIncrease, bonus, indexOfWinner);
     }
 
     private void OnPlayerDies(int indexOfPlayer)
@@ -258,6 +242,7 @@ public class CombatManager : MonoBehaviour
         Player.AttemptAttack += OnPlayerAttacks;
         Player.AttemptBlock += OnPlayerBlocks;
         Player.AttemptSweep += OnPlayerSweeps;
+        Player.Fall += OnPlayerFalls;
         Player.DealStarPowerDamage += OnPlayerDealsStarPowerDamage;
         Player.PlayerDies += OnPlayerDies;
         Player.PlayerHasFullStarPower += OnPlayerHasFullStarPower;
@@ -271,6 +256,7 @@ public class CombatManager : MonoBehaviour
         Player.AttemptAttack -= OnPlayerAttacks;
         Player.AttemptBlock -= OnPlayerBlocks;
         Player.AttemptSweep -= OnPlayerSweeps;
+        Player.Fall -= OnPlayerFalls;
         Player.DealStarPowerDamage -= OnPlayerDealsStarPowerDamage;
         Player.PlayerDies -= OnPlayerDies;
         Player.PlayerHasFullStarPower -= OnPlayerHasFullStarPower;

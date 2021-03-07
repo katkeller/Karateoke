@@ -29,4 +29,12 @@ public class SweepState : CombatState
     {
 
     }
+
+    public override void GetSwept(int indexOfWinner)
+    {
+        if (indexOfWinner != Player.IndexAccordingToCombatManager)
+        {
+            Player.PlayerAnimator.SetTrigger(fallAnimationTrigger);
+        }
+    }
 }

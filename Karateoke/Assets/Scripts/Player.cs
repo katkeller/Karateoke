@@ -170,114 +170,11 @@ public class Player : MonoBehaviour
     public static event Action<int> AttemptAttack;
     public static event Action<int> AttemptBlock;
     public static event Action<int> AttemptSweep;
+    public static event Action<int> Fall;
     public static event Action<int> DealStarPowerDamage;
     public static event Action<int, int> StarPowerMoveEnds;
 
     #endregion
-
-    public void ExecuteMakingChoiceAnimations()
-    {
-        animator.SetTrigger(gettingReadyAnimationTrigger);
-    }
-
-    /// <summary>
-    /// Plays the player's queued animation immediately. This should only be called at the end of a phrase.
-    /// </summary>
-    public void ExecuteQueuedCombatMove()
-    {
-        CurrentCombatState.ExecuteQueuedCombatMove();
-    }
-
-    public void PlayerAttacksEvent(int indexOfOtherPlayer)
-    {
-        AttemptAttack?.Invoke(indexOfOtherPlayer);
-    }
-
-    public void PlayerBlocksEvent(int indexOfOtherPlayer)
-    {
-        Debug.Log("Block animation event triggered.");
-        AttemptBlock?.Invoke(indexOfOtherPlayer);
-    }
-
-    public void PlayerSweepsEvent(int indexOfOtherPlayer)
-    {
-        AttemptSweep?.Invoke(indexOfOtherPlayer);
-    }
-
-    public void PlayerDealsStarPowerDamageEvent(int indexOfOtherPlayer)
-    {
-        DealStarPowerDamage?.Invoke(indexOfOtherPlayer);
-    }
-
-    public void StarPowerMoveEndsEvent(int indexOfOtherPlayer)
-    {
-        // This event should only be triggered from the losing player's animation: either the kip up or the relief.
-        guiCamera.enabled = true;
-        starPowerUi.SetActive(true);
-        StarPowerMoveEnds?.Invoke(IndexAccordingToCombatManager, indexOfOtherPlayer);
-    }
-
-    #region Damage & Animation Interruptions (Triggered From CombatManager)
-
-    public void GetAttcked(float possibleDamage, int bonus, int indexOfWinner)
-    {
-        CurrentCombatState.GetAttacked(possibleDamage, bonus, indexOfWinner);
-    }
-
-    public void GetBlocked()
-    {
-        CurrentCombatState.GetBlocked();
-    }
-
-    public void GetSwept()
-    {
-        CurrentCombatState.GetSwept();
-    }
-
-    public void SuccessfullySweep(int starPowerIncrease, int bonus, int indexOfWinner)
-    {
-        if (indexOfWinner == IndexAccordingToCombatManager)
-        {
-            starPowerIncrease += (bonus / 4);
-            Debug.Log($"Star power increase: {starPowerIncrease}");
-        }
-
-        StarPower += starPowerIncrease;
-    }
-
-    #endregion
-
-    public void StartGame()
-    {
-        if (!gameHasStarted)
-        {
-            gameHasStarted = true;
-            animator.SetTrigger("Start");
-        }
-    }
-
-    private IEnumerator WaitForCombatThenDie()
-    {
-        // When the player dies from a regular combat move, we want to give that move a chance to finish before
-        // we start the death cutscene. When death comes from an SP move, there's no need since the death won't
-        // be activated by the combat manager until after the SP cutscene is finished.
-        yield return new WaitForSeconds(1.5f);
-        Die();
-    }
-
-    public void Die()
-    {
-        Debug.Log($"{this.name} is dead.");
-        IsDead = true;
-        animator.SetTrigger(deathAnimationTrigger);
-        PlayerDies?.Invoke(IndexAccordingToCombatManager);
-    }
-
-    public void Win()
-    {
-        victoryCutSceneObject.Play();
-        animator.SetTrigger(winAnimationTrigger);
-    }
 
     private void Awake()
     {
@@ -343,6 +240,19 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void ExecuteMakingChoiceAnimations()
+    {
+        animator.SetTrigger(gettingReadyAnimationTrigger);
+    }
+
+    /// <summary>
+    /// Plays the player's queued animation immediately. This should only be called at the end of a phrase.
+    /// </summary>
+    public void ExecuteQueuedCombatMove()
+    {
+        CurrentCombatState.ExecuteQueuedCombatMove();
+    }
+
     private void ResetChoiceValuesAndStartChoiceAnimation()
     {
         hasMadeChoiceThisPhrase = false;
@@ -355,5 +265,101 @@ public class Player : MonoBehaviour
         // Need to wait before invoking so that the combat animations have time to finish.
         yield return new WaitForSeconds(1.25f);
         PlayerHasFullStarPower?.Invoke(IndexAccordingToCombatManager);
+    }
+
+    public void PlayerAttacksEvent(int indexOfOtherPlayer)
+    {
+        AttemptAttack?.Invoke(indexOfOtherPlayer);
+    }
+
+    public void PlayerBlocksEvent(int indexOfOtherPlayer)
+    {
+        Debug.Log("Block animation event triggered.");
+        AttemptBlock?.Invoke(indexOfOtherPlayer);
+    }
+
+    public void PlayerSweepsEvent(int indexOfOtherPlayer)
+    {
+        AttemptSweep?.Invoke(indexOfOtherPlayer);
+    }
+
+    public void PlayerFallsEvent(int indexOfOtherPlayer)
+    {
+        Fall?.Invoke(indexOfOtherPlayer);
+    }
+
+    public void PlayerDealsStarPowerDamageEvent(int indexOfOtherPlayer)
+    {
+        DealStarPowerDamage?.Invoke(indexOfOtherPlayer);
+    }
+
+    public void StarPowerMoveEndsEvent(int indexOfOtherPlayer)
+    {
+        // This event should only be triggered from the losing player's animation: either the kip up or the relief.
+        guiCamera.enabled = true;
+        starPowerUi.SetActive(true);
+        StarPowerMoveEnds?.Invoke(IndexAccordingToCombatManager, indexOfOtherPlayer);
+    }
+
+    #region Damage & Animation Interruptions (Triggered From CombatManager)
+
+    public void GetAttcked(float possibleDamage, int bonus, int indexOfWinner)
+    {
+        CurrentCombatState.GetAttacked(possibleDamage, bonus, indexOfWinner);
+    }
+
+    public void GetBlocked()
+    {
+        CurrentCombatState.GetBlocked();
+    }
+
+    public void GetSwept(int indexOfWinner)
+    {
+        CurrentCombatState.GetSwept(indexOfWinner);
+    }
+
+    public void SuccessfullySweep(int starPowerIncrease, int bonus, int indexOfWinner)
+    {
+        if (indexOfWinner == IndexAccordingToCombatManager)
+        {
+            starPowerIncrease += (bonus / 4);
+            Debug.Log($"Star power increase: {starPowerIncrease}");
+        }
+
+        StarPower += starPowerIncrease;
+    }
+
+    #endregion
+
+    public void StartGame()
+    {
+        if (!gameHasStarted)
+        {
+            gameHasStarted = true;
+            animator.SetTrigger("Start");
+        }
+    }
+
+    private IEnumerator WaitForCombatThenDie()
+    {
+        // When the player dies from a regular combat move, we want to give that move a chance to finish before
+        // we start the death cutscene. When death comes from an SP move, there's no need since the death won't
+        // be activated by the combat manager until after the SP cutscene is finished.
+        yield return new WaitForSeconds(1.5f);
+        Die();
+    }
+
+    public void Die()
+    {
+        Debug.Log($"{this.name} is dead.");
+        IsDead = true;
+        animator.SetTrigger(deathAnimationTrigger);
+        PlayerDies?.Invoke(IndexAccordingToCombatManager);
+    }
+
+    public void Win()
+    {
+        victoryCutSceneObject.Play();
+        animator.SetTrigger(winAnimationTrigger);
     }
 }
