@@ -127,7 +127,17 @@ public class AudioSampleCollector : MonoBehaviour
         }
     }
 
-    IEnumerator DelayMusic()
+    private void OnEnable()
+    {
+        GameStartManager.StartGame += StartMusic;
+    }
+
+    private void OnDisable()
+    {
+        GameStartManager.StartGame -= StartMusic;
+    }
+
+    private IEnumerator DelayMusic()
     {
         yield return new WaitForSeconds(0.1f);
         audioSource.PlayOneShot(clipToPlayIfNoMicrophone);

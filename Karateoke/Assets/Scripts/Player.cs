@@ -58,17 +58,6 @@ public class Player : MonoBehaviour
     public BlockState BlockState { get; set; }
     public SweepState SweepState { get; set; }
     public UndecidedState UndecidedState { get; set; }
-
-    private CombatMove moveToExecute;
-    public CombatMove MoveToExecute
-    {
-        get => moveToExecute;
-        set
-        {
-            moveToExecute = value;
-        }
-    }
-
     public GameObject AttackTextObject => attackTextObject;
     public GameObject BlockTextObject => blockTextObject;
     public GameObject SweepTextObject => sweepTextObject;
@@ -215,11 +204,20 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void StartGame()
+    {
+        if (!gameHasStarted)
+        {
+            gameHasStarted = true;
+            animator.SetTrigger("Start");
+        }
+    }
+
     private void CheckAndSetChoice(CombatMove move)
     {
         if (CanMakeChoice && !hasMadeChoiceThisPhrase && !IsDead)
         {
-            MoveToExecute = move;
+            hasMadeChoiceThisPhrase = true;
 
             switch (move)
             {
@@ -330,15 +328,6 @@ public class Player : MonoBehaviour
     }
 
     #endregion
-
-    public void StartGame()
-    {
-        if (!gameHasStarted)
-        {
-            gameHasStarted = true;
-            animator.SetTrigger("Start");
-        }
-    }
 
     private IEnumerator WaitForCombatThenDie()
     {

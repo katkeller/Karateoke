@@ -11,22 +11,32 @@ public class PlayerSFXManager : MonoBehaviour
     private CinemachineVirtualCamera mainCamera;
 
     [SerializeField]
+    private PlayerPhysicalSFXManager physicalSFXManager;
+
+    [SerializeField]
     private float cameraShakeDuration = 0.2f, cameraShakeAmplitude = 1.0f, cameraShakeFrequency = 2.0f;
 
     [SerializeField]
-    private AudioClip attackClip, sweepClip, fallClip;
+    private List<AudioClip> attackClips = new List<AudioClip>();
+
+    [SerializeField]
+    private List<AudioClip> getHitClips = new List<AudioClip>();
+
+    [SerializeField]
+    private List<AudioClip> sweepAttackClips = new List<AudioClip>();
 
     [SerializeField]
     private AudioClip successfullyBlockClip;
-
-    [SerializeField]
-    private AudioClip[] getHitClips = new AudioClip[6];
 
     [SerializeField]
     private ParticleSystem kickTracer, blockParticles, sweepTracer, fallParticles;
 
     private AudioSource audioSource;
     private CinemachineBasicMultiChannelPerlin mainCameraNoise;
+
+    private int attackClipCurrentIndex = 0;
+    private int getHitClipCurrentIndex = 0;
+    private int sweepAttckClipCountIndex = 0;
 
     void Start()
     {
@@ -36,20 +46,47 @@ public class PlayerSFXManager : MonoBehaviour
 
     public void AudioEvent_Attack()
     {
-        audioSource.PlayOneShot(attackClip);
+        audioSource.PlayOneShot(attackClips[attackClipCurrentIndex]);
+        attackClipCurrentIndex = SetNextAudioClipIndex(attackClipCurrentIndex, attackClips.Count);
     }
 
     public void AudioEvent_GetHit()
     {
-        var index = UnityEngine.Random.Range(0, 5);
-        var getHitClip = getHitClips[index];
-        audioSource.PlayOneShot(getHitClip);
+        audioSource.PlayOneShot(getHitClips[getHitClipCurrentIndex]);
         StartCoroutine(ApplyCameraShake());
+        getHitClipCurrentIndex = SetNextAudioClipIndex(getHitClipCurrentIndex, getHitClips.Count);
+    }
+
+    public void AudioEvent_KickWoosh()
+    {
+        physicalSFXManager.PlayKickWooshSFX();
+    }
+
+    public void AudioEvent_HitLands()
+    {
+        physicalSFXManager.PlayHitLandsSFX();
+    }
+
+    public void AudioEvent_SuccesfulBlock()
+    {
+        physicalSFXManager.PlaySuccessfulBlockSFX();
     }
 
     public void AudioEvent_Sweep()
     {
-        audioSource.PlayOneShot(sweepClip);
+        physicalSFXManager.PlaySweepSFX();
+
+        audioSource.PlayOneShot(sweepAttackClips[sweepAttckClipCountIndex]);
+        sweepAttckClipCountIndex = SetNextAudioClipIndex(sweepAttckClipCountIndex, sweepAttackClips.Count);
+    }
+
+    public void AudioEvent_Fall()
+    {
+        physicalSFXManager.PlayFallSFX();
+
+        audioSource.PlayOneShot(getHitClips[getHitClipCurrentIndex]);
+        getHitClipCurrentIndex = SetNextAudioClipIndex(getHitClipCurrentIndex, getHitClips.Count);
+        StartCoroutine(ApplyCameraShake());
     }
 
     public void ActivateSweepVFX()
@@ -67,12 +104,11 @@ public class PlayerSFXManager : MonoBehaviour
     public void ActivateFallVFX()
     {
         fallParticles.Play();
-        audioSource.PlayOneShot(fallClip);
     }
 
     public void ActivateBlockVFXAndSFX()
     {
-        audioSource.PlayOneShot(successfullyBlockClip);
+        //audioSource.PlayOneShot(successfullyBlockClip);
         blockParticles.Play();
         StartCoroutine(WaitThenStopVFX(0.5f, blockParticles));
     }
@@ -92,5 +128,15 @@ public class PlayerSFXManager : MonoBehaviour
 
         mainCameraNoise.m_AmplitudeGain = 0;
         mainCameraNoise.m_FrequencyGain = 0;
+    }
+
+    private int SetNextAudioClipIndex(int currentIndex, int lengthOfClipList)
+    {
+        currentIndex++;
+        if (currentIndex >= lengthOfClipList)
+        {
+            currentIndex = 0;
+        }
+        return currentIndex;
     }
 }

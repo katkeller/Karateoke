@@ -101,4 +101,14 @@ public class LyricScrolling : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, scrollingTarget, Time.deltaTime * speedMultiplier);
         }
     }
+
+    private void OnEnable()
+    {
+        GameStartManager.StartGame += StartScrolling;
+    }
+
+    private void OnDisable()
+    {
+        GameStartManager.StartGame -= StartScrolling;
+    }
 }

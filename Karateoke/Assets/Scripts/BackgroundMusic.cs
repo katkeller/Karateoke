@@ -202,12 +202,14 @@ public class BackgroundMusic : MonoBehaviour
     {
         Player.PlayerHasFullStarPower += OnStarPowerMoveStarts;
         Player.StarPowerMoveEnds += OnStarPowerMoveEnds;
+        GameStartManager.StartGame += StartBackgroundMusic;
     }
 
     private void OnDisable()
     {
         Player.PlayerHasFullStarPower -= OnStarPowerMoveStarts;
         Player.StarPowerMoveEnds -= OnStarPowerMoveEnds;
+        GameStartManager.StartGame -= StartBackgroundMusic;
     }
 
     private void SetLightValues(int index)

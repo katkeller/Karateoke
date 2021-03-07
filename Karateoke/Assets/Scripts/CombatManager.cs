@@ -247,6 +247,7 @@ public class CombatManager : MonoBehaviour
         Player.PlayerDies += OnPlayerDies;
         Player.PlayerHasFullStarPower += OnPlayerHasFullStarPower;
         Player.StarPowerMoveEnds += OnStarPowerMoveEnds;
+        GameStartManager.StartGame += StartAnimations;
     }
 
     private void OnDisable()
@@ -261,6 +262,7 @@ public class CombatManager : MonoBehaviour
         Player.PlayerDies -= OnPlayerDies;
         Player.PlayerHasFullStarPower -= OnPlayerHasFullStarPower;
         Player.StarPowerMoveEnds -= OnStarPowerMoveEnds;
+        GameStartManager.StartGame -= StartAnimations;
     }
 
     #endregion
