@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.UI;
+using static CombatState;
+using static IPlayerCombatState;
 /// <summary>
 /// This class holds each individual player's health and star power values, while also managing their animations and input.
 /// It communicates with the combat manager in order to determine if the chosen combat move will be successful or not, as well
@@ -39,16 +42,7 @@ public class Player : MonoBehaviour
     private PlayableDirector victoryCutSceneObject;
 
     [SerializeField]
-    private string attackButtonString, dodgeButtonString, sweepButtonString;
-
-    [SerializeField]
-    private string attackAnimationTrigger, dodgeAnimationTrigger, sweepAnimationTrigger, sittingDuckAnimationTrigger;
-
-    [SerializeField]
-    private string gettingReadyAnimationTrigger, fallAnimationTrigger, getHitAnimationTrigger, getHitFromBlockAnimationTrigger;
-
-    [SerializeField]
-    private string getBlockedAnimationTrigger, deathAnimationTrigger, winAnimationTrigger;
+    private string gettingReadyAnimationTrigger, deathAnimationTrigger, winAnimationTrigger;
 
     [SerializeField]
     private ParticleSystem getHitParticleSystem;
@@ -56,20 +50,35 @@ public class Player : MonoBehaviour
     [SerializeField]
     private AudioClip choiceMadeClip;
 
-    public enum MoveSet
+    [SerializeField]
+    private string attackButton, blockButton, sweepButton;
+
+    public IPlayerCombatState CurrentCombatState { get; set; }
+    public AttackState AttackState { get; set; }
+    public BlockState BlockState { get; set; }
+    public SweepState SweepState { get; set; }
+    public UndecidedState UndecidedState { get; set; }
+
+    private CombatMove moveToExecute;
+    public CombatMove MoveToExecute
     {
-        Attack,
-        Dodge,
-        Sweep,
-        Undecided
+        get => moveToExecute;
+        set
+        {
+            moveToExecute = value;
+        }
     }
 
-    public int IndexAccordingToCombatManager
-    {
-        get;
-        set;
-    }
+    public GameObject AttackTextObject => attackTextObject;
+    public GameObject BlockTextObject => blockTextObject;
+    public GameObject SweepTextObject => sweepTextObject;
+    public Animator PlayerAnimator => animator;
+    public ParticleSystem GetHitParticleSystem => getHitParticleSystem;
+    public int IndexAccordingToCombatManager { get; set; }
+    public bool IsDead { get; set; }
+    public bool StarPowerMoveIsHappening { get; set; }
 
+    private bool hasMadeChoiceThisPhrase;
     private bool canMakeChoice;
     public bool CanMakeChoice
     {
@@ -78,7 +87,7 @@ public class Player : MonoBehaviour
         {
             canMakeChoice = value;
 
-            if (canMakeChoice == true)
+            if (canMakeChoice)
             {
                 // This makes it so that every time the combat manager asserts that a phrase is about to end,
                 // the player knows that it's time to make a choice again.
@@ -87,23 +96,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public bool IsDead
-    {
-        get;
-        set;
-    }
-
-    public bool StarPowerMoveIsHappening
-    {
-        get;
-        set;
-    }
-
-    private bool hasMadeChoiceThisPhrase;
-
     private int health;
-    private int starPower;
-
     /// <summary>
     /// This value starts at 100, and if it drops below 0, the player dies and the other player wins.
     /// </summary>
@@ -131,6 +124,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    private int starPower;
     /// <summary>
     /// This is the value that control the player's "special move". If this value gets above 100,
     /// their move triggers. Pass in a negative value to decrease the player's star power.
@@ -158,53 +152,6 @@ public class Player : MonoBehaviour
             starPowerRingGraphic.ScaleFill(starPower);
         }
     }
-
-    private MoveSet moveToExecute;
-    public MoveSet MoveToExecute
-    {
-        get
-        {
-            if (!hasMadeChoiceThisPhrase)
-            {
-                // If the player has not made a choice by the time this value is being accessed by the combat manager,
-                // then that means they've run out of time and their Move is set to "Undecided".
-                moveToExecute = MoveSet.Undecided;
-                queuedActionTextObject = null;
-            }
-
-            return moveToExecute;
-        }
-        set
-        {
-            moveToExecute = value;
-
-            switch (moveToExecute)
-            {
-                case MoveSet.Attack:
-                    animationTrigger = attackAnimationTrigger;
-                    queuedActionTextObject = attackTextObject;
-                    break;
-                case MoveSet.Dodge:
-                    animationTrigger = dodgeAnimationTrigger;
-                    queuedActionTextObject = blockTextObject;
-                    break;
-                case MoveSet.Sweep:
-                    animationTrigger = sweepAnimationTrigger;
-                    queuedActionTextObject = sweepTextObject;
-                    break;
-                case MoveSet.Undecided:
-                    break;
-                default:
-                    Debug.Log($"MoveToExecute for {this.name}: {value} unsupported.");
-                    break;
-            }
-
-            hasMadeChoiceThisPhrase = true;
-        }
-    }
-
-    private string animationTrigger;
-    private GameObject queuedActionTextObject;
 
     private bool gameHasStarted;
 
@@ -236,26 +183,9 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Plays the player's queued animation immediately. This should only be called at the end of a phrase.
     /// </summary>
-    /// <param name="overrideAnimation"></param>
-    /// <param name="newAnimationTrigger"></param>
-    public void ExecuteQueuedCombatMove(bool overrideAnimation = false, string newAnimationTrigger = null)
+    public void ExecuteQueuedCombatMove()
     {
-        if (overrideAnimation && !string.IsNullOrEmpty(newAnimationTrigger))
-        {
-            // will we ever need to override animations?
-            animationTrigger = newAnimationTrigger;
-        }
-
-        if (string.IsNullOrEmpty(animationTrigger))
-        {
-            // If we get here we can assume the player didn't make a choice,
-            // so we assign the "sitting duck" animation trigger
-            animationTrigger = sittingDuckAnimationTrigger;
-        }
-
-        animator.SetTrigger(animationTrigger);
-        //also do action text
-        StartCoroutine(ShowActionText());
+        CurrentCombatState.ExecuteQueuedCombatMove();
     }
 
     public void PlayerAttacksEvent(int indexOfOtherPlayer)
@@ -291,73 +221,17 @@ public class Player : MonoBehaviour
 
     public void GetAttcked(float possibleDamage, int bonus, int indexOfWinner)
     {
-        // This only gets called once choices have been locked in (after phrase end)
-
-        int damage = 0;
-
-        switch (MoveToExecute)
-        {
-            case MoveSet.Attack:
-                if (indexOfWinner != IndexAccordingToCombatManager)
-                {
-                    // Apply damage to this player
-                    animator.SetTrigger(getHitAnimationTrigger);
-                    StartCoroutine(PlayVFX(getHitParticleSystem));
-                    damage = (int)(possibleDamage + bonus);
-                    Health -= damage;
-                }
-                break;
-            case MoveSet.Dodge:
-                animator.SetTrigger(getHitFromBlockAnimationTrigger);
-                Debug.Log($"{this.name} dodged successfully.");
-                break;
-            case MoveSet.Sweep:
-                animator.SetTrigger(getHitAnimationTrigger);
-                StartCoroutine(PlayVFX(getHitParticleSystem));
-                damage = (int)possibleDamage;
-                if (indexOfWinner != IndexAccordingToCombatManager)
-                {
-                    // Apply bonus to damage value
-                    damage += bonus;
-                }
-                Health -= damage;
-                break;
-            case MoveSet.Undecided:
-                animator.SetTrigger(getHitAnimationTrigger);
-                StartCoroutine(PlayVFX(getHitParticleSystem));
-                damage = (int)possibleDamage;
-                if (indexOfWinner != IndexAccordingToCombatManager)
-                {
-                    // Apply bonus to damage value
-                    damage += bonus;
-                }
-                Health -= damage;
-                break;
-            default:
-                Debug.Log($"Combat error: getting hit, {this.name}");
-                break;
-        }
-
-    }
-
-    private IEnumerator PlayVFX(ParticleSystem systemToPlay)
-    {
-        systemToPlay.Play();
-        yield return new WaitForSeconds(0.5f);
-        systemToPlay.Stop();
+        CurrentCombatState.GetAttacked(possibleDamage, bonus, indexOfWinner);
     }
 
     public void GetBlocked()
     {
-        if(MoveToExecute == MoveSet.Attack)
-        {
-            animator.SetTrigger(getBlockedAnimationTrigger);
-        }
+        CurrentCombatState.GetBlocked();
     }
 
     public void GetSwept()
     {
-        animator.SetTrigger(fallAnimationTrigger);
+        CurrentCombatState.GetSwept();
     }
 
     public void SuccessfullySweep(int starPowerIncrease, int bonus, int indexOfWinner)
@@ -407,40 +281,55 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        if(string.IsNullOrEmpty(attackButtonString) || string.IsNullOrEmpty(dodgeButtonString) ||
-            string.IsNullOrEmpty(sweepButtonString))
-        {
-            Debug.LogError($"{this.name} does not have input strings assigned to it.");
-        }
-
         audioSource = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
         portraitImage = portraitObject.GetComponent<Image>();
         starPowerRingGraphic = starPowerRingGraphicObject.GetComponent<StarPowerBar>();
         healthBar = healthBarObject.GetComponent<HealthBar>();
+
+        AttackState = new AttackState(this);
+        BlockState = new BlockState(this);
+        SweepState = new SweepState(this);
+        UndecidedState = new UndecidedState(this);
+
+        CurrentCombatState = UndecidedState;
     }
 
     void Update()
     {
-        if (Input.GetButtonDown(attackButtonString))
+        if (Input.GetButtonDown(attackButton))
         {
-            CheckAndSetChoice(MoveSet.Attack);
+            CheckAndSetChoice(CombatMove.Attack);
         }
-        if (Input.GetButtonDown(dodgeButtonString))
+        if (Input.GetButtonDown(blockButton))
         {
-            CheckAndSetChoice(MoveSet.Dodge);
+            CheckAndSetChoice(CombatMove.Block);
         }
-        if (Input.GetButtonDown(sweepButtonString))
+        if (Input.GetButtonDown(sweepButton))
         {
-            CheckAndSetChoice(MoveSet.Sweep);
+            CheckAndSetChoice(CombatMove.Sweep);
         }
     }
 
-    private void CheckAndSetChoice(MoveSet move)
+    private void CheckAndSetChoice(CombatMove move)
     {
         if (CanMakeChoice && !hasMadeChoiceThisPhrase && !IsDead)
         {
             MoveToExecute = move;
+
+            switch (move)
+            {
+                case CombatMove.Attack:
+                    CurrentCombatState = AttackState;
+                    break;
+                case CombatMove.Block:
+                    CurrentCombatState = BlockState;
+                    break;
+                case CombatMove.Sweep:
+                    CurrentCombatState = SweepState;
+                    break;
+            }
+
             portraitImage.sprite = activatedPortrait;
             audioSource.PlayOneShot(choiceMadeClip);
             Debug.Log($"{this.name} has chosen {move}");
@@ -450,9 +339,8 @@ public class Player : MonoBehaviour
     private void ResetChoiceValuesAndStartChoiceAnimation()
     {
         hasMadeChoiceThisPhrase = false;
-        animationTrigger = null;
+        CurrentCombatState = UndecidedState;
         portraitImage.sprite = unactivatedPortrait;
-        queuedActionTextObject = null;
     }
 
     private IEnumerator SetUpStarPowerMove()
@@ -460,15 +348,5 @@ public class Player : MonoBehaviour
         // Need to wait before invoking so that the combat animations have time to finish.
         yield return new WaitForSeconds(1.25f);
         PlayerHasFullStarPower?.Invoke(IndexAccordingToCombatManager);
-    }
-
-    IEnumerator ShowActionText()
-    {
-        if (queuedActionTextObject != null)
-        {
-            queuedActionTextObject.SetActive(true);
-            yield return new WaitForSeconds(2.15f);
-            queuedActionTextObject.SetActive(false);
-        }
     }
 }

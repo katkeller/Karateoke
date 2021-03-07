@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using System;
 using UnityEngine.UI;
+using static CombatState;
 /// <summary>
 /// This script is the "main brain" of the game's combat. It recieves info from the two player scripts, the phrase end trigger,
 /// the star power QTE manager, and the audio comparison manager. It also handles activting the various elements of those scripts 
@@ -157,8 +158,8 @@ public class CombatManager : MonoBehaviour
 
         bool successfullySweep = true;
 
-        if ((player[indexOfOtherPlayer].MoveToExecute == Player.MoveSet.Sweep && indexOfWinner == indexOfOtherPlayer) ||
-            player[indexOfOtherPlayer].MoveToExecute == Player.MoveSet.Attack)
+        if ((player[indexOfOtherPlayer].MoveToExecute == CombatMove.Sweep && indexOfWinner == indexOfOtherPlayer) ||
+            player[indexOfOtherPlayer].MoveToExecute == CombatMove.Attack)
         {
             successfullySweep = false;
         }

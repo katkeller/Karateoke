@@ -58,11 +58,11 @@ public class AudioSampleCollector : MonoBehaviour
 
     public float[] NormalizedBufferedBands = new float[8];
 
-    private AudioSource audioSource;
+    public int IndexOfHighestValue { get; private set; }
+    public float HighestValue { get; private set; }
 
+    private AudioSource audioSource;
     private float pitchIndicatorHeight;
-    public int indexOfHighestValue;
-    public float highestValue;
 
     private float[] samples = new float[2048];
     private float[] samplesForVisualizer = new float[512];
@@ -171,8 +171,8 @@ public class AudioSampleCollector : MonoBehaviour
 
     private void GetRelevantFrequency()
     {
-        highestValue = samples.Max();
-        indexOfHighestValue = samples.ToList().IndexOf(highestValue);
+        HighestValue = samples.Max();
+        IndexOfHighestValue = samples.ToList().IndexOf(HighestValue);
     }
 
     private void CreateFrequencyBands()
@@ -238,12 +238,12 @@ public class AudioSampleCollector : MonoBehaviour
         // I changed 97 to 96 because #1, whose voice actually goes that high?,
         // and #2, it makes it much easier to calculate word height for the lyrics
         // since then we only have 90 samples.
-        if(indexOfHighestValue > 6 && indexOfHighestValue < 96)
+        if(IndexOfHighestValue > 6 && IndexOfHighestValue < 96)
         {
-            if(highestValue > 0.01f)
+            if(HighestValue > 0.01f)
             {
                 Transform startingPosition = pitchIndicator.transform;
-                pitchIndicatorHeight = ((indexOfHighestValue - 6) * pitchIndicatorHeightMultiplier) - 9.2f;
+                pitchIndicatorHeight = ((IndexOfHighestValue - 6) * pitchIndicatorHeightMultiplier) - 9.2f;
                 Vector3 endingVector3 = new Vector3(startingPosition.position.x, pitchIndicatorHeight, startingPosition.position.z);
 
                 pitchIndicator.transform.position = Vector3.Lerp(startingPosition.position, endingVector3, pitchIndicatorSpeed);
@@ -254,7 +254,7 @@ public class AudioSampleCollector : MonoBehaviour
 
     private void SetPitchIndicatorAlpha()
     {
-        float alpha = highestValue * alphaMultiplier;
+        float alpha = HighestValue * alphaMultiplier;
 
         Color color = pitchIndicator.GetComponent<SpriteRenderer>().color;
         color.a = alpha;

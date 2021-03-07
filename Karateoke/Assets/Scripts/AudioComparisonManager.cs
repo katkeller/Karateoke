@@ -64,8 +64,8 @@ public class AudioComparisonManager : MonoBehaviour
 
     private void RecordSampleValues(int e)
     {
-        index[e] = audioSampleCollector[e].indexOfHighestValue;
-        highestValue[e] = audioSampleCollector[e].highestValue;
+        index[e] = audioSampleCollector[e].IndexOfHighestValue;
+        highestValue[e] = audioSampleCollector[e].HighestValue;
 
         if (e > 0)
         {
