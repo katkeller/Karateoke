@@ -24,6 +24,8 @@ public abstract class CombatState : MonoBehaviour, IPlayerCombatState
     protected int getBlockedAnimationTrigger = Animator.StringToHash("GetBlocked");
     protected int fallAnimationTrigger = Animator.StringToHash("Fall");
 
+    public abstract void SetStatePlayerObjects(Player player);
+
     public void ExecuteQueuedCombatMove()
     {
         Player.PlayerAnimator.SetTrigger(combatAnimationTrigger);

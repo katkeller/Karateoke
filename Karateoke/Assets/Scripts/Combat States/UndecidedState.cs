@@ -7,7 +7,7 @@ public class UndecidedState : CombatState
     protected override int combatAnimationTrigger => Animator.StringToHash("SittingDuck");
     public override CombatMove AssociatedCombatMove => CombatMove.Undecided;
 
-    public UndecidedState(Player player)
+    public override void SetStatePlayerObjects(Player player)
     {
         Player = player;
         actionTextObject = null;

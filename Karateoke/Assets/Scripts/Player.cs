@@ -286,11 +286,18 @@ public class Player : MonoBehaviour
         portraitImage = portraitObject.GetComponent<Image>();
         starPowerRingGraphic = starPowerRingGraphicObject.GetComponent<StarPowerBar>();
         healthBar = healthBarObject.GetComponent<HealthBar>();
+    }
 
-        AttackState = new AttackState(this);
-        BlockState = new BlockState(this);
-        SweepState = new SweepState(this);
-        UndecidedState = new UndecidedState(this);
+    private void Start()
+    {
+        AttackState = (new GameObject($"Player{IndexAccordingToCombatManager}AttackState")).AddComponent<AttackState>();
+        AttackState.SetStatePlayerObjects(this);
+        BlockState = (new GameObject($"Player{IndexAccordingToCombatManager}BlockState")).AddComponent<BlockState>();
+        BlockState.SetStatePlayerObjects(this);
+        SweepState = (new GameObject($"Player{IndexAccordingToCombatManager}SweepState")).AddComponent<SweepState>();
+        SweepState.SetStatePlayerObjects(this);
+        UndecidedState = (new GameObject($"Player{IndexAccordingToCombatManager}UndecidedState")).AddComponent<UndecidedState>();
+        UndecidedState.SetStatePlayerObjects(this);
 
         CurrentCombatState = UndecidedState;
     }

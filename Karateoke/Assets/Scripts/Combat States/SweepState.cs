@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class SweepState : CombatState
 {
-    protected override int combatAnimationTrigger => throw new System.NotImplementedException();
+    protected override int combatAnimationTrigger => Animator.StringToHash("Sweep");
     public override CombatMove AssociatedCombatMove => CombatMove.Sweep;
 
-    public SweepState(Player player)
+    public override void SetStatePlayerObjects(Player player)
     {
         Player = player;
         actionTextObject = Player.SweepTextObject;

@@ -7,7 +7,7 @@ public class AttackState : CombatState
     protected override int combatAnimationTrigger => Animator.StringToHash("Attack");
     public override CombatMove AssociatedCombatMove => CombatMove.Attack;
 
-    public AttackState(Player player)
+    public override void SetStatePlayerObjects(Player player)
     {
         Player = player;
         actionTextObject = Player.AttackTextObject;

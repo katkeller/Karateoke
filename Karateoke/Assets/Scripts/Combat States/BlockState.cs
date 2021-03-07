@@ -7,7 +7,7 @@ public class BlockState : CombatState
     protected override int combatAnimationTrigger => Animator.StringToHash("Block");
     public override CombatMove AssociatedCombatMove => CombatMove.Block;
 
-    public BlockState(Player player)
+    public override void SetStatePlayerObjects(Player player)
     {
         Player = player;
         actionTextObject = Player.BlockTextObject;
